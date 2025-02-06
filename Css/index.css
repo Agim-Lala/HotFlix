@@ -1,0 +1,253 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif; 
+    background-color: #1b1b1f; 
+    color: #e4e4e7; 
+    line-height: 1.6;
+    overflow-x: hidden; 
+}
+
+ul,ol,li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* SVG */
+svg {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+    margin-right: .5rem;  
+}
+.green {
+    fill: green;
+}
+.red {
+    fill: red;
+}
+.white {
+    fill: white;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #e4e4e7;
+    text-align: center;
+    cursor: pointer;
+}
+.btn-primary {
+    border: 1px solid #ff9933;
+    font-size: small;
+}
+.btn-primary:hover {
+    background-color: #ff9933;
+    color: #1b1b1f;
+}   
+.btn-secondary {
+    border: 1px solid #0bad0b;
+    font-size: small;
+}
+.btn-secondary:hover {
+    background-color: #0bad0b;
+    color: #1b1b1f;
+}
+.btn-sign{
+    border: 1px solid #ff9933;
+    font-size: small;
+    padding: 0.5rem 2rem;
+}
+/* Header */
+.header {
+    display: flex;
+    justify-content: flex-end;   
+    align-items: center;
+    padding: 1rem 6.2rem;    
+}
+.header-list {
+    display: flex;
+    align-items: center;
+    margin-right: 7rem;
+}
+.header-list-item {
+    margin: 0 1rem;
+    cursor: pointer;
+}
+.header-list-item:last-child {
+    padding: 1rem 1rem;
+    margin-bottom: .5rem;
+}
+.header-list-item:hover {
+    color: #ff9933;
+}
+.header-list-item:last-child:hover {
+    background-color: #ff9933;  
+}
+
+.search-input {
+    display: flex; 
+    align-items: center; 
+    border: 1px solid#2b2b31; 
+    border-radius: 0.5rem; 
+    padding: 0.2rem; 
+    width: 15rem;     
+    background-color:#2b2b31; 
+    margin-right: 7rem;
+}
+
+.search-input input {
+    flex-grow: 1; 
+    border: none; 
+    outline: none; 
+    font-size: 1rem; 
+    color: #eae9e9;
+    font-weight: 100;
+    background-color:#2b2b31; 
+}
+
+.search-input svg {
+    flex-shrink: 0; 
+    margin-top: .5rem;
+    width: 1.5rem; 
+    height: 1.5rem; 
+    color: #2b2b31; 
+    cursor: pointer; 
+}
+
+.search-input svg:hover {
+    color: #ff9933; 
+}
+
+
+/* Footer */
+
+.footer-text{
+    margin: 1rem;
+}
+.footer-text-header{
+    display: flex;
+}
+.footer-text-header h2{
+    font-size: 1.8rem;
+    font-weight: 100;
+    margin-left: .5rem;
+}
+
+/* Price card */
+.price-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+.price-card {
+    width: 22rem;
+    margin: 1.25rem;
+    padding: 1.5rem;
+    background-color: #2b2b31;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #e4e4e7;
+}
+.price-card:nth-child(1) {
+border-top: 3px solid #2b2b31  ;
+
+    }
+.price-card:nth-child(2) {
+border-top: 3px solid #0bad0b  ;
+}
+.price-card:nth-child(3) {
+border-top: 3px solid #ff9933;
+}
+.price-card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 1rem ;
+}
+.price-card_header h2 {
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+.price-card_header_price {
+    font-size: 1.5rem;
+    font-weight: 100;
+    color: #ff9933;
+    display: flex;
+    align-items: center;
+}
+
+.price-card_header_price h1{
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+.price-card_header_price p{
+    font-size: 1rem;
+}
+.price-card_header_green {
+    color: #0bad0b;
+    display: flex;
+    align-items: center;
+}
+.price-card_header_green h1{
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
+
+.price-card_list_item {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    border-bottom: 1px solid #090909;
+    padding-bottom: 1rem;
+    font-size: .9rem;
+}
+.price-card_list_item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+
+/* Last Line Footer */
+
+.last-line-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 4rem 6.2rem;
+    border-top: 1px solid #353535;
+    
+}
+.last-line-footer-items {
+    display: flex;
+    align-items: center;
+    margin: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: .9rem;
+}
+.last-line-footer-items:hover {
+    color: #ff9933;
+}
+
+.last-line-footer-items svg{
+    margin : 0.5rem;
+}
+.last-line-footer-items:last-child {
+    padding: 0;
+    border: 1px solid #ff9933;
+}
+
+.last-line-footer-items:hover:last-child {
+    background-color: #ff9933;
+    color: #1b1b1f;
+}
