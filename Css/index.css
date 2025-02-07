@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif; 
+    font-size: 1rem;
     background-color: #1b1b1f; 
     color: #e4e4e7; 
     line-height: 1.6;
@@ -63,6 +64,14 @@ svg {
     font-size: small;
     padding: 0.5rem 2rem;
 }
+.view-all{
+    background-color:#2b2b31 ;
+    border-radius: .5rem;
+    padding: .4rem ;
+}
+
+
+
 /* Header */
 .header {
     display: flex;
@@ -123,6 +132,290 @@ svg {
 .search-input svg:hover {
     color: #ff9933; 
 }
+
+
+/* Movie Card Container Big */
+.movies-big-container {
+    background-image: url('../Images/home/home__bg.jpg'); 
+    background-size: cover;  
+    background-repeat: no-repeat;
+    position: relative;
+    background-position: center;
+    
+}
+
+.movies-big-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); 
+}
+
+.movies-big-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3rem 7rem;
+   
+}
+
+.movies-big-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 100;
+    
+}
+
+.movies-big-nav {
+    display: flex;
+    gap: 0.5rem;
+    padding-right:4rem ;
+}
+.movies-big-nav svg{
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+
+.movies-card-big-list {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    justify-content: center; 
+    gap: 1.5rem;
+    
+}
+
+/*Movie-Card-Big */
+
+.movie-card-big{
+    flex: 1 1 calc(100% / 6 - 1rem); 
+    max-width: calc(100% / 6 - 1rem);
+    margin: 1rem .6rem 5rem;
+
+}
+
+.movie-card-big-image{
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 25rem; 
+    width: 100%; 
+    padding: 0.5rem; 
+    cursor: pointer;
+    border-radius: .5rem;
+    transition: transform 0.3s ease; 
+}
+.movie-card-big-image:hover {
+    transform: scale(1.05);
+}
+.movie-card-big-rating-green {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid #0bad0b;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .8rem;
+}
+.movie-card-big-rating-yellow {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid  #ff9933;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .8rem;
+}
+.movie-card-big-rating-red {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid red;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .8rem;
+}
+
+.movie-card-big-tittle{
+    font-size: 1.2rem;
+    font-weight: 100;
+    margin: 1rem 0 0 0;
+    cursor: pointer;
+}
+.movie-card-big-tittle:hover{
+    text-decoration: underline;
+}
+.movie-card-big-genre{
+    font-size: .7rem;
+    font-weight: 100;
+    margin: 0;
+    color: #ff9933;
+    cursor:pointer;
+}
+.movie-card-big-genre:hover{
+    text-decoration: underline;
+}
+
+/* New Items Section */
+
+.new-items-tittle{
+    border-bottom: 1px solid #353535;
+
+}
+.new-items-tittle h1 {
+    font-weight: 100;
+    margin-left: 1.5rem;
+
+}
+
+.new-items-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 2rem;
+    margin-left: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.new-items-list-item {
+    cursor: pointer;
+}
+.new-items-list-item:hover {
+    color: #ff9933;
+}
+
+/* Movie Card Medium */
+
+.new-items-cards-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;  
+    padding: 1rem;
+    margin-right: .5rem;
+}
+
+.movie-card-medium{
+    flex: 1 1 calc(100% / 7 - 1rem); 
+    max-width: calc(100% / 7 - 1rem);
+    margin: 1rem .6rem;
+    transition: transform 0.3s ease;
+}
+.movie-card-medium-image:hover {
+    transform: scale(1.05);
+}
+.movie-card-medium-image{
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 20rem; 
+    width: 100%; 
+    padding: 0.5rem; 
+    cursor: pointer;
+    border-radius: .5rem;
+}
+.movie-card-medium-rating-green {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid #0bad0b;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .7rem;
+}
+.movie-card-medium-rating-yellow {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid  #ff9933;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .7rem;
+}
+.movie-card-medium-rating-red {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid red;
+    background-color: #2b2b31;
+    opacity: 0.7;
+    font-size: .7rem;
+}
+
+.movie-card-medium-tittle{
+    font-size: 1rem;
+    font-weight: 100;
+    margin: 1rem 0 0 0;
+    cursor: pointer;
+}
+.movie-card-medium-tittle:hover{
+    text-decoration: underline;
+}
+.movie-card-medium-genre{
+    font-size: .7rem;
+    font-weight: 100;
+    margin: 0;
+    color: #ff9933;
+    cursor:pointer;
+}
+.movie-card-medium-genre:hover{
+    text-decoration: underline;
+}
+
+/* Expected premiere */
+
+.expected-premiere-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+}
+
+.expected-premiere-buttons{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.chevron-container {
+    display: flex;
+    gap: 1rem; 
+}
+
+.chevron-left, .chevron-right {
+    width: 1.5rem;  
+    height: 1.5rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.chevron-left svg, .chevron-right svg {
+    width: 1.5rem; 
+    height: 1.5rem;
+}
+
 
 
 /* Footer */
