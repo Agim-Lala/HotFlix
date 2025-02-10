@@ -136,12 +136,10 @@ svg {
 
 /* Movie Card Container Big */
 .movies-big-container {
-    background-image: url('../Images/home/home__bg.jpg'); 
     background-size: cover;  
     background-repeat: no-repeat;
     position: relative;
     background-position: center;
-    
 }
 
 .movies-big-container::before {
@@ -199,7 +197,7 @@ svg {
 }
 
 .movie-card-big-image{
-    background-size: cover; 
+   background-size: cover; 
     background-repeat: no-repeat;
     background-position: center;
     height: 25rem; 
