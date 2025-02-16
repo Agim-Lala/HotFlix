@@ -8,6 +8,21 @@ body {
     line-height: 1.6;
     overflow-x: hidden; 
 }
+h3 {
+    font-weight: 300;
+    font-size: 1.2rem;
+}
+h4 {
+    font-weight: 100;
+    font-size: .7rem;
+    opacity: .7;
+    margin-left: 1.5rem;
+}
+h5{
+    font-weight: 100;
+    font-size: .7rem;
+    margin: 0;
+}
 
 ul,ol,li {
     list-style: none;
@@ -15,12 +30,27 @@ ul,ol,li {
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+    color: #e4e4e7;
+}
+
+.grey-border-bottom{
+    border-bottom: 1px solid #353535;
+}
+.grey-border-top{
+    border-top: 1px solid #353535;
+}
+
+.margin-bottom0{
+    margin-bottom: 0;
+}
+
 /* SVG */
 svg {
     width: 1rem;
     height: 1rem;
     vertical-align: middle;
-    margin-right: .5rem;  
 }
 .green {
     fill: green;
@@ -36,7 +66,7 @@ svg {
 .btn {
     display: inline-block;
     padding: 0.5rem 1rem;
-    margin: 0.5rem;
+    margin: 1rem;
     border-radius: 0.5rem;
     text-decoration: none;
     color: #e4e4e7;
@@ -63,6 +93,7 @@ svg {
     border: 1px solid #ff9933;
     font-size: small;
     padding: 0.5rem 2rem;
+    margin-left: 3rem;
 }
 .view-all{
     background-color:#2b2b31 ;
@@ -107,7 +138,7 @@ svg {
     padding: 0.2rem; 
     width: 15rem;     
     background-color:#2b2b31; 
-    margin-right: 7rem;
+    margin-right: 4rem;
 }
 
 .search-input input {
@@ -128,9 +159,47 @@ svg {
     color: #2b2b31; 
     cursor: pointer; 
 }
-
 .search-input svg:hover {
-    color: #ff9933; 
+    color:#ff9933; 
+}
+
+.language{
+    cursor: pointer;
+    margin-right: 4rem;
+}
+.language:hover{
+ color: #ff9933;
+}
+
+/* Catalog Header */
+.catalog-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Catalog Bar */
+
+.catalog{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-bottom: 1rem;
+}
+.catalog-list{
+    display: flex;   
+}
+.content{
+    margin: .5rem 1.5rem;
+    display: flex;
+    justify-content: ceter;
+    align-items: center;
+    gap: .5rem;
+} 
+.content:hover{
+    cursor: pointer;
+    color: #ff9933;
 }
 
 
@@ -193,6 +262,7 @@ svg {
     flex: 1 1 calc(100% / 6 - 1rem); 
     max-width: calc(100% / 6 - 1rem);
     margin: 1rem .6rem 5rem;
+    position: relative;
 
 }
 
@@ -206,46 +276,35 @@ svg {
     cursor: pointer;
     border-radius: .5rem;
     transition: transform 0.3s ease; 
+    position: relative;
 }
 .movie-card-big-image:hover {
     transform: scale(1.05);
 }
-.movie-card-big-rating-green {
+.rating {
     display: flex;
     align-items:center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    position: absolute;
+    left: 1.5rem;
+    top: 1.5rem;
+    width: 2.2rem;
+    height: 2.2rem;
     border-radius: 50%;
-    border: 1px solid #0bad0b;
     background-color: #2b2b31;
     opacity: 0.7;
-    font-size: .8rem;
+    font-size: .9rem;
 }
-.movie-card-big-rating-yellow {
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: 1px solid  #ff9933;
-    background-color: #2b2b31;
-    opacity: 0.7;
-    font-size: .8rem;
+.green-rating{
+    border: 2px solid #0bad0b;
 }
-.movie-card-big-rating-red {
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: 1px solid red;
-    background-color: #2b2b31;
-    opacity: 0.7;
-    font-size: .8rem;
+.yellow-rating{
+    border: 2px solid #ff9933;
 }
+.red-rating{
+    border: 2px solid red;
+}
+
 
 .movie-card-big-tittle{
     font-size: 1.2rem;
@@ -299,16 +358,17 @@ svg {
 .new-items-cards-container{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;  
-    padding: 1rem;
-    margin-right: .5rem;
+    align-items: center;
+    gap: 1rem; 
+    margin-bottom: 3rem;
 }
 
 .movie-card-medium{
     flex: 1 1 calc(100% / 7 - 1rem); 
     max-width: calc(100% / 7 - 1rem);
-    margin: 1rem .6rem;
+    margin: 1rem 1rem;
     transition: transform 0.3s ease;
+    position: relative;
 }
 .movie-card-medium-image:hover {
     transform: scale(1.05);
@@ -319,45 +379,11 @@ svg {
     background-position: center;
     height: 20rem; 
     width: 100%; 
-    padding: 0.5rem; 
+    padding: .5rem; 
     cursor: pointer;
     border-radius: .5rem;
-}
-.movie-card-medium-rating-green {
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: 1px solid #0bad0b;
-    background-color: #2b2b31;
-    opacity: 0.7;
-    font-size: .7rem;
-}
-.movie-card-medium-rating-yellow {
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: 1px solid  #ff9933;
-    background-color: #2b2b31;
-    opacity: 0.7;
-    font-size: .7rem;
-}
-.movie-card-medium-rating-red {
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: 1px solid red;
-    background-color: #2b2b31;
-    opacity: 0.7;
-    font-size: .7rem;
+    position: relative;
+
 }
 
 .movie-card-medium-tittle{
@@ -386,7 +412,7 @@ svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 4rem 1.5rem 0;
 }
 
 .expected-premiere-buttons{
@@ -407,6 +433,7 @@ svg {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    
 }
 
 .chevron-left svg, .chevron-right svg {
@@ -414,6 +441,28 @@ svg {
     height: 1.5rem;
 }
 
+
+/* Pagination */
+
+.pagination {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    gap: 2rem;
+    padding: 4rem 0 4rem;    
+}
+
+.pagination a{
+    background-color: #2b2b31;
+    padding: .7rem 1.2rem;
+    border-radius: 10px;
+}
+.active{
+    border: 1px solid #ff9933;
+}
+.pagination a:hover{
+    border: 1px solid #ff9933;    
+}
 
 
 /* Footer */
@@ -440,7 +489,7 @@ svg {
 }
 .price-card {
     width: 22rem;
-    margin: 1.25rem;
+    margin: 4rem 1.25rem;
     padding: 1.5rem;
     background-color: #2b2b31;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -451,8 +500,7 @@ svg {
 }
 .price-card:nth-child(1) {
 border-top: 3px solid #2b2b31  ;
-
-    }
+}
 .price-card:nth-child(2) {
 border-top: 3px solid #0bad0b  ;
 }
@@ -515,9 +563,7 @@ border-top: 3px solid #ff9933;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 4rem 6.2rem;
-    border-top: 1px solid #353535;
-    
+    padding: 2rem;    
 }
 .last-line-footer-items {
     display: flex;
