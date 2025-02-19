@@ -5,7 +5,6 @@ body {
     font-size: 1rem;
     background-color: #1b1b1f; 
     color: #e4e4e7; 
-    line-height: 1.6;
     overflow-x: hidden; 
 }
 h3 {
@@ -41,9 +40,15 @@ a {
 .grey-border-top{
     border-top: 1px solid #353535;
 }
-
 .margin-bottom0{
-    margin-bottom: 0;
+    margin-bottom:0;
+}
+.primary-color{
+    color: #ff9933;
+} 
+
+.no-font-weight{
+    font-weight: 100;
 }
 
 /* SVG */
@@ -61,6 +66,8 @@ svg {
 .white {
     fill: white;
 }
+
+
 
 /* Buttons */
 .btn {
@@ -100,7 +107,21 @@ svg {
     border-radius: .5rem;
     padding: .4rem ;
 }
+ .trailer-btn{ 
+    display: flex;    
+    align-items: center;     
+    justify-content: center;    
+    width: 14rem; 
+    margin-left: 0;
+    padding: .9rem;
+ }
 
+ .send-btn{
+    width: 5rem;
+    margin-left: 0;
+    border: 3px solid #ff9933; 
+    
+ }
 
 
 /* Header */
@@ -122,6 +143,7 @@ svg {
 .header-list-item:last-child {
     padding: 1rem 1rem;
     margin-bottom: .5rem;
+  
 }
 .header-list-item:hover {
     color: #ff9933;
@@ -224,15 +246,12 @@ svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3rem 7rem;
-   
+    padding: 3rem 7rem ; 
 }
 
 .movies-big-title {
-    color: white;
     font-size: 1.5rem;
-    font-weight: 100;
-    
+    font-weight: 100;  
 }
 
 .movies-big-nav {
@@ -245,15 +264,12 @@ svg {
     width: 1.5rem;
     height: 1.5rem;
 }
-
-
 .movies-card-big-list {
     display: flex;
     flex-wrap: wrap;
     position: relative;
     justify-content: center; 
     gap: 1.5rem;
-    
 }
 
 /*Movie-Card-Big */
@@ -346,11 +362,10 @@ svg {
     margin-left: 1.5rem;
     padding-bottom: 1.5rem;
 }
-.new-items-list-item {
-    cursor: pointer;
-}
+
 .new-items-list-item:hover {
     color: #ff9933;
+    cursor: pointer;
 }
 
 /* Movie Card Medium */
@@ -359,13 +374,14 @@ svg {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem; 
+    padding: 1.5rem;
     margin-bottom: 3rem;
 }
-
+.movie-card-medium.movie-card-fixed {
+    width: 15rem; 
+}
 .movie-card-medium{
     flex: 1 1 calc(100% / 7 - 1rem); 
-    max-width: calc(100% / 7 - 1rem);
     margin: 1rem 1rem;
     transition: transform 0.3s ease;
     position: relative;
@@ -383,7 +399,6 @@ svg {
     cursor: pointer;
     border-radius: .5rem;
     position: relative;
-
 }
 
 .movie-card-medium-tittle{
@@ -463,6 +478,255 @@ svg {
 .pagination a:hover{
     border: 1px solid #ff9933;    
 }
+
+
+/* Details page grid 4x2 */
+
+.details-4x2{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    place-items: center;    
+}
+
+.details-tittle{
+    position: relative;
+    padding:3rem 5.7rem 0;
+}
+.details-4x2 ul{
+    position: relative;
+}
+
+.details-4x2 li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    font-size: .9rem;
+    flex-wrap: wrap;
+}
+.details-4x2 li p {
+    margin: 0;
+    display: contents;
+    padding-left: 5px;
+}
+.scrollable-box {
+    width: 20rem;
+    height: 11rem; 
+    margin-top: 2rem;
+    overflow-y: auto; 
+    background-color: #27272c; 
+    color: white; 
+    padding: .5rem;
+    border-radius: .5rem;
+    scrollbar-width: thin; 
+    scrollbar-color: #ff9933 transparent; 
+    position: relative;
+}
+
+.scrollable-box p {
+    margin: 0;
+    padding: 0.5rem;
+    font-size: .9rem;
+}
+
+.details-4x2 :nth-child(3){
+    grid-column: span 2;
+    margin-right: 4rem;
+    position: relative;
+}
+
+.play{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    cursor: pointer;
+    background: #e4e4e7;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px #b4b4b4;
+}
+.play:hover{
+    
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px #ff9933;
+
+}
+.play svg{
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #ff9933;
+}
+
+/* Details page grid 3x1 */
+
+.grid-3x1{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;    
+    margin: 2rem 0 3rem;
+}
+
+.details-movie-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    margin-right: 2rem;
+   
+}
+
+.movie-section {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+/* Comments Section */
+.comments-section {
+    padding: 1rem;
+    grid-column: span 2;
+}
+
+/* Comment Item */
+.comment {
+    border-radius:5px;
+    margin-bottom:10px;
+    border: 1px solid #3a3a3a;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: .5rem 0;
+}
+
+.avatar {
+    background:  #2b2b31;
+    padding: .5rem;
+    margin-right: 10px;
+    border-radius: 20%;
+}
+
+.avatar svg{
+    width: 1.2rem;
+    height:1.2rem;
+    cursor: pointer;
+}
+
+
+.timestamp {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.replied-comment{
+    margin-left: 2rem;
+}
+
+/* Comment Text */
+.comment-text {
+    padding: 20px;
+}
+
+/* Quoted Text */
+.quoted-comment{
+    margin-left: 2rem;
+}
+
+.quoted-text {
+    background:#2b2b31;
+    padding:1rem;
+    margin: 1rem;
+    border-radius: 5px;
+    font-style: italic;
+    position: relative;
+}
+.quote-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.2;
+}
+
+
+/* Comment Actions */
+.comment-actions {
+    padding: 1.2rem .9rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #ff9800;
+    border-top: 1px solid #3a3a3a;
+}
+.like-dislike{
+    display: flex;
+    gap:2rem;
+    align-items: center;
+}
+.like-dislike span{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color:#d4d4d4;
+    cursor: pointer;
+
+}
+.reply-quote{
+    display: flex;
+    gap:2rem;
+    align-items: center;
+}
+.reply-quote span{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color:#d4d4d4;
+    cursor: pointer;
+}
+
+
+/* Comment Input Box */
+.comment-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    padding: 1rem;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+}
+
+.comment-box textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background:  #2b2b31;
+    color: #ffffff;
+    resize: none;
+    height: 100px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Footer */
