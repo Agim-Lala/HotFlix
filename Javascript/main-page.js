@@ -68,12 +68,12 @@ function renderMovies() {
     const visibleMovies = movies.slice(currentIndex, currentIndex + MOVIES_PER_PAGE);
 
 
-    visibleMovies.forEach(movie => {
+    visibleMovies.forEach((movie,index )=> {
         const imageUrl = `http://localhost:5219${movie.imagePath}`;
         
         
         const movieCard = `
-            <div class="movie-card-big">
+            <div class="movie-card-big movie-card-animate" style="animation-delay: ${index * 0.2}s">
                 <div class="movie-card-big-image" style="background-image: url('${imageUrl}')">
                     <div class="rating ${getRatingClass(movie.rating)}">${5}</div> 
                 </div>
@@ -152,13 +152,15 @@ const renderCategoryMovies = () => {
     categoryMovies.forEach((movie) => {
         const imageUrl = `http://localhost:5219${movie.imagePath}`;
 
+        const genreSpans = movie.genres.map(genre => `<span class="movie-genre">${genre}</span>`).join(",");
+
         const movieCard = `
             <div class="movie-card-medium">
                 <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
                     <div class="rating ${getRatingClass(movie.rating)}">${8}</div>
                 </div>
                 <h2 class="movie-card-medium-title">${movie.title}</h2>
-                <p class="movie-card-medium-genre">${movie.genres.join(", ")}</p>
+                <p class="movie-card-medium-genre">${genreSpans}</p>
             </div>
         `;
         container.innerHTML += movieCard;
@@ -185,7 +187,7 @@ const setupCategoryListeners = () => {
                     fetchCategoryMovies(CATEGORY_IDS.CARTOONS);
                     break;
                 default:
-                    fetchCategoryMovies(); // Default to new releases
+                    fetchCategoryMovies();
             }
         });
     });

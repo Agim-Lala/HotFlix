@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Css/index.css">
-    <title>Document</title>
+    <title>HotFlix-Catalog</title>
 </head>
     <Header>
     <div class="header">
         <ul class="header-list">
-           <li class="header-list-item">HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+           <li class="header-list-item"> <a href="HotFlix.html"> HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
              </svg>
+            </a>
              </li>
            <li class="header-list-item">CATALOG <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -51,7 +52,7 @@
         <div class="movies-big-header">
             <h1> Catalog</h1>
             <div class="catalog-nav">
-                <h4>Home</h4>
+                <h4> <a href="HotFlix.html"> Home </a></h4>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-9">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                   </svg>
@@ -64,218 +65,59 @@
         <ul class="catalog-list">
            <li>
             <div><h4 class="margin-bottom0">GENRE :</h4>
-              <div class="content ">
-                <h5>ACTION/ADVENTURE</h5>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-              </div>
+                <div class="content">
+                    <select id="genre-select" class="dropdown">
+                        <option value="">All Genres</option>
+                        <option value="2">Action</option>
+                        <option value="1">Adventure</option>
+                        <option value="3">Romance</option>
+                        <option value="4">Thriller</option>
+                        <option value="5">Fantasy</option>
+                        <option value="7">Sci-Fi</option>
+                        <option value="6">Mystery</option>
+                    </select>
+                </div>
             </div>
            </li>
         
            <li>
-            <div><h4 class="margin-bottom0" >QUALITY :</h4>
-              <div class="content ">
-                <h5>HD 1080</h5>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-        
+            <div><h4 class="margin-bottom0">QUALITY :</h4>
+              <div class="content">
+              <div> 
+            <select id="quality-select" class="dropdown">
+                <option value="all">All</option>
+                <option value="1">HD 1080</option>
+                <option value="2">HD 720</option>
+                <option value="3">SD 480</option>
+            </select>
               </div>
             </div>
            </li>
            <li>
             <div><h4 class="margin-bottom0">RATING :</h4>
-              <div class="content ">
-                <h5>3.1 - 8.6</h5>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-        
+              <div class="content">
+                <input type="text" id="rating-input" class="input-field" placeholder="e.g. 3.1 - 8.6">
               </div>
             </div>
            </li>
            <li>
             <div><h4 class="margin-bottom0">RELEASE YEAR :</h4>
-              <div class="content ">
-                <h5>2007 - 2009</h5>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75H12a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-        
+              <div class="content">
+                <input type="text" id="year-input" class="input-field" placeholder="e.g. 2007 - 2009">
               </div>
             </div>
            </li>
         </ul>
-
-        <div class=" btn btn-primary view-all"> APPLY FILTER</div>
-
+    
+        <div class="btn btn-primary filter-btn" onclick="applyFilter()"> APPLY FILTER</div>
     </div>
 
-    <div class="new-items-cards-container">
+    <div class="new-items-cards-container" id="movies-container"></div>
 
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover6.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover2.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover3.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover4.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover5.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover6.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover7.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover8.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover9.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover10.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover11.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover12.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover13.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover14.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover15.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover16.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover17.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        <div class="movie-card-medium">
-            <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover18.jpg)">
-                <div class="rating green-rating">8</div>
-            </div>
-            <h2 class="movie-card-medium-tittle">Benched</h2>
-            <p class="movie-card-medium-genre">Action, Thriller</p>
-        </div>
-        
-        
 
-    </div>
+      
 
-    <div class="pagination">
-        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-          </svg>
-          
-          </a>
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-          </svg></a>
-    </div>
+    <div class="pagination"></div>
 
     <div class="expected-premiere-header grey-border-top">
         <h1>Expected Premiere</h1>
@@ -506,5 +348,6 @@
    </ul>
 
 </Footer>
+<script src="Javascript/catalog-page.js" ></script>
 
 </html>
