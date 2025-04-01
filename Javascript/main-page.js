@@ -63,25 +63,31 @@ function renderMovies() {
         console.error("Container not found");
         return;
     }
-    container.innerHTML = "";  
+    container.innerHTML = "";
 
     const visibleMovies = movies.slice(currentIndex, currentIndex + MOVIES_PER_PAGE);
 
-
-    visibleMovies.forEach((movie,index )=> {
+    visibleMovies.forEach((movie, index) => {
         const imageUrl = `http://localhost:5219${movie.imagePath}`;
-        
-        
-        const movieCard = `
-            <div class="movie-card-big movie-card-animate" style="animation-delay: ${index * 0.2}s">
-                <div class="movie-card-big-image" style="background-image: url('${imageUrl}')">
-                    <div class="rating ${getRatingClass(movie.rating)}">${5}</div> 
-                </div>
-                <h2 class="movie-card-big-title">${movie.title}</h2>
-                <p class="movie-card-big-genre">${movie.genres.join(", ")}</p>
+
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card-big', 'movie-card-animate');
+        movieCard.style.animationDelay = `${index * 0.2}s`;
+
+        movieCard.innerHTML = `
+            <div class="movie-card-big-image" style="background-image: url('${imageUrl}')">
+                <div class="rating ${getRatingClass(movie.rating)}">${5}</div> 
             </div>
+            <h2 class="movie-card-big-title">${movie.title}</h2>
+            <p class="movie-card-big-genre">${movie.genres.join(", ")}</p>
         `;
-        container.innerHTML += movieCard;
+
+        // Add click event listener to the movieCard element
+        movieCard.addEventListener('click', () => {
+            window.location.href = `MovieDetail.html?id=${movie.movieId}`;
+        });
+
+        container.appendChild(movieCard);
     });
 }
 function nextMovies() {
@@ -154,7 +160,10 @@ const renderCategoryMovies = () => {
 
         const genreSpans = movie.genres.map(genre => `<span class="movie-genre">${genre}</span>`).join(",");
 
-        const movieCard = `
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card-medium');
+
+        movieCard.innerHTML = `
             <div class="movie-card-medium">
                 <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
                     <div class="rating ${getRatingClass(movie.rating)}">${8}</div>
@@ -163,7 +172,11 @@ const renderCategoryMovies = () => {
                 <p class="movie-card-medium-genre">${genreSpans}</p>
             </div>
         `;
-        container.innerHTML += movieCard;
+        movieCard.addEventListener('click', () => {
+            window.location.href = `MovieDetail.html?id=${movie.movieId}`;
+        });
+
+        container.appendChild(movieCard);
     });
 };
 
@@ -200,3 +213,14 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchCategoryMovies();
     setupCategoryListeners();
 });
+
+const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+if (scrollToTopButton) {
+    scrollToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Optional: Adds smooth scrolling
+        });
+    });
+}

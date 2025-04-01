@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Css/index.css">
-    <title>Document</title>
+    <title>Details</title>
 </head>
 <Header>
     <div class="header">
         <ul class="header-list">
-           <li class="header-list-item">HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+           <li class="header-list-item"> <a href="HotFlix.html"> HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-             </svg>
+             </svg></a>
              </li>
-           <li class="header-list-item">CATALOG <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+           <li class="header-list-item"> <a href="Catalog.html">CATALOG <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-             </svg>
+             </svg></a>
              </li>
            <li class="header-list-item">PRICING PLAN</li>
    
@@ -42,16 +42,66 @@
        </div>
 </Header>
 <body>
+    
     <div class="movies-big-container" style="background-image: url('../Images/home/home__bg.jpg');">
         <div class="details-tittle">
-            <h1 class="no-font-weight margin-bottom0">  I Dream in Another Language</h1>
+            <h1 id="movieTitle" class="no-font-weight">Loading...</h1>
+        </div>
+    
+        <div class="details-4x2">
+            <div>
+                <div class="details-movie-card">
+                    <div id="movieCover" class="movie-card-big-image" style="background-image: url()">
+                        <div id="movieRating" class="rating "></div>
+                    </div>
+                    <div id="trailerButton" class="btn btn-primary trailer-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
+                        </svg>
+                        WATCH TRAILER
+                    </div>
+                </div>
+            </div>
+    
+            <div class="movie-details">
+                <ul>
+                    <li>Director: <p id="movieDirector"></p></li>
+                    <li>Cast: <p id="movieCast" class="cast primary-color"></p></li>
+                    <li>Genres: <p id="movieGenres" class="primary-color"></p></li>
+                    <li>Release Year: <p id="movieReleaseYear"></p></li>
+                    <li>Running Time: <p id="movieRunningTime"></p></li>
+                    <li>Country: <p id="movieCountry" class="primary-color"></p></li>
+                </ul>
+    
+                <div class="scrollable-box">
+                    <p id="movieDescription">Loading description...</p>
+                </div>
+            </div>
+    
+            <div>
+                <video id="movieVideo" width="700px" height="400px" style="border-radius:3%;" controls>
+                    <source src="Images/Videos/Movie.mp4" type="video/mp4">
+                    <source src="Images/Videos/Movie.mp4" type="video/ogg">
+                </video>
+                <div class="play">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+   <!-- <div class="movies-big-container" style="background-image: url('../Images/home/home__bg.jpg');">
+        <div class="details-tittle">
+            <h1 class="no-font-weight">I Dream in Another Language</h1>
         </div>       
 
         <div class="details-4x2">
 
             <div>
-                <div class="movie-card-medium movie-card-fixed">
-                    <div class="movie-card-medium-image" style="background-image: url(../Images/covers/cover7.jpg)">
+                <div class="details-movie-card">
+                    <div class="movie-card-big-image" style="background-image: url(../Images/covers/cover7.jpg)">
                         <div class="rating green-rating">8</div>
                     </div>
                     <div class="btn btn-primary trailer-btn "><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -61,7 +111,7 @@
                 </div>
             </div>
 
-            <div>
+            <div class="movie-details">
                 <ul>
                     <li>Director: <p>Vince Gilligan</p></li>
                     <li>Cast: <p class=" cast primary-color">Brian Cranston, Jesse Plemonts, Matt Jones, Jonathan Banks, Charles Baker, Tess Harper</p></li>
@@ -98,7 +148,7 @@
               
 
         </div>    
-    </div>
+    </div> -->
 
     <div class="new-items-tittle">
         <h1>Discover</h1>
@@ -364,15 +414,19 @@
     </div>
 
 </body>
+
 <Footer> 
      <ul class="last-line-footer grey-border-top">
     <li class="last-line-footer-items">About Us</li>
     <li class="last-line-footer-items">Contacts</li>
     <li class="last-line-footer-items">Privacy policy</li>
-    <li class="last-line-footer-items"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+    <li id="scrollToTopButton" class="last-line-footer-items"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
         <path fill-rule="evenodd" d="M8 14a.75.75 0 0 1-.75-.75V4.56L4.03 7.78a.75.75 0 0 1-1.06-1.06l4.5-4.5a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.75 4.56v8.69A.75.75 0 0 1 8 14Z" clip-rule="evenodd" />
       </svg>
       </li>
 </ul>
 </Footer>
+
+<script src="Javascript/movieDetails.js"></script>
+
 </html>

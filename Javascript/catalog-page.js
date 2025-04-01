@@ -25,6 +25,7 @@ function renderSkeleton(containerId, cardClass, cardCount) {
                 <p class="movie-card-medium-genre skeleton"></p>
             </div>
         `;
+        
     }
 }
 
@@ -84,14 +85,17 @@ function renderMovies() {
     const startIndex = (currentPage - 1) * MOVIES_PER_PAGE;
     const endIndex = startIndex + MOVIES_PER_PAGE;
     const pageMovies = movies.slice(startIndex, endIndex);
-
-    pageMovies.forEach(movie => {
+    
+    pageMovies.forEach((movie, index) => {
         const imageUrl = `http://localhost:5219${movie.imagePath}`;
+        
+        const movieCard = document.createElement('div');
+        movieCard.classList.add('movie-card-medium', 'movie-card-animate'); 
+        movieCard.style.animationDelay = `${index * 0.05}s`;
 
         const genreSpans = movie.genres.map(genre => `<span class="movie-genre">${genre} </span>`).join(",");
 
-
-        const movieCard = `
+        movieCard.innerHTML = `
             <div class="movie-card-medium">
                 <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
                     <div class="rating ${getRatingClass(movie.rating)}">${8}</div>
@@ -100,7 +104,12 @@ function renderMovies() {
                 <p class="movie-card-medium-genre">${genreSpans}</p>
             </div>
         `;
-        container.innerHTML += movieCard;
+        
+        movieCard.addEventListener('click', () => {
+            window.location.href = `MovieDetail.html?id=${movie.movieId}`;
+        });
+
+        container.appendChild(movieCard);
     });
 }
 
@@ -188,4 +197,16 @@ function renderPagination() {
         }
     });
     paginationContainer.appendChild(nextArrow);
+}
+
+
+const scrollToTopButton = document.getElementById('scrollToTopButton');
+
+if (scrollToTopButton) {
+    scrollToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Optional: Adds smooth scrolling
+        });
+    });
 }

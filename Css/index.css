@@ -112,8 +112,8 @@ svg {
     align-items: center;     
     justify-content: center;    
     width: 14rem; 
-    margin-left: 0;
-    padding: .9rem;
+    margin-left: 1rem;
+    padding: 1rem;
  }
 
  .send-btn{
@@ -424,18 +424,6 @@ svg {
     padding: 1.5rem;
     margin-bottom: 3rem;
 }
-.movie-card-medium.movie-card-fixed {
-    width: 15rem; 
-}
-.movie-card-medium{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.movie-card-medium-image:hover {
-    transform: scale(1.05);
-}
 .movie-card-medium-image{
     transition: transform .4s ease;
     background-size: cover; 
@@ -447,7 +435,9 @@ svg {
     border-radius: .5rem;
     position: relative;
 }
-
+.movie-card-medium-image:hover {
+    transform: scale(1.05);
+}
 .movie-card-medium-title{
     font-size: 1rem;
     font-weight: 100;
@@ -543,25 +533,35 @@ svg {
 .details-4x2{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    place-items: center;    
+    place-items: flex-start;    
+}
+.details-movie-card{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 26rem;
+    width: 15rem;
+    margin-left: 5rem;
 }
 
 .details-tittle{
     position: relative;
-    padding:3rem 5.7rem 0;
+    padding:3rem 4.5rem 0;
 }
-.details-4x2 ul{
+
+.movie-details{
     position: relative;
 }
 
-.details-4x2 li {
+.movie-details li {
     display: flex;
     align-items: flex-start;
     margin-bottom: 0.5rem;
     font-size: .9rem;
     flex-wrap: wrap;
 }
-.details-4x2 li p {
+.movie-details li p {
     margin: 0;
     display: contents;
     padding-left: 5px;
@@ -630,6 +630,7 @@ svg {
     display: grid;
     grid-template-columns: repeat(2, 1fr); 
     margin-right: 2rem;
+    gap: 1rem;
    
 }
 
