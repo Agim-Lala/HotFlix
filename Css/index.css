@@ -132,7 +132,7 @@ svg {
     display: flex;
     justify-content: flex-end;   
     align-items: center;
-    padding: 1rem 6.2rem;    
+    padding: 1rem 2rem;    
 }
 .header-list {
     display: flex;
@@ -197,6 +197,10 @@ svg {
 }
 .language:hover{
  color: #ff9933;
+}
+
+#dashboardBtn{
+    margin-right: 2rem;
 }
 
 /* Catalog Header */

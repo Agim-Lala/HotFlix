@@ -9,6 +9,11 @@
     <Header>
     <div class="header">
         <ul class="header-list">
+
+            <div id="dashboardBtn" style="display: none; text-align: center; cursor: pointer; margin-top: 0">
+                <div class="btn btn-primary btn-sign" onclick="goToDashboard()">Dashboard</div>
+            </div>
+
            <li class="header-list-item"> <a href="HotFlix.html"> HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
              </svg>
@@ -40,7 +45,25 @@
              </svg>
           </div>
    
-           <div class="btn btn-primary btn-sign"> SIGN IN</div>
+          <div id="auth-section">
+            <a href="SignIn.html" id="signInBtn" class="btn btn-primary btn-sign">Sign In</a>
+          
+            <div id="userInfo" style="display: none; text-align: center; cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="size-6" width="30" height="30" style="color: #fff;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 
+                  20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 
+                  21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+              <div id="usernameDisplay" style="margin-top: 5px; font-size: 0.9rem; color: #ccc;"></div>
+            </div>            
+        </div>
+        <div id="logoutBtn" style="display: none; text-align: center; cursor: pointer; margin-top: 10px;">
+            <div class="btn btn-primary btn-sign" onclick="logoutUser()">Logout</div>
+        </div>
+      </div>
         
          
    
@@ -348,7 +371,7 @@
    </ul>
 
 </Footer>
-
+<script src="Javascript/sign-in-sign-out.js"></script>
 <script src="Javascript/catalog-page.js" ></script>
 
 </html>
