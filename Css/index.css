@@ -653,10 +653,14 @@ svg {
 }
 
 /* Comment Item */
-.comment {
+.comment{
     border-radius:5px;
     margin-bottom:10px;
-    border: 1px solid #3a3a3a;
+}
+.comment-content {
+    border-radius:5px;
+    margin-bottom:10px;
+    border : 1px solid #3a3a3a;
 }
 
 .user-info {
@@ -671,12 +675,14 @@ svg {
     padding: .5rem;
     margin-right: 10px;
     border-radius: 20%;
+    margin-left: .5rem;
 }
 
 .avatar svg{
     width: 1.2rem;
     height:1.2rem;
     cursor: pointer;
+    
 }
 
 
@@ -692,7 +698,9 @@ svg {
 
 /* Comment Text */
 .comment-text {
-    padding: 20px;
+    padding: 30px 20px 20px;
+    margin-top: 1rem;
+
 }
 
 /* Quoted Text */
