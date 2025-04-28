@@ -1,20 +1,37 @@
 const API_URL = "http://localhost:5219/api";
-const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+const token = localStorage.getItem("token"); 
 
+let currentMovieId = null; // Store current movie id
+const dataLoaded = {
+    comments: false,
+    reviews: false,
+    photos: false
+};
+
+// Containers
+const tabContainer = document.getElementById('discoverTabs');
+const contentContainers = document.querySelectorAll('.tab-content');
+const commentsContainer = document.getElementById("commentsContainer");
+const reviewsContainer = document.getElementById("reviewsContainer");
+const photosContainer = document.getElementById("photosContainer");
+
+// --- DOMContentLoaded ENTRY POINT ---
 document.addEventListener("DOMContentLoaded", () => {
     const movieId = new URLSearchParams(window.location.search).get("id");
     if (movieId) {
-        fetchMovieData(movieId); // Assuming this function exists and fetches movie details
+        setupTabs(); 
+        fetchMovieData(movieId); 
         fetchComments(movieId);
+        loadActiveTabData();
     } else {
         console.error("Movie ID not found in URL.");
     }
 
+    // --- Comment submission ---
     const commentBox = document.querySelector(".comment-box textarea");
     const sendButton = document.querySelector(".comment-box .send-btn");
-    const commentsContainer = document.getElementById("commentsContainer"); 
 
-    sendButton.addEventListener("click", async () => {
+    sendButton?.addEventListener("click", async () => {
         const text = commentBox.value.trim(); // Changed 'content' to 'text' to match backend DTO
         if (!text) return;
 
@@ -26,12 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const payload = {
             movieId,
-            text, 
+            text
         };
 
         const quotedId = sendButton.getAttribute("data-quote-id");
         const repliedId = sendButton.getAttribute("data-reply-id");
-
         if (quotedId) payload.quotedCommentId = parseInt(quotedId);
         if (repliedId) payload.parentCommentId = parseInt(repliedId);
 
@@ -58,16 +74,126 @@ document.addEventListener("DOMContentLoaded", () => {
             fetchComments(movieId); // Re-fetch comments after successful post
         } catch (error) {
             console.error("Comment error:", error);
-            // Optionally display an error message to the user
         }
     });
-});
 
+    // --- Review submission
+    document.getElementById("submitReviewBtn")?.addEventListener("click", async () => {
+        const text = document.getElementById("reviewText")?.value.trim();
+        const rating = parseFloat(document.getElementById("reviewRating")?.value);
+
+        if (!text || !rating || isNaN(rating)) {
+            alert("Please enter review text and select a valid rating.");
+            return;
+        }
+
+        if (!token) {
+            alert("You must be logged in to post a review.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/reviews`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    movieId: currentMovieId,
+                    text: text,
+                    rating: rating
+                })
+            });
+
+            if (!response.ok) {
+                const errText = await response.text();
+                console.error("Failed to post review:", errText);
+                alert("Error posting review.");
+                return;
+            }
+
+            const newReview = await response.json();
+            reviewsContainer?.prepend(createReviewElement(newReview));
+            document.getElementById("reviewText").value = "";
+            document.getElementById("reviewRating").value = "";
+        } catch (error) {
+            console.error("Post review error:", error);
+            alert("Something went wrong.");
+        }
+    });
+
+    
+    // --- Rating Slider Display ---
+    const ratingSlider = document.getElementById("reviewRating");
+    const ratingValueDisplay = document.getElementById("ratingValue");
+    ratingSlider?.addEventListener("input", () => {
+        ratingValueDisplay.textContent = ratingSlider.value;
+    });
+
+     // Add event listeners for like and dislike buttons after rendering
+    
+
+}); // End DOMContentLoaded
+
+// --- TAB SETUP AND DATA LOADING ---
+function setupTabs() {
+    if (!tabContainer) return;
+
+    tabContainer.addEventListener('click', (event) => {
+        if (event.target && event.target.matches('.new-items-list-item')) {
+            const clickedTab = event.target;
+            const tabName = clickedTab.getAttribute('data-tab');
+
+            // Remove active class from all tabs and content
+            tabContainer.querySelectorAll('.new-items-list-item').forEach(tab => tab.classList.remove('active-tab'));
+            contentContainers.forEach(content => content.classList.remove('active-content'));
+
+            // Add active class to the clicked tab and corresponding content
+            clickedTab.classList.add('active-tab');
+            const activeContent = document.querySelector(`.tab-content[data-tab-content="${tabName}"]`);
+            if (activeContent) {
+                activeContent.classList.add('active-content');
+            }
+
+            // Load data for the activated tab if not already loaded
+            loadActiveTabData();
+        }
+    });
+}
+
+function loadActiveTabData() {
+    const activeTab = tabContainer.querySelector('.new-items-list-item.active-tab');
+    if (!activeTab || !currentMovieId) return;
+
+    const tabName = activeTab.getAttribute('data-tab');
+
+    switch (tabName) {
+        case 'comments':
+            if (!dataLoaded.comments) {
+                fetchComments(currentMovieId);
+            }
+            break;
+        case 'reviews':
+            if (!dataLoaded.reviews) {
+                fetchReviews(currentMovieId);
+            }
+            break;
+        case 'photos':
+            if (!dataLoaded.photos) {
+                fetchPhotos(currentMovieId); // Implement this if needed!
+            }
+            break;
+    }
+}
+
+// --- MOVIE FETCH & DISPLAY ---
 async function fetchMovieData(movieId) {
     try {
         const response = await fetch(`${API_URL}/movies/${movieId}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const movie = await response.json();
+        currentMovieId = movieId;
         populateMovieDetails(movie);
     } catch (error) {
         console.error("Failed to fetch movie details:", error);
@@ -84,7 +210,6 @@ function populateMovieDetails(movie) {
         document.getElementById('movieRating').textContent = '8';
         document.getElementById('movieRating').classList.add(getRatingClass(8));
     }
-
     document.getElementById('movieDirector').textContent = movie.directorName;
     document.getElementById('movieCast').textContent = movie.actors.join(', ');
     document.getElementById('movieGenres').textContent = movie.genres.join(', ');
@@ -94,15 +219,14 @@ function populateMovieDetails(movie) {
     document.getElementById('movieDescription').textContent = movie.description;
     document.getElementById('movieVideo').querySelector('source[type="video/mp4"]').src = 'Images/Videos/Movie.mp4'
     document.getElementById('movieVideo').querySelector('source[type="video/ogg"]').src = 'Images/Videos/Movie.mp4'
-
 }
-
 function getRatingClass(rating) {
     if (rating >= 8) return "green-rating";
     if (rating >= 6) return "yellow-rating";
     return "red-rating";
 }
 
+// --- COMMENTS ---
 async function fetchComments(movieId) {
     try {
         const response = await fetch(`${API_URL}/comments/movie/${movieId}`);
@@ -113,14 +237,14 @@ async function fetchComments(movieId) {
         }
         const comments = await response.json();
         renderComments(comments);
+        dataLoaded.comments = true;
     } catch (error) {
         console.error("Comment fetch error:", error);
-        // Optionally display an error message to the user
     }
 }
 
 function renderComments(comments) {
-    const container = document.getElementById("commentsContainer");
+    const container = commentsContainer;
     if (!container) {
         console.error("Comments container element not found.");
         return;
@@ -131,34 +255,34 @@ function renderComments(comments) {
         const div = document.createElement("div");
         div.className = "comment";
         if (level > 0) div.classList.add("replied-comment");
-    
-        // Quote HTML
+
+        // Quoted comment
         let quoteHTML = "";
         if (comment.quotedComment) {
             quoteHTML = `
-            <div class="quoted-comment">
-                <div class="user-info">
-                    <div class="avatar">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                <div class="quoted-comment">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="username">${comment.quotedComment.username}</span>
+                            <span class="timestamp">${new Date(comment.quotedComment.createdAt).toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="quoted-text">
+                        <svg class="quote-icon" viewBox="0 0 16 16" fill="#ff9933" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 10.4142L2.70711 14.7071L1.29289 13.2929L5 9.58579V9L1 9V2H7V10.4142Z" fill="#ff9933"></path>
+                            <path d="M9 9L13 9V9.58579L9.29289 13.2929L10.7071 14.7071L15 10.4142L15 2H9L9 9Z" fill="#ff9933"></path>
                         </svg>
-                    </div>
-                    <div>
-                        <span class="username">${comment.quotedComment.username}</span>
-                        <span class="timestamp">${new Date(comment.quotedComment.createdAt).toLocaleString()}</span>
+                        ${comment.quotedComment.text}
                     </div>
                 </div>
-                <div class="quoted-text">
-                    <svg class="quote-icon" viewBox="0 0 16 16" fill="#ff9933" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 10.4142L2.70711 14.7071L1.29289 13.2929L5 9.58579V9L1 9V2H7V10.4142Z" fill="#ff9933"></path>
-                        <path d="M9 9L13 9V9.58579L9.29289 13.2929L10.7071 14.7071L15 10.4142L15 2H9L9 9Z" fill="#ff9933"></path>
-                    </svg>
-                    ${comment.quotedComment.text}
-                </div>
-            </div>
             `;
         }
-    
+        // Main comment
         div.innerHTML = `
             <div class="user-info">
                 <div class="avatar">
@@ -171,12 +295,9 @@ function renderComments(comments) {
                     <span class="timestamp">${new Date(comment.createdAt).toLocaleString()}</span>
                 </div>
             </div>
-    
             <div class="comment-content">
                 ${quoteHTML}
-    
                 <p class="comment-text">${comment.text}</p>
-    
                 <div class="comment-actions">
                     <div class="like-dislike">
                         <span class="like-button" data-comment-id="${comment.commentId}">
@@ -210,18 +331,15 @@ function renderComments(comments) {
                 </div>
             </div>
         `;
-    
+
         container.appendChild(div);
-    
+
         if (comment.replies && comment.replies.length > 0) {
             comment.replies.forEach((child) => render(child, level + 1));
         }
     }
-    
-
     comments.forEach((c) => render(c));
 
-    // Add event listeners for like and dislike buttons after rendering
     const likeButtons = container.querySelectorAll(".like-button");
     likeButtons.forEach(button => {
         button.addEventListener("click", async () => {
@@ -238,6 +356,70 @@ function renderComments(comments) {
         });
     });
 }
+
+
+    
+
+// --- REVIEWS ---
+async function fetchReviews(movieId) {
+    if (!reviewsContainer) return;
+    reviewsContainer.innerHTML = '<p>Loading reviews...</p>';
+    try {
+        const response = await fetch(`${API_URL}/reviews/movie/${movieId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        if (!response.ok) {
+            console.error("Failed to load reviews:", response.statusText);
+            reviewsContainer.innerHTML = '<p class="error-message">Could not load reviews.</p>';
+            throw new Error("Failed to load reviews");
+        }
+        const reviews = await response.json();
+        renderReviews(reviews);
+        dataLoaded.reviews = true;
+    } catch (error) {
+        console.error("Review fetch error:", error);
+        reviewsContainer.innerHTML = '<p class="error-message">Could not load reviews.</p>';
+    }
+}
+
+// --- Render Reviews Helper ---
+function renderReviews(reviews) {
+    if (!reviewsContainer) return;
+    reviewsContainer.innerHTML = ""; // Clear loading indicator or previous reviews
+
+    if (reviews && reviews.length > 0) {
+        reviews.forEach(review => {
+            reviewsContainer.appendChild(createReviewElement(review));
+        });
+    } 
+}
+
+// --- Create Review Element Helper ---
+function createReviewElement(review) {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    const formattedDate = new Date(review.createdAt).toLocaleString();
+    const displayRating = Math.round(review.rating * 10) / 10;
+    div.innerHTML = `
+        <div class="user-info">
+            <div class="avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+            </div>
+            <div>
+                <strong>${review.username || 'Anonymous'}</strong>
+            </div>
+            <span class="review-rating">Rating: ${displayRating}/10</span>
+        </div>
+        <p class="review-text">${review.text}</p>
+        <div class="review-timestamp">${formattedDate}</div>
+    `;
+    return div;
+}   
 
 function replyToComment(commentId) {
     const sendButton = document.querySelector(".comment-box .send-btn");
