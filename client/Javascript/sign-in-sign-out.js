@@ -67,7 +67,7 @@ function logoutUser() {
 
 // Redirect to dashboard
 function goToDashboard() {
-    window.location.href = "http://localhost:3000/dashboard";
+    window.location.href = "http://localhost:5173";
 }
 
 // Check login state on page load

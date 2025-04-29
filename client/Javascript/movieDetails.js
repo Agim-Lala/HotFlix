@@ -202,7 +202,7 @@ async function fetchMovieData(movieId) {
 
 function populateMovieDetails(movie) {
     document.getElementById('movieTitle').textContent = movie.title;
-    document.getElementById('movieCover').style.backgroundImage = `url(${movie.imagePath})`;
+    document.getElementById('movieCover').style.backgroundImage = `url(/client${movie.imagePath})`;
     if (movie.rating !== undefined && typeof movie.rating === 'number') {
         document.getElementById('movieRating').textContent = movie.rating;
         document.getElementById('movieRating').classList.add(getRatingClass(movie.rating));
