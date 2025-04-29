@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../client/Css/index.css">
+    <title>Details</title>
+</head>
+<Header>
+    <div class="header">
+        <ul class="header-list">
+
+            <div id="dashboardBtn" style="display: none; text-align: center; cursor: pointer; margin-top: 0">
+                <div class="btn btn-primary btn-sign" onclick="goToDashboard()">Dashboard</div>
+            </div>
+
+           <li class="header-list-item"> <a href="/client/HotFlix.html"> HOME <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+             </svg></a>
+             </li>
+           <li class="header-list-item"> <a href="/client/Catalog.html">CATALOG <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+             </svg></a>
+             </li>
+           <li class="header-list-item">PRICING PLAN</li>
+   
+           <li class="header-list-item"><svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+          </svg>
+          
+             </li>
+        </ul>
+            
+        
+           <div class="search-input">
+               <input type="text" placeholder="Search..." >
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" fill="white" class="size-5">
+                   <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
+                 </svg>
+                 
+           </div>
+   
+           <div id="auth-section">
+            <a href="/client/SignIn.html" id="signInBtn" class="btn btn-primary btn-sign">Sign In</a>
+          
+            <div id="userInfo" style="display: none; text-align: center; cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="size-6" width="30" height="30" style="color: #fff;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 
+                  20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 
+                  21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+              <div id="usernameDisplay" style="margin-top: 5px; font-size: 0.9rem; color: #ccc;"></div>
+            </div>            
+        </div>
+        <div id="logoutBtn" style="display: none; text-align: center; cursor: pointer; margin-top: 10px;">
+            <div class="btn btn-primary btn-sign" onclick="logoutUser()">Logout</div>
+        </div>
+      </div>
+        
+         
+   
+       </div>
+</Header>
+<body>
+    
+    <div class="movies-big-container" style="background-image: url('../client/Images/home/home__bg.jpg');">
+        <div class="details-tittle">
+            <h1 id="movieTitle" class="no-font-weight">Loading...</h1>
+        </div>
+    
+        <div class="details-4x2">
+            <div>
+                <div class="details-movie-card">
+                    <div id="movieCover" class="movie-card-big-image" style="background-image: url()">
+                        <div id="movieRating" class="rating "></div>
+                    </div>
+                    <div id="trailerButton" class="btn btn-primary trailer-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
+                        </svg>
+                        WATCH TRAILER
+                    </div>
+                </div>
+            </div>
+    
+            <div class="movie-details">
+                <ul>
+                    <li>Director: <p id="movieDirector"></p></li>
+                    <li>Cast: <p id="movieCast" class="cast primary-color"></p></li>
+                    <li>Genres: <p id="movieGenres" class="primary-color"></p></li>
+                    <li>Release Year: <p id="movieReleaseYear"></p></li>
+                    <li>Running Time: <p id="movieRunningTime"></p></li>
+                    <li>Country: <p id="movieCountry" class="primary-color"></p></li>
+                </ul>
+    
+                <div class="scrollable-box">
+                    <p id="movieDescription">Loading description...</p>
+                </div>
+            </div>
+    
+            <div>
+                <video id="movieVideo" width="700px" height="400px" style="border-radius:3%;" controls>
+                    <source src="/client/Images/Videos/Movie.mp4" type="video/mp4">
+                    <source src="/client/Images/Videos/Movie.mp4" type="video/ogg">
+                </video>
+                <div class="play">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+ 
+
+    <div class="new-items-tittle">
+        <h1>Discover</h1>
+        <ul class="new-items-list" id="discoverTabs">
+            <li class="new-items-list-item active-tab" data-tab="comments">COMMENTS</li>
+            <li class="new-items-list-item" data-tab="reviews">REVIEWS</li>
+            <li class="new-items-list-item" data-tab="photos">PHOTOS</li>
+        </ul>
+    </div>
+    
+
+    <div class="grid-3x1">
+
+        <div id="commentsSectionContent" class="tab-content active-content" data-tab-content="comments">
+            <div class="comments-section"> <div id="commentsContainer">
+                    </div>
+                <div class="comment-box">
+                    <textarea placeholder="Add comment"></textarea>
+                    <div class="btn btn-primary send-btn">SEND</div>
+                </div>
+            </div>
+        </div>
+    
+        <div id="reviewsSectionContent" class="tab-content" data-tab-content="reviews">
+            <div class="reviews-section">
+                <h2>Reviews</h2>
+                <div id="addReviewSection" class="review-box">
+                    <textarea id="reviewText" placeholder="Write your review..."></textarea>
+                    <label class="rating-label" for="reviewRating">Rating:</label>
+                    <input type="range" min="1" max="10" step="0.1" id="reviewRating" />
+                    <span id="ratingValue">5</span>
+                    <div id="submitReviewBtn" class="btn btn-primary send-btn">Submit Review</div>
+                </div>
+                <div id="reviewsContainer">
+                    <!-- reviews get rendered here -->
+                </div>
+            </div>
+        </div>
+    
+        <div id="photosSectionContent" class="tab-content" data-tab-content="photos">
+            <div class="photos-section"> <h2>Photos</h2>
+                <div id="photosContainer">
+                    <p>Photos feature coming soon.</p>
+                </div>
+            </div>
+        </div>
+        
+
+
+        <div class="related-section">
+            <h1 class="related-header">You may also like ...</h1>
+            <div class="details-movie-container">
+                <div class="movie-card-medium ">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover6.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+                <div class="movie-card-medium ">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover2.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+                <div class="movie-card-medium">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover3.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+                <div class="movie-card-medium">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover4.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+                <div class="movie-card-medium">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover5.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+                <div class="movie-card-medium">
+                    <div class="movie-card-medium-image" style="background-image: url(../client/Images/covers/cover6.jpg)">
+                        <div class="rating green-rating">8</div>
+                    </div>
+                    <h2 class="movie-card-medium-tittle">Benched</h2>
+                    <p class="movie-card-medium-genre">Action, Thriller</p>
+                </div>
+            </div>
+                </div>
+        </div>
+
+    </div>
+
+</body>
+
+<Footer> 
+     <ul class="last-line-footer grey-border-top">
+    <li class="last-line-footer-items">About Us</li>
+    <li class="last-line-footer-items">Contacts</li>
+    <li class="last-line-footer-items">Privacy policy</li>
+    <li id="scrollToTopButton" class="last-line-footer-items"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+        <path fill-rule="evenodd" d="M8 14a.75.75 0 0 1-.75-.75V4.56L4.03 7.78a.75.75 0 0 1-1.06-1.06l4.5-4.5a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.75 4.56v8.69A.75.75 0 0 1 8 14Z" clip-rule="evenodd" />
+      </svg>
+      </li>
+</ul>
+</Footer>
+<script src="/client/Javascript/sign-in-sign-out.js"></script>
+<script src="/client/Javascript/movieDetails.js"></script>
+
+</html>
