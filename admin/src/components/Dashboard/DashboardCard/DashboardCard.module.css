@@ -1,0 +1,90 @@
+/* Card container */
+.cardContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  color: white;
+  min-height: 300px;
+  border: none;
+}
+
+/* Header */
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+  padding-bottom: 10px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.reloadIcon {
+  color: white;
+  font-size: 18px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.viewAllButton {
+  background: #141414;
+  border: none;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.viewAllButton:hover {
+  background: #2a2a2a;
+}
+
+.customTable {
+  margin-top: 1rem;
+  
+}
+
+:global(.custom-table .ant-table-thead > tr > th::before) {
+  height: 0 !important;
+}
+
+
+:global(.custom-table .ant-table) {
+  border-bottom: none !important;
+  color: #ffffff;
+  background: transparent;
+  
+}
+
+:global(.custom-table .ant-table-thead > tr > th) {
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: none !important;
+  border-right: none !important;
+  font-weight: 500;
+  font-size: 12px;
+  background: transparent;
+  
+}
+
+:global(.custom-table .ant-table-tbody > tr > td) {
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: transparent;
+  color: white;
+  
+}
+
+:global(.custom-table .ant-table-tbody > tr:hover > td) {
+  background-color: rgb(46, 44, 44) !important;
+  cursor: pointer;
+}

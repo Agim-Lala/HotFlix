@@ -1,0 +1,86 @@
+.sidebar {
+    background: #1c1c1c;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .sidebarHeader {
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .role {
+    color: white;
+    font-size: 9px;
+    opacity: 0.8;
+  }
+  
+  .name {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .logoutBtn {
+    border: 2px solid #ff9933;
+    color: #fff;
+    background: transparent;
+  }
+
+  .logoutBtn:hover {
+    background: #ff9933 !important;
+    color: #141414 !important;
+    border: 2px solid #ff9933 !important;
+  }
+  
+  .menu {
+    background: #1c1c1c;
+  }
+  
+  .layoutBackground {
+  background: #1c1c1c;
+  padding: 24px;
+  }
+
+  .menuItem {
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .menuItem :global(.anticon) {
+    color: white;
+  }
+
+  .menuItem:hover :global(.anticon) {
+    color: white;
+  }
+  
+  :global(.ant-menu-dark) :global(.ant-menu-item-selected).menuItem {
+    color: #ff9933;
+    background-color: transparent;
+  }
+  
+  :global(.ant-menu-dark) :global(.ant-menu-item-selected).menuItem :global(.anticon) {
+    color: #ff9933;
+  }
+  
+  :global(.ant-menu-dark) .menuItem:hover {
+    color: white;
+    background-color: #e0a971 !important;
+  }
+  
+  :global(.ant-menu-dark) .menuItem:hover :global(.anticon) {
+    color: white;
+  }
+  
