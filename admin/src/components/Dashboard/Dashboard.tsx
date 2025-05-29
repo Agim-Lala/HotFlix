@@ -22,7 +22,7 @@ import { getReviewsSortedById, } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
 
 
-export const metric_Items = [
+export const metricItems = [
   {
     title: "Unique Views This Month",
     value: "5678",
@@ -122,9 +122,7 @@ const Dashboard = () => {
       </div>
 
       <div className={styles.metricCardsContainer}>
-        {[
-          ...metric_Items,
-        ].map((item, index) => (
+        {metricItems.map((item, index) => (
           <div key={index} className={styles.metricCard}>
             <div>
               <div className={styles.metricTitle}>{item.title}</div>
