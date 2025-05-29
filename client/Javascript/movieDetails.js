@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:5219/api";
 const token = localStorage.getItem("token"); 
 
-let currentMovieId = null; // Store current movie id
+let currentMovieId = null; 
 const dataLoaded = {
     comments: false,
     reviews: false,
@@ -15,14 +15,99 @@ const commentsContainer = document.getElementById("commentsContainer");
 const reviewsContainer = document.getElementById("reviewsContainer");
 const photosContainer = document.getElementById("photosContainer");
 
+function getCurrentUserId() {
+     const token = localStorage.getItem("token");
+     console.debug("getCurrentUserId - Token:", token);
+     if (token) {
+        try {
+           const base64Url = token.split('.')[1];
+           const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+           const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+               return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+           }).join(''));
+
+           const payload = JSON.parse(jsonPayload);
+           console.debug("getCurrentUserId - Parsed Payload Object:", payload);
+
+          
+           const userIdClaimValue = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+           const userId = parseInt(userIdClaimValue) || null;
+           
+
+           return userId; 
+        } catch (e) {
+           console.error("getCurrentUserId - Error decoding or parsing token:", e);
+           return null;
+        }
+     }
+     console.debug("getCurrentUserId - No token found.");
+     return null;
+}
+
+async function recordMovieView(movieId) {
+    const viewApiUrl = `${API_URL}/Movies/recordView`; 
+
+    const userId = getCurrentUserId();
+
+    
+    if (userId === null) {
+        console.warn("User not logged in. View will not be recorded for a specific user.");
+        
+        return; 
+    }
+
+
+    const sessionViewKey = `movie_${movieId}_user_${userId}_viewed_details_session`;
+    const isViewRecordedForSession = sessionStorage.getItem(sessionViewKey) === 'true';
+
+    if (isViewRecordedForSession) {
+        console.debug(`View already recorded for movie ${movieId} in this session.`);
+        return; 
+    }
+
+    if (!movieId) {
+        console.error("Cannot record view: Movie ID is missing.");
+        return;
+    }
+
+    console.debug(`Attempting to record view for movie ${movieId} by user ${userId}...`);
+
+    try {
+        const response = await fetch(viewApiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            
+            body: JSON.stringify(parseInt(movieId))
+        });
+
+        if (response.ok) { 
+            console.debug(`View recorded successfully for movie ${movieId}`);
+            sessionStorage.setItem(sessionViewKey, 'true');
+        } else {
+            
+             const errorDetail = response.headers.get("content-type")?.includes("application/json")
+                               ? await response.json() : await response.text();
+            console.error(`Failed to record view for movie ${movieId}. Status: ${response.status}. Details:`, errorDetail);
+        }
+    } catch (error) {
+        console.error(`Network or unexpected error recording view for movie ${movieId}:`, error);
+    }
+}
+
 // --- DOMContentLoaded ENTRY POINT ---
-document.addEventListener("DOMContentLoaded", () => {
-    const movieId = new URLSearchParams(window.location.search).get("id");
+    document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get("id");    
     if (movieId) {
         setupTabs(); 
         fetchMovieData(movieId); 
         fetchComments(movieId);
         loadActiveTabData();
+        recordMovieView(movieId); 
     } else {
         console.error("Movie ID not found in URL.");
     }
