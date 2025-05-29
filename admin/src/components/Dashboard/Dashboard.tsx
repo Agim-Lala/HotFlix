@@ -21,6 +21,30 @@ import {
 import { getReviewsSortedById, } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
 
+
+export const metric_Items = [
+  {
+    title: "Unique Views This Month",
+    value: "5678",
+    icon: <ColumnHeightOutlined className={styles.metricIcon} />,
+  },
+  {
+    title: "Items Added This Month",
+    value: "172",
+    icon: <FileAddOutlined className={styles.metricIcon} />,
+  },
+  {
+    title: "New Comments",
+    value: "2573",
+    icon: <MessageOutlined className={styles.metricIcon} />,
+  },
+  {
+    title: "New Reviews",
+    value: "1021",
+    icon: <StarOutlined className={styles.metricIcon} />,
+  },
+];
+
 const movieColumnsRating = [
   { title: "ID", dataIndex: "movieId", key: "movieId" },
   { title: "Title", dataIndex: "title", key: "title" },
@@ -40,7 +64,6 @@ const movieColumnsRating = [
     ),
   },
 ];
-
 const movieColumnsLatest = [
   { title: "ID", dataIndex: "movieId", key: "movieId" },
   { title: "Title", dataIndex: "title", key: "title" },
@@ -64,7 +87,6 @@ const movieColumnsLatest = [
   },
 }
 ];
-
 const userColumns = [
   { title: "ID", dataIndex: "id", key: "id" },                
   { title: "Full Name", dataIndex: "fullName", key: "fullName" },
@@ -101,26 +123,7 @@ const Dashboard = () => {
 
       <div className={styles.metricCardsContainer}>
         {[
-          {
-            title: "Unique Views This Month",
-            value: "5678",
-            icon: <ColumnHeightOutlined className={styles.metricIcon} />,
-          },
-          {
-            title: "Items Added This Month",
-            value: "172",
-            icon: <FileAddOutlined className={styles.metricIcon} />,
-          },
-          {
-            title: "New Comments",
-            value: "2573",
-            icon: <MessageOutlined className={styles.metricIcon} />,
-          },
-          {
-            title: "New Reviews",
-            value: "1021",
-            icon: <StarOutlined className={styles.metricIcon} />,
-          },
+          ...metric_Items,
         ].map((item, index) => (
           <div key={index} className={styles.metricCard}>
             <div>
@@ -131,6 +134,7 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+      
 
       <div className={styles.dashboardGrid}>
         <DashboardCard
@@ -152,7 +156,7 @@ const Dashboard = () => {
           icon={<UserOutlined className={styles.dashboardGridIcon} />}
           columns={userColumns}
           fetchData={async () => await getUsersSortedByCreatedAt()}
-          rowKey="Id"
+          rowKey="id"
         />
         <DashboardCard
           title="Latest Reviews"

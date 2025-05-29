@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:5219/api";
 const token = localStorage.getItem("token"); 
 
-let currentMovieId = null; // Store current movie id
+let currentMovieId = null; 
 const dataLoaded = {
     comments: false,
     reviews: false,
@@ -17,7 +17,7 @@ const photosContainer = document.getElementById("photosContainer");
 
 function getCurrentUserId() {
      const token = localStorage.getItem("token");
-     console.log("getCurrentUserId - Token:", token);
+     console.debug("getCurrentUserId - Token:", token);
      if (token) {
         try {
            const base64Url = token.split('.')[1];
@@ -27,7 +27,7 @@ function getCurrentUserId() {
            }).join(''));
 
            const payload = JSON.parse(jsonPayload);
-           console.log("getCurrentUserId - Parsed Payload Object:", payload);
+           console.debug("getCurrentUserId - Parsed Payload Object:", payload);
 
           
            const userIdClaimValue = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
@@ -41,7 +41,7 @@ function getCurrentUserId() {
            return null;
         }
      }
-     console.log("getCurrentUserId - No token found.");
+     console.debug("getCurrentUserId - No token found.");
      return null;
 }
 
@@ -62,7 +62,7 @@ async function recordMovieView(movieId) {
     const isViewRecordedForSession = sessionStorage.getItem(sessionViewKey) === 'true';
 
     if (isViewRecordedForSession) {
-        console.log(`View already recorded for movie ${movieId} in this session.`);
+        console.debug(`View already recorded for movie ${movieId} in this session.`);
         return; 
     }
 
@@ -71,7 +71,7 @@ async function recordMovieView(movieId) {
         return;
     }
 
-    console.log(`Attempting to record view for movie ${movieId} by user ${userId}...`);
+    console.debug(`Attempting to record view for movie ${movieId} by user ${userId}...`);
 
     try {
         const response = await fetch(viewApiUrl, {
@@ -85,7 +85,7 @@ async function recordMovieView(movieId) {
         });
 
         if (response.ok) { 
-            console.log(`View recorded successfully for movie ${movieId}`);
+            console.debug(`View recorded successfully for movie ${movieId}`);
             sessionStorage.setItem(sessionViewKey, 'true');
         } else {
             
