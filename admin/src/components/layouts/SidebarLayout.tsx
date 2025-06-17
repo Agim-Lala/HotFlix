@@ -38,7 +38,6 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
   </div>
 
  <SidebarMenu />
-
 </Sider>
 
 <Layout>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export enum SortFields {
-  UserId = "UserId",    
+  Id = "Id",    
   Username = "Username",
   Email = "Email",
   CreatedAt = "CreatedAt",
@@ -23,23 +23,25 @@ interface UserQueryOptions {
 }
 
 export interface User {
-  Id: number;                
-  FirstName: string;
-  LastName: string;
-  Username: string;
-  FullName?: string;
-  Email: string;
-  CreatedAt?: string;
-  CommentCount?: number;
-  ReviewCount?: number;
-  Status?: string;  
+  id: number;                
+  firstName: string;
+  lastName: string;
+  username: string;
+  fullName?: string;
+  email: string;
+  createdAt?: string;
+  commentCount?: number;
+  reviewCount?: number;
+  status: 'Banned' | 'Approved';
+  role: string;  
+  subscriptionPlanId?: number;
 }
 
 export const fetchUsers = async (
   options: UserQueryOptions = {}
 ): Promise<PaginatedUserResponse> => {
   const {
-    sortBy = SortFields.UserId,
+    sortBy = SortFields.Id,
     ascending = false,
     page,
     pageSize,
@@ -65,4 +67,21 @@ export const fetchUsers = async (
 export const getUsersSortedByCreatedAt = async () => {
   const response = await fetchUsers({ sortBy: SortFields.CreatedAt, ascending: false });
   return response.users;
+};
+
+export const getUserById = async (id: number): Promise<User> => {
+  const response = await axios.get(`http://localhost:5219/api/auth/${id}`);
+  return response.data;
+};
+
+export const updateUserProfile = async (id: number, data: Partial<User>) => {
+  return axios.patch(`http://localhost:5219/api/auth/${id}`, data);
+};
+
+export const updateUserPassword = async (id: number,oldPassword: string,newPassword: string, confirmNewPassword: string) => {
+  return axios.post(`http://localhost:5219/api/auth/${id}/change-password`, {
+    oldPassword,
+    newPassword,
+    confirmNewPassword
+  });
 };
