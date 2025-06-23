@@ -1,100 +1,88 @@
-import React, { useState } from 'react';
-import { Input, Select, Button, message } from 'antd';
-import { User,updateUserProfile } from '../../../api/userApi';
-import { useEffect } from 'react';
-import styles from './UserProfileForm.module.css'; 
-
+import React, { useState, useEffect, useRef } from "react";
+import { Input, Select, Button, message } from "antd";
+import { User, updateUserProfile } from "../../../api/userApi";
+import styles from "./UserProfileForm.module.css";
 
 interface UserProfileFormProps {
   user: User;
   userId: number;
   onSave: (updatedUser: User) => void;
 }
- const UserProfileForm: React.FC<UserProfileFormProps> = ({ user,userId, onSave }) => {
-   const [success, setSuccess] = useState('');
+const UserProfileForm: React.FC<UserProfileFormProps> = ({
+  user,
+  userId,
+  onSave,
+}) => {
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    role: "",
-    subscriptionPlanId: user.subscriptionPlanId || 1, 
-  });
-  
+  const formRef = useRef<HTMLFormElement>(null);
 
- 
- useEffect(() => {
-  if (user) {
-    setFormData({
-      username: user.username || '',
-      email: user.email || '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      role:user.role || 'user', 
-      subscriptionPlanId: user.subscriptionPlanId || 1,
-    });
-  }
-}, [user]);
+  useEffect(() => {
+    if (user && formRef.current) {
+      const form = formRef.current;
+      (form.elements.namedItem("username") as HTMLInputElement).value =
+        user.username || "";
+      (form.elements.namedItem("email") as HTMLInputElement).value =
+        user.email || "";
+      (form.elements.namedItem("firstName") as HTMLInputElement).value =
+        user.firstName || "";
+      (form.elements.namedItem("lastName") as HTMLInputElement).value =
+        user.lastName || "";
+      (form.elements.namedItem("role") as HTMLSelectElement).value =
+        user.role || "user";
+      (
+        form.elements.namedItem("subscriptionPlanId") as HTMLSelectElement
+      ).value = String(user.subscriptionPlanId || 1);
+    }
+  }, [user]);
 
-  const handleChange = (key: keyof User, value: any) => {
-    setFormData({ ...formData, [key]: value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formRef.current) return;
+
+    const form = new FormData(formRef.current);
+    const data = {
+      username: form.get("username") as string,
+      email: form.get("email") as string,
+      firstName: form.get("firstName") as string,
+      lastName: form.get("lastName") as string,
+      role: form.get("role") as string,
+      subscriptionPlanId: Number(form.get("subscriptionPlanId")),
+    };
+
     setLoading(true);
-    setSuccess('');
+    setSuccess("");
     try {
-      await updateUserProfile(userId, formData);
-      setSuccess('Profile updated!');
-      onSave({ ...user, ...formData });
+      await updateUserProfile(userId, data);
+      setSuccess("Profile updated!");
+      onSave({ ...user, ...data });
     } catch {
-      message.error('Failed to update profile.');
+      message.error("Failed to update profile.");
     } finally {
       setLoading(false);
     }
   };
-
   return (
-     <form onSubmit={handleSubmit} className={styles.profileForm}>
-      <h3>Profile Details</h3>
-
+    <form ref={formRef} onSubmit={handleSubmit} className={styles.profileForm}>
       <div className={styles.row}>
         <div>
           <p>Username</p>
-          <Input
-            placeholder="Username"
-            value={formData.username}
-            onChange={(e) => handleChange('username', e.target.value)}
-          />
+          <Input placeholder="Username" name="username" />
         </div>
         <div>
           <p>Email</p>
-          <Input
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-          />
+          <Input placeholder="Email" name="email" />
         </div>
       </div>
 
       <div className={styles.row}>
         <div>
           <p>First Name</p>
-          <Input
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={(e) => handleChange('firstName', e.target.value)}
-          />
+          <Input placeholder="First Name" name="firstName" />
         </div>
         <div>
           <p>Last Name</p>
-          <Input
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={(e) => handleChange('lastName', e.target.value)}
-          />
+          <Input placeholder="Last Name" name="lastName" />
         </div>
       </div>
 
@@ -102,26 +90,48 @@ interface UserProfileFormProps {
         <div>
           <p>Subscription</p>
           <Select
-            style={{ width: '100%' }}
-            value={formData.subscriptionPlanId}
-            onChange={(value) => handleChange('subscriptionPlanId', value)}
+            className={styles.tallSelect}
+            defaultValue={user.subscriptionPlanId || 1}
+            onChange={(value) => {
+              const hidden = document.getElementById(
+                "subscriptionPlanId"
+              ) as HTMLInputElement;
+              if (hidden) hidden.value = value.toString();
+            }}
           >
             <Select.Option value={1}>Free</Select.Option>
             <Select.Option value={2}>Basic</Select.Option>
             <Select.Option value={3}>Premium</Select.Option>
           </Select>
+          <input
+            type="hidden"
+            name="subscriptionPlanId"
+            id="subscriptionPlanId"
+            defaultValue={String(user.subscriptionPlanId || 1)}
+          />
         </div>
 
         <div>
           <p>Role</p>
           <Select
             className={styles.tallSelect}
-            value={formData.role}
-            onChange={(val) => handleChange('role', val as 'user' | 'admin')}
+            defaultValue={user.role || "user"}
+            onChange={(value) => {
+              const hidden = document.getElementById(
+                "role"
+              ) as HTMLInputElement;
+              if (hidden) hidden.value = value.toString();
+            }}
           >
             <Select.Option value="customer">Customer</Select.Option>
             <Select.Option value="admin">Admin</Select.Option>
           </Select>
+          <input
+            type="hidden"
+            name="role"
+            id="role"
+            defaultValue={String(user.role || "user")}
+          />
         </div>
       </div>
 
@@ -136,9 +146,7 @@ interface UserProfileFormProps {
         {success && <span className={styles.successMessage}>{success}</span>}
       </div>
     </form>
-
   );
 };
 
 export default UserProfileForm;
-
