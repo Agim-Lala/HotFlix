@@ -42,11 +42,11 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
     const form = new FormData(formRef.current);
     const data = {
-      username: form.get("username") as string,
-      email: form.get("email") as string,
-      firstName: form.get("firstName") as string,
-      lastName: form.get("lastName") as string,
-      role: form.get("role") as string,
+      username: form.get("username")!.toString(),
+      email: form.get("email")!.toString(),
+      firstName: form.get("firstName")!.toString(),
+      lastName: form.get("lastName")!.toString(),
+      role: form.get("role")!.toString(),
       subscriptionPlanId: Number(form.get("subscriptionPlanId")),
     };
 

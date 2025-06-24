@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Input, Button, message } from "antd";
-import type { InputRef } from "antd";
+import { Input, Button, InputRef, App, Form } from "antd";
 import styles from "./UserPasswordForm.module.css";
 import { updateUserPassword } from "../../../api/userApi";
 
@@ -14,19 +13,21 @@ const UserPasswordForm: React.FC<UserPasswordFormProps> = ({ userId }) => {
   const confirmRef = useRef<InputRef>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+  const { message } = App.useApp();
+  const [passwordForm] = Form.useForm();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const oldPassword = oldRef.current?.input?.value || "";
-    const newPassword = newRef.current?.input?.value || "";
-    const confirmPassword = confirmRef.current?.input?.value || "";
+  const handleSubmit = async () => {
+    const values = passwordForm.getFieldsValue();
+    const { oldPassword, newPassword, confirmPassword } = values;
 
     if (!oldPassword || !newPassword || !confirmPassword) {
       return message.error("Please fill in all fields.");
     }
 
     if (newPassword !== confirmPassword) {
-      return message.error("New passwords do not match.");
+      return message.error(
+        "New password and confirmation of the new password do not match."
+      );
     }
 
     setLoading(true);
@@ -38,9 +39,8 @@ const UserPasswordForm: React.FC<UserPasswordFormProps> = ({ userId }) => {
         confirmPassword
       );
       setSuccess("Password updated!");
-      if (oldRef.current) oldRef.current.input!.value = "";
-      if (newRef.current) newRef.current.input!.value = "";
-      if (confirmRef.current) confirmRef.current.input!.value = "";
+      setTimeout(() => setSuccess(""), 3000);
+      passwordForm.resetFields();
     } catch (error) {
       console.error("Change password failed:", error);
       message.error("Failed to update password.");
@@ -50,36 +50,43 @@ const UserPasswordForm: React.FC<UserPasswordFormProps> = ({ userId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.passwordForm}>
+    <Form
+      form={passwordForm}
+      onFinish={handleSubmit}
+      className={styles.passwordForm}
+    >
       <h3>Change Password</h3>
       <div className={styles.row}>
         <div className={styles.inputGroup}>
           <p>Old Password</p>
-          <Input.Password
-            className={styles.halfWidthInput}
-            placeholder="Old Password"
-            ref={oldRef}
-            required
-          />
+          <Form.Item name="oldPassword" rules={[{ required: true }]}>
+            <Input.Password
+              className={styles.halfWidthInput}
+              placeholder="Old Password"
+              ref={oldRef}
+            />
+          </Form.Item>
         </div>
         <div className={styles.inputGroup}>
           <p>New Password</p>
-          <Input.Password
-            className={styles.halfWidthInput}
-            placeholder="New Password"
-            ref={newRef}
-            required
-          />
+          <Form.Item name="newPassword" rules={[{ required: true }]}>
+            <Input.Password
+              className={styles.halfWidthInput}
+              placeholder="New Password"
+              ref={newRef}
+            />
+          </Form.Item>
         </div>
       </div>
       <div className={styles.inputGroup}>
         <p>Confirm New Password</p>
-        <Input.Password
-          className={styles.halfWidthInput}
-          placeholder="Confirm New Password"
-          ref={confirmRef}
-          required
-        />
+        <Form.Item name="confirmPassword" rules={[{ required: true }]}>
+          <Input.Password
+            className={styles.halfWidthInput}
+            placeholder="Confirm New Password"
+            ref={confirmRef}
+          />
+        </Form.Item>
       </div>
       <div className={styles.footer}>
         <Button
@@ -91,7 +98,7 @@ const UserPasswordForm: React.FC<UserPasswordFormProps> = ({ userId }) => {
         </Button>
         {success && <p className={styles.successMessage}>{success}</p>}
       </div>
-    </form>
+    </Form>
   );
 };
 
