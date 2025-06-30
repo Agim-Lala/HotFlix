@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, Table } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import styles from "./DashboardCard.module.css"; 
-
+import styles from "./DashboardCard.module.css";
+import useQuery from "../../../hooks/useQuery";
 
 interface DashboardCardProps<T> {
   title: string;
@@ -21,60 +21,15 @@ function DashboardCard<T>({
   rowKey,
   onViewAll = () => {},
 }: DashboardCardProps<T>) {
-  const [data, setData] = useState<T[]>([]);
-  const [loading, setLoading] = useState(false);
-
- 
- 
-  const fetchTableData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const result = await fetchData();
-      setData(result.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
+  const fetchResponse = useCallback(async () => {
+    const result = await fetchData();
+    return result.slice(0, 5);
   }, [fetchData]);
 
-  useEffect(() => {
-    fetchTableData();
-  }, [fetchTableData]);
+  const {
+    query: { response, status },
+  } = useQuery(fetchResponse);
 
- /* const fetchTableData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const result = await fetchData();
-      setData(result.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchData]);
-
-  useEffect(() => {
-    fetchTableData();
-  }, [fetchTableData]);
-
- useEffect(() => {
-  const fetchTableData = async () => {
-    setLoading(true);
-    try {
-      const result = await fetchData();
-      setData(result.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchTableData();
-}, [fetchData]);
-
-*/
   return (
     <Card className={styles.cardContainer}>
       <div className={styles.headerContainer}>
@@ -83,10 +38,7 @@ function DashboardCard<T>({
           <h3 style={{ margin: 0 }}>{title}</h3>
         </div>
         <div className={styles.headerRight}>
-          <ReloadOutlined
-            onClick={fetchData}
-            className={styles.reloadIcon}
-          />
+          <ReloadOutlined onClick={fetchData} className={styles.reloadIcon} />
           <button onClick={onViewAll} className={styles.viewAllButton}>
             View All
           </button>
@@ -95,9 +47,9 @@ function DashboardCard<T>({
       <Table
         className="custom-table"
         columns={columns}
-        dataSource={data}
+        dataSource={response}
         pagination={false}
-        loading={loading}
+        loading={status === "loading" || status === "idle"}
         rowKey={rowKey}
         bordered={false}
       />
@@ -105,4 +57,3 @@ function DashboardCard<T>({
   );
 }
 export default DashboardCard;
-

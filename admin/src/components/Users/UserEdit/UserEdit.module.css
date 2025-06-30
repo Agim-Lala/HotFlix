@@ -30,7 +30,6 @@
   color: #ccc;
 }
 
-
 .userName {
   font-size: 15px;
   margin-top: 10px;
@@ -50,7 +49,7 @@
   color: #888;
 }
 
-.tabWrapper { 
+.tabWrapper {
   margin-left: 40px;
 }
 
@@ -116,7 +115,6 @@
   background-color: #f25c5c22;
 }
 
-
 .formsContainer {
   display: flex;
   gap: 40px;
@@ -126,13 +124,9 @@
 .formBox {
   flex: 1;
 }
-
-
-
-
-
-
-
-
-
-
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

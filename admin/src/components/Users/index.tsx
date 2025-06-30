@@ -9,43 +9,29 @@ import {
 } from "../../api/userApi";
 import { UserTable } from "./UserTable";
 import styles from "./Users.module.css";
+import useQuery from "../../hooks/useQuery";
 
 const sortOptions = Object.values(SortFields);
 
 const Users = () => {
-  const [{ status, response }, setResponse] = useState<
-    | { status: "successs"; response: PaginatedUserResponse }
-    | { status: "loading" | "idle"; response: undefined }
-    | { status: "error"; response: undefined; error: string }
-  >({ status: "loading", response: undefined });
   const [selectedSort, setSelectedSort] = useState<SortFields>(
     SortFields.CreatedAt
   );
 
-  const fetchUserData = useCallback(async (sortBy: SortFields) => {
-    try {
-      setResponse({ status: "loading", response: undefined });
-      const response: PaginatedUserResponse = await fetchUsers({
-        sortBy,
+  const fetchResponse = useCallback(
+    () =>
+      fetchUsers({
+        sortBy: selectedSort,
         ascending: true,
         page: 1,
         pageSize: 10,
-      });
-      setResponse({ status: "successs", response });
-      console.log("Fetched users:", response.users);
-    } catch (error) {
-      console.error("Error fetching movies", error);
-      setResponse({
-        status: "error",
-        response: undefined,
-        error: (error as Error).message || "Failed to fetch users",
-      });
-    }
-  }, []);
+      }),
+    [selectedSort]
+  );
 
-  useEffect(() => {
-    fetchUserData(selectedSort);
-  }, [selectedSort, fetchUserData]);
+  const {
+    query: { status, response },
+  } = useQuery(fetchResponse);
 
   return (
     <SidebarLayout>

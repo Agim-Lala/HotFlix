@@ -1,5 +1,6 @@
-import { type FC, memo, useCallback, useEffect, useState } from "react";
+import { type FC, memo, useCallback, useState } from "react";
 import { Tabs, message, Spin } from "antd";
+import useQuery from "../../../hooks/useQuery";
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../../api/userApi";
 import UserProfileForm from "./UserProfileForm";
@@ -59,33 +60,34 @@ const TabContent = memo(
 
 const UserEditPage: FC = () => {
   const userId = Number(useParams().id);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-
   const [activeTab, setActiveTab] = useState<TabKeys>("profile");
 
-  const fetchUser = useCallback(async () => {
-    if (isNaN(userId)) return;
-    setLoading(true);
-    try {
-      const data = await getUserById(userId);
-      console.log("[UserEditPage] Loaded user:", data);
-      setUser(data);
-    } catch (error) {
-      message.error("Failed to fetch user.");
-    } finally {
-      setLoading(false);
+  const fetchResponse = useCallback(async () => {
+    if (isNaN(userId)) {
+      throw new Error("Invalid user ID");
     }
-  }, [userId, setUser]);
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    return await getUserById(userId);
+  }, [userId]);
+  const {
+    query: { status, response: user },
+    refetch,
+  } = useQuery(fetchResponse);
 
   const handleTabChange = (key: TabKeys) => setActiveTab(key);
 
-  if (loading) return <Spin size="large" />;
-  if (!user || !user.id) return <div>User not found.</div>;
+  const handleSaveUser = () => {
+    message.success("User profile updated successfully!");
+    refetch();
+  };
+
+  if (status === "loading" || status === "idle") {
+    return (
+      <div className={styles.spinnerContainer}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+  if (status === "error" || !user) return <div>User not found.</div>;
 
   return (
     <div className={styles.userEditPage}>
@@ -133,7 +135,7 @@ const UserEditPage: FC = () => {
       <TabContent
         user={user}
         activeTab={activeTab}
-        onSaveUser={(updated) => setUser(updated)}
+        onSaveUser={handleSaveUser}
       />
     </div>
   );
