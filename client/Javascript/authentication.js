@@ -66,7 +66,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 
         if (response.ok) {
             alert("Registration successful! Redirecting to login...");
-            window.location.href = "Login.html";
+            window.location.href = "client/Login.html";
         } else {
             const error = await response.text();
             console.error("Registration failed:", error);

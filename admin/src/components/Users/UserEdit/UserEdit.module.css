@@ -1,0 +1,132 @@
+.userEditPage {
+  background-color: #1a1a1f;
+  padding: 20px;
+  color: #fff;
+}
+
+.userHeader {
+  background-color: #343435;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem;
+}
+
+.userInfoBlock {
+  display: flex;
+  flex-direction: row;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userIcon {
+  font-size: 30px;
+  color: #ccc;
+}
+
+.userName {
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.statusApproved {
+  color: #3fcf8e;
+}
+
+.statusBanned {
+  color: #f25c5c;
+}
+
+.userId {
+  font-size: 12px;
+  color: #888;
+}
+
+.tabWrapper {
+  margin-left: 40px;
+}
+
+.customTabs :global(.ant-tabs-nav) {
+  margin: 0;
+  border-bottom: none !important;
+}
+
+.customTabs :global(.ant-tabs-tab) {
+  color: #ccc;
+  font-weight: 500;
+  padding: 10px 20px;
+  background: none;
+  border: none !important;
+}
+
+.customTabs :global(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: #ff9933 !important;
+  font-weight: 400;
+}
+
+.customTabs :global(.ant-tabs-ink-bar) {
+  background-color: #ff9933 !important;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.customTabs :global(.ant-tabs-tab:hover) {
+  background: none;
+  color: #ff9933;
+}
+:global(:where(.ant-tabs-top) > .ant-tabs-nav::before),
+:global(:where(.ant-tabs-top) > div > .ant-tabs-nav::before) {
+  border-bottom: none !important;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+.lockBtn,
+.deleteBtn {
+  background-color: #2c2c33;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+.lockBtn {
+  color: #3fcf8e;
+}
+.deleteBtn {
+  color: #f25c5c;
+}
+.lockBtn:hover {
+  background-color: #3fcf8e22;
+}
+
+.deleteBtn:hover {
+  background-color: #f25c5c22;
+}
+
+.formsContainer {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.formBox {
+  flex: 1;
+}
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

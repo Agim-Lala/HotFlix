@@ -1,0 +1,80 @@
+.tableContainer :global(.ant-table-tbody > tr) {
+  position: relative;
+  z-index: 1;
+}
+
+.tableContainer :global(.ant-table-tbody) {
+  margin-top: 2rem !important;
+}
+.tableContainer :global(.ant-table-tbody > tr)::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  right: 8px;
+  bottom: 4px;
+  background-color: #2e2e2e;
+  border-radius: 8px;
+  z-index: -1;
+  transition: background-color 0.2s ease;
+  ;
+}
+.tableContainer :global(.ant-table-tbody > tr:hover)::after {
+  background-color: #3a3a3a;
+}
+.tableContainer :global(.ant-table-tbody > tr > td) {
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: transparent !important;
+  color: white;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+.tableContainer :global(.ant-table-tbody > tr > td) {
+  padding: 15px 25px; 
+}
+.tableContainer :global(.ant-table) {
+  border-bottom: none !important;
+  color: #ffffff;
+  background: transparent;
+}
+
+
+.userDetails {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userIcon {
+  color: #999999;
+  font-size: 20px;
+  border: 1px solid #444;
+  border-radius: 30%;
+  padding: 8px;
+}
+
+.userName {
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.statusApproved {
+  color: #2f7e08;
+}
+
+.statusBanned {
+  color: #f5222d;
+}
+
+.createdAt {
+  font-size: 13px;
+  color: #ddd;
+}

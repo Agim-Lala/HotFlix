@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "antd";
 import {
   ColumnHeightOutlined,
@@ -18,9 +17,8 @@ import {
   getMoviesSortedByRating,
   Movie,
 } from "../../api/movieApi";
-import { getReviewsSortedById, } from "../../api/reviewApi";
+import { getReviewsSortedById } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
-
 
 export const metricItems = [
   {
@@ -52,7 +50,8 @@ const movieColumnsRating = [
     title: "Category",
     dataIndex: "categories",
     key: "categories",
-    render: (categories: string[]) => categories.join(", "),},
+    render: (categories: string[]) => categories.join(", "),
+  },
   {
     title: "Rating",
     dataIndex: "averageRating",
@@ -67,7 +66,7 @@ const movieColumnsRating = [
 const movieColumnsLatest = [
   { title: "ID", dataIndex: "movieId", key: "movieId" },
   { title: "Title", dataIndex: "title", key: "title" },
- {
+  {
     title: "Category",
     dataIndex: "categories",
     key: "categories",
@@ -75,31 +74,30 @@ const movieColumnsLatest = [
   },
   {
     title: "Status",
-    dataIndex: "isVisible",  
+    dataIndex: "isVisible",
     key: "isVisible",
     render: (isVisible: boolean | undefined) => {
-    if (isVisible === undefined) return "Unknown";
-    return (
-      <span style={{ color: isVisible ? "green" : "red" }}>
-        {isVisible ? "Visible" : "Hidden"}
-      </span>
-    );
+      if (isVisible === undefined) return "Unknown";
+      return (
+        <span style={{ color: isVisible ? "green" : "red" }}>
+          {isVisible ? "Visible" : "Hidden"}
+        </span>
+      );
+    },
   },
-}
 ];
 const userColumns = [
-  { title: "ID", dataIndex: "id", key: "id" },                
+  { title: "ID", dataIndex: "id", key: "id" },
   { title: "Full Name", dataIndex: "fullName", key: "fullName" },
   { title: "Email", dataIndex: "email", key: "email" },
   { title: "Username", dataIndex: "username", key: "username" },
 ];
 
-
 const reviewsColumns = [
   { title: "ID", dataIndex: "reviewId", key: "reviewId" },
   { title: "Title", dataIndex: "movieTitle", key: "movieTitle" },
   { title: "Author", dataIndex: "author", key: "author" },
-  
+
   {
     title: "Rating",
     dataIndex: "rating",
@@ -109,7 +107,6 @@ const reviewsColumns = [
         <StarFilled /> {rating}
       </span>
     ),
-  
   },
 ];
 
@@ -132,7 +129,6 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-      
 
       <div className={styles.dashboardGrid}>
         <DashboardCard
