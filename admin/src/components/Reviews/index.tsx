@@ -2,24 +2,23 @@ import { useState, useCallback, useEffect } from "react";
 import { Input, Select, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import SidebarLayout from "../layouts/SidebarLayout";
-import { fetchUsers, SortFields } from "../../api/userApi";
-import { UserTable } from "./UserTable";
-import styles from "./Users.module.css";
+import { fetchReviews, SortFields } from "../../api/reviewApi";
+import styles from "./reviews.module.css";
 import useQuery from "../../hooks/useQuery";
+import { ReviewTable } from "./ReviewTable";
 import { usePagination } from "../../hooks/usePagination";
 
 const sortOptions = Object.values(SortFields);
 
-const Users = () => {
+const Reviews = () => {
   const [selectedSort, setSelectedSort] = useState<SortFields>(
     SortFields.CreatedAt
   );
-
   const { pagination, onTotalCountChange, onPageChange } = usePagination(10);
 
   const fetchResponse = useCallback(
     () =>
-      fetchUsers({
+      fetchReviews({
         sortBy: selectedSort,
         ascending: true,
         page: 1,
@@ -43,8 +42,8 @@ const Users = () => {
       <div className={styles.header}>
         <div>
           <div className={styles.title}>
-            Users
-            <span className={styles.userCount}>
+            Reviews
+            <span className={styles.reviewCount}>
               {response?.totalCount} Total
             </span>
           </div>
@@ -67,7 +66,7 @@ const Users = () => {
 
           <Input
             className={styles.input}
-            placeholder="Find users ..."
+            placeholder="Key word ..."
             suffix={<SearchOutlined />}
             variant="borderless"
           />
@@ -75,8 +74,8 @@ const Users = () => {
       </div>
 
       <div className={styles.body}>
-        <UserTable
-          users={response?.users ?? []}
+        <ReviewTable
+          reviews={response?.reviews ?? []}
           loading={status === "loading"}
           currentPage={pagination.page}
           totalCount={pagination.totalCount}
@@ -87,4 +86,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Reviews;

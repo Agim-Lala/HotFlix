@@ -1,20 +1,19 @@
 import axios from "axios";
 
 export enum SortFields {
-  ReviewId = "Id",
+  commentId = "Id",
   Title = "Title",
   Author = "Author",
   Text = "Text",
-  Rating = "Rating",
   CreatedAt = "CreatedAt",
 }
 
-export interface PaginatedReviewResponse {
-  reviews: Review[];
+export interface PaginatedCommentResponse {
+  comments: Comment[];
   totalCount: number;
 }
 
-interface ReviewQueryOptions {
+interface CommentQueryOptions {
   sortBy?: SortFields;
   ascending?: boolean;
   page?: number;
@@ -22,21 +21,20 @@ interface ReviewQueryOptions {
   filters?: Record<string, string | number | boolean>;
 }
 
-export interface Review {
-  reviewId: number;
+export interface Comment {
+  commentId: number;
   movieTitle: string;
-  Author: string;
+  author: string;
   text: string;
-  Rating: number;
   createdAt?: string;
   likeDislike?: string;
 }
 
-export const fetchReviews = async (
-  options: ReviewQueryOptions = {}
-): Promise<PaginatedReviewResponse> => {
+export const fetchComments = async (
+  options: CommentQueryOptions = {}
+): Promise<PaginatedCommentResponse> => {
   const {
-    sortBy = SortFields.ReviewId,
+    sortBy = SortFields.commentId,
     ascending = false,
     page,
     pageSize,
@@ -51,18 +49,18 @@ export const fetchReviews = async (
     pageSize: pageSize !== undefined ? pageSize : 10,
   };
 
-  const response = await axios.get<PaginatedReviewResponse>(
-    "http://localhost:5219/api/reviews/sorted",
+  const response = await axios.get<PaginatedCommentResponse>(
+    "http://localhost:5219/api/Comments/sorted",
     { params }
   );
 
   return response.data;
 };
 
-export const getReviewsSortedById = async () => {
-  const response = await fetchReviews({
+export const getCommentsSortedById = async () => {
+  const response = await fetchComments({
     sortBy: SortFields.CreatedAt,
     ascending: false,
   });
-  return response.reviews;
+  return response.comments;
 };
