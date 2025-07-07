@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { Card, Table } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import styles from "./DashboardCard.module.css";
@@ -19,7 +19,7 @@ function DashboardCard<T>({
   columns,
   fetchData,
   rowKey,
-  onViewAll = () => {},
+  onViewAll,
 }: DashboardCardProps<T>) {
   const fetchResponse = useCallback(async () => {
     const result = await fetchData();
