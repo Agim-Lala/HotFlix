@@ -14,6 +14,10 @@ import styles from "./UserTable.module.css";
 interface UserTableProps {
   users: User[];
   loading: boolean;
+  currentPage?: number;
+  totalCount?: number;
+  initialPageSize?: number;
+  onPageChange?: (page: number) => void;
 }
 
 const getUserTableColumns = (
@@ -97,7 +101,14 @@ const getUserTableColumns = (
   },
 ];
 
-export const UserTable: React.FC<UserTableProps> = ({ users, loading }) => {
+export const UserTable: React.FC<UserTableProps> = ({
+  users,
+  loading,
+  currentPage,
+  initialPageSize,
+  totalCount,
+  onPageChange,
+}) => {
   const navigate = useNavigate();
   const columns = getUserTableColumns(navigate);
 
@@ -107,7 +118,12 @@ export const UserTable: React.FC<UserTableProps> = ({ users, loading }) => {
       dataSource={users}
       loading={loading}
       rowKey="id"
-      pagination={{ pageSize: 10 }}
+      pagination={{
+        pageSize: initialPageSize,
+        current: currentPage,
+        total: totalCount,
+        onChange: onPageChange,
+      }}
       className={styles.tableContainer}
       onRow={(record) => {
         return {

@@ -1,15 +1,14 @@
 // src/api/movieApi.ts
 import axios from "axios";
 
-
 export enum SortFields {
-    MovieId = "Id",
-    Title = "Title",
-    Rating = "Rating",
-    Views = "Views",
-    IsVisible = "Status",
-    CreatedAt = "CreatedAt",
-  }
+  MovieId = "Id",
+  Title = "Title",
+  Rating = "Rating",
+  Views = "Views",
+  IsVisible = "Status",
+  CreatedAt = "CreatedAt",
+}
 
 export interface PaginatedMovieResponse {
   movies: Movie[];
@@ -25,15 +24,14 @@ interface MovieQueryOptions {
 }
 
 export interface Movie {
-    movieId: number;
-    title: string;
-    categories: string[];
-    averageRating: number;
-    views?: number;
-    IsVisible?: boolean;
-    createdAt?: string;
-  }
-
+  movieId: number;
+  title: string;
+  categories: string[];
+  averageRating: number;
+  views?: number;
+  isVisible?: boolean;
+  createdAt?: string;
+}
 
 export const fetchMovies = async (
   options: MovieQueryOptions = {}
@@ -50,7 +48,7 @@ export const fetchMovies = async (
     sortBy,
     ascending,
     ...filters,
-    page: page !== undefined ? page : 1, 
+    page: page !== undefined ? page : 1,
     pageSize: pageSize !== undefined ? pageSize : 10,
   };
 
@@ -63,11 +61,17 @@ export const fetchMovies = async (
 };
 
 export const getMoviesSortedByRating = async () => {
-  const response = await fetchMovies({ sortBy: SortFields.Rating, ascending: false });
+  const response = await fetchMovies({
+    sortBy: SortFields.Rating,
+    ascending: false,
+  });
   return response.movies;
 };
 
 export const getMoviesSortedByCreatedAt = async () => {
-  const response = await fetchMovies({ sortBy: SortFields.CreatedAt, ascending: false });
+  const response = await fetchMovies({
+    sortBy: SortFields.CreatedAt,
+    ascending: false,
+  });
   return response.movies;
 };

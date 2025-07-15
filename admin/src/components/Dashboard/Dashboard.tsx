@@ -12,6 +12,7 @@ import {
 import SidebarLayout from "../layouts/SidebarLayout";
 import styles from "./Dashboard.module.css";
 import DashboardCard from "./DashboardCard";
+import { Link } from "react-router-dom";
 import {
   getMoviesSortedByCreatedAt,
   getMoviesSortedByRating,
@@ -115,7 +116,9 @@ const Dashboard = () => {
     <SidebarLayout>
       <div className={styles.headerRow}>
         <h2 className={styles.dashboardTitle}>Dashboard</h2>
-        <Button className={styles.addNewButton}>Add New</Button>
+        <Link to="/add-movie">
+          <Button className={styles.addNewButton}>Add New</Button>
+        </Link>
       </div>
 
       <div className={styles.metricCardsContainer}>
