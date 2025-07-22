@@ -2,6 +2,15 @@ import React, { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Form, Input, Select, Button, App, Radio } from "antd";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  createMovie,
+  fetchActors,
+  fetchCategories,
+  fetchDirectors,
+  fetchGenres,
+  fetchQualities,
+} from "../../api/movieApi";
+import useQuery from "../../hooks/useQuery";
 import styles from "./addMovieForm.module.css";
 
 const { TextArea } = Input;
@@ -24,21 +33,6 @@ type FormFields = {
   video: File | null;
   link: string;
 };
-const genres = [
-  { genreId: 1, name: "Adventure" },
-  { genreId: 2, name: "Action" },
-  { genreId: 3, name: "Romance" },
-  { genreId: 4, name: "Thriller" },
-  { genreId: 5, name: "Fantasy" },
-  { genreId: 6, name: "Mystery" },
-  { genreId: 7, name: "Sci-Fi" },
-];
-
-const categories = [
-  { categoryId: 1, name: "Movie" },
-  { categoryId: 2, name: "TV Series" },
-  { categoryId: 3, name: "Cartoon" },
-];
 
 const AddMovieForm: React.FC = () => {
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -48,12 +42,60 @@ const AddMovieForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormFields>();
+  const { query: genreQuery } = useQuery(fetchGenres);
+  const { query: categoryQuery } = useQuery(fetchCategories);
+  const { query: directorQuery } = useQuery(fetchDirectors);
+  const { query: actorQuery } = useQuery(fetchActors);
+  const { query: qualityQuery } = useQuery(fetchQualities);
 
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
+  if (
+    genreQuery.status === "loading" ||
+    categoryQuery.status === "loading" ||
+    directorQuery.status === "loading" ||
+    actorQuery.status === "loading" ||
+    qualityQuery.status === "loading"
+  ) {
+    return <div>Loading...</div>;
+  }
+
+  if (
+    genreQuery.status === "error" ||
+    categoryQuery.status === "error" ||
+    directorQuery.status === "error" ||
+    actorQuery.status === "error" ||
+    qualityQuery.status === "error"
+  ) {
+    return <div>Failed to load data</div>;
+  }
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    const formData = new FormData();
+
+    formData.append("Title", data.title);
+    formData.append("Description", data.description);
+    formData.append("ReleaseYear", String(data.releaseYear));
+    formData.append("RunningTime", String(data.runningTime));
+    formData.append("DirectorId", String(data.director));
+    formData.append("Link", data.link ?? "");
+    formData.append("AddedAt", new Date().toISOString());
+
+    data.genres?.forEach((g) => formData.append("GenreIds", g));
+    formData.append("CategoryIds", data.category);
+    data.quality?.forEach((q) => formData.append("QualityIds", q));
+    data.actors?.forEach((a) => formData.append("ActorIds", a));
+    formData.append("Age", data.age);
+    formData.append("Countries", data.countries ?? "");
+    if (data.cover?.[0]) formData.append("CoverImage", data.cover[0]);
+    if (data.video) formData.append("VideoFile", data.video);
     console.log("Form Data:", data as FormFields);
-    message.success("Movie added successfully!");
+    try {
+      await createMovie(formData);
+      console.log(formData);
+      message.success("Movie added successfully!");
+    } catch (error) {
+      message.error("Failed to add movie.");
+    }
   };
-
   const handleCoverChange = (
     files: FileList | null,
     onChange: (files: FileList) => void
@@ -224,12 +266,18 @@ const AddMovieForm: React.FC = () => {
                   <Select
                     {...field}
                     mode="multiple"
-                    placeholder="Quality"
+                    placeholder="Select Quality"
                     variant="borderless"
+                    loading={qualityQuery.status === "loading"}
+                    value={field.value || []}
+                    onChange={(value) => field.onChange(value)}
                   >
-                    <Option value="1080p">1080p</Option>
-                    <Option value="720p">720p</Option>
-                    <Option value="480p">480p</Option>
+                    {qualityQuery.status === "success" &&
+                      qualityQuery.response.map((quality) => (
+                        <Select.Option key={quality.id} value={quality.id}>
+                          {quality.name}
+                        </Select.Option>
+                      ))}
                   </Select>
                 )}
               />
@@ -262,11 +310,7 @@ const AddMovieForm: React.FC = () => {
                 control={control}
                 rules={{ required: "Countries are required" }}
                 render={({ field }) => (
-                  <Select
-                    {...field}
-                    placeholder="Countries"
-                    variant="borderless"
-                  >
+                  <Select {...field} placeholder="Country" variant="borderless">
                     <Option value="USA">USA</Option>
                     <Option value="UK">UK</Option>
                     <Option value="France">France</Option>
@@ -292,16 +336,16 @@ const AddMovieForm: React.FC = () => {
                     {...field}
                     placeholder="Select genres"
                     variant="borderless"
+                    loading={genreQuery.status === "loading"}
+                    value={field.value || []}
+                    onChange={(value) => field.onChange(value)}
                   >
-                    {genres.map((genre) => (
-                      <Option
-                        key={genre.genreId}
-                        value={genre.genreId}
-                        label={genre.name}
-                      >
-                        {genre.name}
-                      </Option>
-                    ))}
+                    {genreQuery.status === "success" &&
+                      genreQuery.response.map((genre) => (
+                        <Select.Option key={genre.id} value={genre.id}>
+                          {genre.name}
+                        </Select.Option>
+                      ))}
                   </Select>
                 )}
               />
@@ -343,15 +387,17 @@ const AddMovieForm: React.FC = () => {
                   control={control}
                   rules={{ required: "Category is required" }}
                   render={({ field }) => (
-                    <Radio.Group {...field}>
-                      {categories.map((category) => (
-                        <Radio
-                          key={category.categoryId}
-                          value={category.categoryId}
-                        >
-                          {category.name}
-                        </Radio>
-                      ))}
+                    <Radio.Group
+                      {...field}
+                      value={field.value || []}
+                      onChange={(value) => field.onChange(value)}
+                    >
+                      {categoryQuery.status === "success" &&
+                        categoryQuery.response.map((category) => (
+                          <Radio key={category.id} value={category.id}>
+                            {category.name}
+                          </Radio>
+                        ))}
                     </Radio.Group>
                   )}
                 />
@@ -369,11 +415,32 @@ const AddMovieForm: React.FC = () => {
                 control={control}
                 rules={{ required: "Actors are required" }}
                 render={({ field }) => (
-                  <Input
+                  <Select
                     {...field}
-                    placeholder="Actors (comma separated)"
+                    mode="multiple"
+                    placeholder="Select Actors"
                     variant="borderless"
-                  />
+                    loading={actorQuery.status === "loading"}
+                    value={field.value || []}
+                    showSearch
+                    onChange={(value) => field.onChange(value)}
+                    filterOption={(input, option) =>
+                      (option?.label as string)
+                        ?.toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {actorQuery.status === "success" &&
+                      actorQuery.response.map((actor) => (
+                        <Select.Option
+                          key={actor.id}
+                          value={actor.id}
+                          label={actor.name}
+                        >
+                          {actor.name}
+                        </Select.Option>
+                      ))}
+                  </Select>
                 )}
               />
               {errors.actors && (
@@ -389,11 +456,31 @@ const AddMovieForm: React.FC = () => {
                 control={control}
                 rules={{ required: "Director is required" }}
                 render={({ field }) => (
-                  <Input
+                  <Select
                     {...field}
-                    placeholder="Director"
+                    placeholder="Select Director"
                     variant="borderless"
-                  />
+                    loading={directorQuery.status === "loading"}
+                    value={field.value || []}
+                    showSearch
+                    onChange={(value) => field.onChange(value)}
+                    filterOption={(input, option) =>
+                      (option?.label as string)
+                        ?.toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {directorQuery.status === "success" &&
+                      directorQuery.response.map((director) => (
+                        <Select.Option
+                          key={director.id}
+                          value={director.id}
+                          label={director.name}
+                        >
+                          {director.name}
+                        </Select.Option>
+                      ))}
+                  </Select>
                 )}
               />
               {errors.director && (
