@@ -1,131 +1,93 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Input, Select, Space } from "antd";
-import {
-  SearchOutlined,
-  
-} from "@ant-design/icons";
-import SidebarLayout from "../layouts/SidebarLayout"; 
-import { fetchMovies, PaginatedMovieResponse, SortFields } from "../../api/movieApi"; 
-import {Movie} from "../../api/movieApi";
+import { SearchOutlined } from "@ant-design/icons";
+import SidebarLayout from "../layouts/SidebarLayout";
+import { fetchMovies, SortFields } from "../../api/movieApi";
+import styles from "./catalog.module.css";
+import useQuery from "../../hooks/useQuery";
+import { usePagination } from "../../hooks/usePagination";
+import { MovieTable } from "./MovieTable";
 
-const sortOptions = [
-  "Id",
-  "Title",
-  "Rating",
-  "Category",
-  "Views",
-  "Status",
-  "Created At",
-];
+const sortOptions = Object.values(SortFields);
 
-const Catalog = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [movieCount, setMovieCount] = useState<number>(0);
-  const [selectedSort, setSelectedSort] = useState<SortFields>(SortFields.CreatedAt);
+const Movies = () => {
+  const [selectedSort, setSelectedSort] = useState<SortFields>(
+    SortFields.CreatedAt
+  );
 
+  const { pagination, onPageChange, onTotalCountChange } = usePagination(10);
 
-  const fetchMovieData = useCallback(async (sortBy: SortFields) => {
-    try {
-      const response: PaginatedMovieResponse = await fetchMovies({
-        sortBy,
-        ascending: false,
-        page: 1,
-        pageSize: 10, 
-      });
-      setMovies(response.movies);
-      setMovieCount(response.totalCount);
-    } catch (error) {
-      console.error("Error fetching movies", error);
-    }
-   
-  }, [setMovies, setMovieCount]); 
+  const fetchResponse = useCallback(
+    () =>
+      fetchMovies({
+        sortBy: selectedSort,
+        ascending: true,
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+      }),
+    [selectedSort, pagination.page, pagination.pageSize]
+  );
 
-  
+  const {
+    query: { status, response },
+  } = useQuery(fetchResponse);
+
   useEffect(() => {
-    fetchMovieData(SortFields.CreatedAt);
-  }, [fetchMovieData]); 
-
- 
-  useEffect(() => {
-    
-    const sortField = SortFields[selectedSort as keyof typeof SortFields];
-    if (sortField) { 
-         fetchMovieData(sortField);
-    } else {
-        console.error(`Invalid sort field selected: ${selectedSort}`);
+    if (response?.totalCount) {
+      onTotalCountChange(response.totalCount);
     }
-
-  }, [selectedSort, fetchMovieData]);
- 
+  }, [response]);
 
   return (
     <SidebarLayout>
-      
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1 rem",
-          paddingBottom: "0.7rem", 
-          borderBottom: "1px solid rgba(255, 255, 255, 0.2)", 
-        }}
-      >
-      
+      <div className={styles.header}>
         <div>
-          <div style={{ fontSize: "24px", fontWeight: 600, color: "white" }}>
-            Catalog
-            <span style={{ fontSize: "12px", color: "#aaa", marginLeft: 8, opacity: 0.8 }}>
-             {movieCount} Movies
+          <div className={styles.title}>
+            Movies
+            <span className={styles.movieCount}>
+              {response?.totalCount} Total
             </span>
           </div>
         </div>
 
-       
         <Space align="end" size="middle">
           <div>
-            <div style={{ color: "cccccc", fontSize: "12px",  }}>
-              Sort by:
-            </div>
+            <div className={styles.sortLabel}>Sort by:</div>
             <Select
               value={selectedSort}
-              onChange={(value) => setSelectedSort(value)}
-              style={{
-                width: 140, 
-                backgroundColor: "#302c34",
-                color: "#f0f0f0",
+              onChange={(value) => {
+                setSelectedSort(value);
+                onPageChange(1);
               }}
-              bordered={false} 
-              dropdownStyle={{
-                backgroundColor: '#2a2a2e',
-              }}
-              
+              className={styles.select}
+              variant="borderless"
               options={sortOptions.map((item) => ({
                 value: item,
-                label: <span style={{ color: "#f0f0f0" }}>{item}</span>,
+                label: <span>{item}</span>,
               }))}
             />
           </div>
 
-          
           <Input
-            placeholder="Find movie / TV series..."
-            suffix={<SearchOutlined style={{ color:"#f0f0f0" }} />}
-            style={{
-              width: 220, 
-              backgroundColor: "#302c34",
-              color: "#ffffff",
-            }}
-            bordered={false} 
+            className={styles.input}
+            placeholder="Find Movie/Tv series ..."
+            suffix={<SearchOutlined />}
+            variant="borderless"
           />
         </Space>
       </div>
 
-      <div style={{ color: "#999", paddingTop: "1rem" }}>
-        Catalog 
+      <div className={styles.body}>
+        <MovieTable
+          movies={response?.movies ?? []}
+          loading={status === "loading"}
+          currentPage={pagination.page}
+          totalCount={pagination.totalCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </SidebarLayout>
   );
 };
 
-export default Catalog;
+export default Movies;
