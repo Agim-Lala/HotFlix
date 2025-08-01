@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Form, Input, Select, Button, App, Radio } from "antd";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import {
-  createMovie,
+  getMovieById,
+  updateMovie,
   fetchActors,
   fetchCategories,
   fetchDirectors,
@@ -21,12 +23,12 @@ type FormFields = {
   description: string;
   releaseYear: number;
   runningTime: number;
-  quality: string[];
-  genres: string[];
+  qualities: number[];
+  genres: number[];
   age: number;
-  actors: string[];
-  director: string;
-  category: string;
+  actors: number[];
+  director: number;
+  category: number;
   country: string;
   photos: FileList | null;
   cover: FileList | null;
@@ -34,14 +36,54 @@ type FormFields = {
   link: string;
 };
 
-const AddMovieForm: React.FC = () => {
+const EditMovieForm: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const movieId = Number(id);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const { message } = App.useApp();
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormFields>();
+
+  useEffect(() => {
+    if (!movieId) return;
+
+    async function loadMovie() {
+      try {
+        const movie = await getMovieById(movieId);
+
+        if (movie.imagePath)
+          setCoverPreview(`http://localhost:5219${movie.imagePath}`);
+
+        reset({
+          title: movie.title,
+          description: movie.description,
+          releaseYear: movie.releaseYear,
+          runningTime: movie.runningTime,
+          genres: movie.genres.map((g) => g.id) ?? [],
+          qualities: movie.qualities.map((q) => q.id) ?? [],
+          actors: movie.actors.map((a) => a.id) ?? [],
+          age: movie.age,
+          country: movie.country,
+          director: movie.director.id ?? 0,
+          category: movie.categories[0]?.id ?? 0,
+          photos: null,
+          cover: movie.imagePath ? new DataTransfer().files : null,
+          video: null,
+          link: movie.link,
+        });
+        console.log("Loaded movie data:", movie);
+      } catch (error) {
+        console.error("Error loading movie data", error);
+      }
+    }
+
+    loadMovie();
+  }, [movieId, reset, message]);
+
   const { query: genreQuery } = useQuery(fetchGenres);
   const { query: categoryQuery } = useQuery(fetchCategories);
   const { query: directorQuery } = useQuery(fetchDirectors);
@@ -69,6 +111,7 @@ const AddMovieForm: React.FC = () => {
   }
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log("Submitting data:", data);
     const formData = new FormData();
 
     formData.append("Title", data.title);
@@ -78,22 +121,21 @@ const AddMovieForm: React.FC = () => {
     formData.append("DirectorId", String(data.director));
     formData.append("Link", data.link ?? "");
     formData.append("AddedAt", new Date().toISOString());
-
-    data.genres?.forEach((g) => formData.append("GenreIds", g));
-    formData.append("CategoryIds", data.category);
-    data.quality?.forEach((q) => formData.append("QualityIds", q));
-    data.actors?.forEach((a) => formData.append("ActorIds", a));
+    data.genres?.forEach((g) => formData.append("GenreIds", String(g)));
+    data.qualities?.forEach((q) => formData.append("QualityIds", String(q)));
+    data.actors?.forEach((a) => formData.append("ActorIds", String(a)));
+    formData.append("CategoryIds", String(data.category));
     formData.append("Age", String(data.age));
     formData.append("Country", data.country);
     if (data.cover?.[0]) formData.append("CoverImage", data.cover[0]);
     if (data.video) formData.append("VideoFile", data.video);
     console.log("Form Data:", data as FormFields);
     try {
-      await createMovie(formData);
+      await updateMovie(Number(id), formData);
       console.log(formData);
-      message.success("Movie added successfully!");
+      message.success("Movie updated successfully!");
     } catch (error) {
-      message.error("Failed to add movie.");
+      message.error("Failed to update movie.");
     }
   };
   const handleCoverChange = (
@@ -111,7 +153,7 @@ const AddMovieForm: React.FC = () => {
 
   return (
     <>
-      <h1>Add New Movie</h1>
+      <h1>Edit Movie</h1>
       <Form
         layout="vertical"
         onFinish={handleSubmit(onSubmit)}
@@ -123,6 +165,7 @@ const AddMovieForm: React.FC = () => {
               <Controller
                 name="cover"
                 control={control}
+                rules={{ required: "Cover is required" }}
                 render={({ field }) => (
                   <div
                     onDrop={(e) => {
@@ -134,7 +177,6 @@ const AddMovieForm: React.FC = () => {
                   >
                     <input
                       type="file"
-                      required
                       style={{ display: "none" }}
                       onChange={(e) =>
                         handleCoverChange(e.target.files, field.onChange)
@@ -259,7 +301,7 @@ const AddMovieForm: React.FC = () => {
           <div className={`${styles.quality} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="quality"
+                name="qualities"
                 control={control}
                 rules={{ required: "Quality is required" }}
                 render={({ field }) => (
@@ -269,8 +311,9 @@ const AddMovieForm: React.FC = () => {
                     placeholder="Select Quality"
                     variant="borderless"
                     loading={qualityQuery.status === "loading"}
-                    value={field.value || []}
-                    onChange={(value) => field.onChange(value)}
+                    {...field}
+                    value={field.value}
+                    onChange={(val) => field.onChange(val)}
                   >
                     {qualityQuery.status === "success" &&
                       qualityQuery.response.map((quality) => (
@@ -281,8 +324,8 @@ const AddMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.quality && (
-                <span className={styles.error}>{errors.quality.message}</span>
+              {errors.qualities && (
+                <span className={styles.error}>{errors.qualities.message}</span>
               )}
             </Form.Item>
           </div>
@@ -308,13 +351,13 @@ const AddMovieForm: React.FC = () => {
               <Controller
                 name="country"
                 control={control}
-                rules={{ required: "Country is required" }}
+                rules={{ required: "Countries are required" }}
                 render={({ field }) => (
                   <Input
                     {...field}
                     placeholder="Country"
                     variant="borderless"
-                  />
+                  ></Input>
                 )}
               />
               {errors.country && (
@@ -388,8 +431,8 @@ const AddMovieForm: React.FC = () => {
                   render={({ field }) => (
                     <Radio.Group
                       {...field}
-                      value={field.value || []}
-                      onChange={(value) => field.onChange(value)}
+                      value={field.value}
+                      onChange={(val) => field.onChange(val)}
                     >
                       {categoryQuery.status === "success" &&
                         categoryQuery.response.map((category) => (
@@ -420,9 +463,10 @@ const AddMovieForm: React.FC = () => {
                     placeholder="Select Actors"
                     variant="borderless"
                     loading={actorQuery.status === "loading"}
+                    {...field}
                     value={field.value || []}
+                    onChange={(val) => field.onChange(val)}
                     showSearch
-                    onChange={(value) => field.onChange(value)}
                     filterOption={(input, option) =>
                       (option?.label as string)
                         ?.toLowerCase()
@@ -460,9 +504,10 @@ const AddMovieForm: React.FC = () => {
                     placeholder="Select Director"
                     variant="borderless"
                     loading={directorQuery.status === "loading"}
-                    value={field.value || []}
+                    {...field}
+                    value={field.value}
+                    onChange={(val) => field.onChange(val)}
                     showSearch
-                    onChange={(value) => field.onChange(value)}
                     filterOption={(input, option) =>
                       (option?.label as string)
                         ?.toLowerCase()
@@ -511,14 +556,22 @@ const AddMovieForm: React.FC = () => {
           </div>
 
           <div className={`${styles.addLink} ${styles.inputStyles}`}>
-            <Form.Item>
+            <Form.Item required>
               <Controller
                 name="link"
                 control={control}
+                rules={{ required: "Link is required" }}
                 render={({ field }) => (
-                  <Input placeholder="Link" variant="borderless" {...field} />
+                  <Input
+                    {...field}
+                    placeholder="Link"
+                    variant="borderless"
+                  ></Input>
                 )}
               />
+              {errors.link && (
+                <span className={styles.error}>{errors.link.message}</span>
+              )}
             </Form.Item>
           </div>
         </div>
@@ -537,4 +590,4 @@ const AddMovieForm: React.FC = () => {
   );
 };
 
-export default AddMovieForm;
+export default EditMovieForm;

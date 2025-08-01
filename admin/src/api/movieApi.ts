@@ -31,6 +31,42 @@ export interface Movie {
   views?: number;
   isVisible?: boolean;
   createdAt?: string;
+  description: string;
+  releaseYear: number;
+  runningTime: number;
+  quality: string[];
+  genres: string[];
+  age: number;
+  actors: string[];
+  director: string;
+  category: string;
+  country: string;
+  photos: FileList | null;
+  cover: FileList | null;
+  video: File | null;
+  link: string;
+}
+
+export interface MovieDTO {
+  movieId: number;
+  title: string;
+  releaseYear: number;
+  description: string;
+  director: { id: number; name: string };
+  runningTime: number;
+  genres: { id: number; name: string }[];
+  age: number;
+  country: string;
+  categories: { id: number; name: string }[];
+  qualities: { id: number; name: string }[];
+  actors: { id: number; name: string }[];
+  addedAt: string;
+  imagePath: string;
+  videoPath: string;
+  averageRating: number;
+  isVisible: boolean;
+  views: number;
+  link: string;
 }
 
 export const fetchMovies = async (
@@ -76,12 +112,31 @@ export const getMoviesSortedByCreatedAt = async () => {
   return response.movies;
 };
 
+export const getMovieById = async (id: number): Promise<MovieDTO> => {
+  const response = await axios.get<MovieDTO>(
+    `http://localhost:5219/api/movies/${id}`
+  );
+  return response.data;
+};
+
 export const createMovie = async (formData: FormData) => {
   const response = await axios.post(
     "http://localhost:5219/api/Movies",
     formData
   );
   return response.data;
+};
+
+export const updateMovie = async (id: number, formData: FormData) => {
+  const response = await axios.put(
+    `http://localhost:5219/api/Movies/${id}`,
+    formData
+  );
+  return response.data;
+};
+
+export const deleteMovieById = async (id: number): Promise<void> => {
+  await axios.delete(`http://localhost:5219/api/Movies/${id}`);
 };
 
 // Fetching Form data for movie creation
