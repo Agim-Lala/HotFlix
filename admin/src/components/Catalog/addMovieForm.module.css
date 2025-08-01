@@ -1,0 +1,263 @@
+:root {
+  --primary-color: #ff9933;
+  --secondary-color: #3fcf8e;
+  --background-color: rgba(131, 130, 130, 0.459);
+  --text-color: #ffffff;
+  --border-color: #333;
+}
+body {
+  background: #1c1c1c;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: repeat(8, auto);
+  gap: 10px;
+  grid-template-areas:
+    "cover title title title title"
+    "cover description description description description"
+    "cover release-year running-time quality age"
+    "cover choose-countries choose-countries choose-genres choose-genres"
+    "cover upload-photos upload-photos upload-photos upload-photos"
+    "categories categories categories categories categories"
+    "actors actors actors director director"
+    "upload-videos upload-videos upload-videos upload-videos upload-videos"
+    "add-link add-link add-link add-link add-link";
+}
+h1 {
+  color: var(--text-color);
+  font-size: 24px;
+  padding: 16px 20px;
+  margin: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form {
+  padding: 32px;
+  border-radius: 12px;
+  color: #ffffff;
+  border: 1px solid var(--border-color);
+  margin: 0.5rem;
+}
+.error {
+  color: #ff4d4f;
+  font-size: 11px;
+  margin-left: 8px;
+}
+.input,
+.textarea,
+.select,
+.number-input,
+.ant-input,
+.ant-input-number,
+.ant-select-selector {
+  color: var(--text-color) !important;
+  transition: border-color 0.2s;
+}
+
+.input:hover,
+.textarea:hover,
+.select:hover,
+.number-input:hover,
+.ant-input:hover,
+.ant-input-number:hover,
+.ant-select:hover {
+  border-color: #888 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder,
+.ant-select::placeholder,
+.ant-input::placeholder,
+.ant-input::placeholder {
+  color: #999 !important;
+  opacity: 0.7 !important;
+}
+.textarea {
+  resize: vertical;
+}
+
+:global(.ant-select-selection-placeholder) {
+  color: #999 !important;
+  opacity: 0.7 !important;
+}
+
+.dragArea {
+  width: 270px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px dashed #666;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.dragArea:hover {
+  border-color: #999;
+  color: #ddd;
+}
+
+.dragArea img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.dragArea label {
+  cursor: pointer;
+}
+
+.removeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.2s ease;
+}
+
+.removeButton:hover {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+.button {
+  background-color: transparent;
+  color: var(--text-color);
+  font-size: 16px;
+  border: 2px solid var(--primary-color);
+  margin-top: 2rem;
+  padding: 20px 50px;
+  border-radius: 8px;
+}
+
+.button:hover {
+  border: 2px solid var(--secondary-color) !important;
+  color: var(--text-color) !important;
+}
+
+.inlineRadio {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.inlineRadio p {
+  margin: 0;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.radioWrapper :global(.ant-radio-checked .ant-radio-inner) {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--background-color) !important;
+}
+
+.radioWrapper :global(.ant-radio-wrapper:hover .ant-radio-inner) {
+  border-color: var(--primary-color);
+}
+
+.radioWrapper :global(.ant-radio-wrapper:hover) {
+  color: var(--primary-color);
+}
+
+.uploadLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  padding: 10px;
+}
+.uploadLabel span {
+  font-size: 14px;
+  opacity: 0.7;
+  color: #bfbfbf;
+  transition: color 0.2s;
+  pointer-events: none;
+}
+.uploadIcon {
+  font-size: 20px;
+  color: #bfbfbf;
+  margin-left: 12px;
+}
+
+.hiddenInput {
+  display: none;
+}
+.uploadText {
+  color: #888;
+  font-size: 16px;
+}
+.cover {
+  grid-area: cover;
+}
+.title {
+  grid-area: title;
+}
+.description {
+  grid-area: description;
+  min-height: 100px;
+}
+.releaseYear {
+  grid-area: release-year;
+}
+.running-time {
+  grid-area: running-time;
+}
+.quality {
+  grid-area: quality;
+}
+.age {
+  grid-area: age;
+}
+.chooseCountries {
+  grid-area: choose-countries;
+}
+.chooseGenres {
+  grid-area: choose-genres;
+}
+.uploadPhotos {
+  grid-area: upload-photos;
+}
+.categories {
+  grid-area: categories;
+}
+.actors {
+  grid-area: actors;
+}
+.director {
+  grid-area: director;
+}
+.uploadVideos {
+  grid-area: upload-videos;
+  height: 70% !important;
+}
+.addLink {
+  grid-area: add-link;
+}
+.inputStyles {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 10px;
+  height: 70% !important;
+}
