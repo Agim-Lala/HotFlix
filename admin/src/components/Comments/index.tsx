@@ -2,15 +2,15 @@ import { useState, useCallback, useEffect } from "react";
 import { Input, Select, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import SidebarLayout from "../layouts/SidebarLayout";
-import { fetchUsers, SortFields } from "../../api/userApi";
-import { UserTable } from "./UserTable";
-import styles from "./Users.module.css";
+import { fetchComments, SortFields } from "../../api/commentApi";
+import styles from "./comments.module.css";
 import useQuery from "../../hooks/useQuery";
 import { usePagination } from "../../hooks/usePagination";
+import { CommentTable } from "./CommentsTable";
 
 const sortOptions = Object.values(SortFields);
 
-const Users = () => {
+const Comments = () => {
   const [selectedSort, setSelectedSort] = useState<SortFields>(
     SortFields.CreatedAt
   );
@@ -19,13 +19,13 @@ const Users = () => {
 
   const fetchResponse = useCallback(
     () =>
-      fetchUsers({
+      fetchComments({
         sortBy: selectedSort,
         ascending: true,
-        page: 1,
-        pageSize: 10,
+        page: pagination.page,
+        pageSize: pagination.pageSize,
       }),
-    [selectedSort]
+    [selectedSort, pagination.page, pagination.pageSize]
   );
 
   const {
@@ -43,8 +43,8 @@ const Users = () => {
       <div className={styles.header}>
         <div>
           <div className={styles.title}>
-            Users
-            <span className={styles.userCount}>
+            Comments
+            <span className={styles.commentCount}>
               {response?.totalCount} Total
             </span>
           </div>
@@ -55,7 +55,10 @@ const Users = () => {
             <div className={styles.sortLabel}>Sort by:</div>
             <Select
               value={selectedSort}
-              onChange={(value) => setSelectedSort(value)}
+              onChange={(value) => {
+                setSelectedSort(value);
+                onPageChange(1);
+              }}
               className={styles.select}
               variant="borderless"
               options={sortOptions.map((item) => ({
@@ -67,7 +70,7 @@ const Users = () => {
 
           <Input
             className={styles.input}
-            placeholder="Find users ..."
+            placeholder="Find Movie/Tv series ..."
             suffix={<SearchOutlined />}
             variant="borderless"
           />
@@ -75,8 +78,8 @@ const Users = () => {
       </div>
 
       <div className={styles.body}>
-        <UserTable
-          users={response?.users ?? []}
+        <CommentTable
+          comments={response?.comments ?? []}
           loading={status === "loading"}
           currentPage={pagination.page}
           totalCount={pagination.totalCount}
@@ -87,4 +90,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Comments;
