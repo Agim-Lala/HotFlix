@@ -11,30 +11,12 @@ import {
   fetchDirectors,
   fetchGenres,
   fetchQualities,
+  CreateMovieRequest,
 } from "../../api/movieApi";
 import useQuery from "../../hooks/useQuery";
 import styles from "./addMovieForm.module.css";
 
 const { TextArea } = Input;
-const { Option } = Select;
-
-type FormFields = {
-  title: string;
-  description: string;
-  releaseYear: number;
-  runningTime: number;
-  qualities: number[];
-  genres: number[];
-  age: number;
-  actors: number[];
-  director: number;
-  category: number;
-  country: string;
-  photos: FileList | null;
-  cover: FileList | null;
-  video: File | null;
-  link: string;
-};
 
 const EditMovieForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +28,7 @@ const EditMovieForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormFields>();
+  } = useForm<CreateMovieRequest>();
 
   useEffect(() => {
     if (!movieId) return;
@@ -63,13 +45,13 @@ const EditMovieForm: React.FC = () => {
           description: movie.description,
           releaseYear: movie.releaseYear,
           runningTime: movie.runningTime,
-          genres: movie.genres.map((g) => g.id) ?? [],
-          qualities: movie.qualities.map((q) => q.id) ?? [],
-          actors: movie.actors.map((a) => a.id) ?? [],
+          genreIds: movie.genres.map((g) => g.id) ?? [],
+          qualityIds: movie.qualities.map((q) => q.id) ?? [],
+          actorIds: movie.actors.map((a) => a.id) ?? [],
           age: movie.age,
           country: movie.country,
-          director: movie.director.id ?? 0,
-          category: movie.categories[0]?.id ?? 0,
+          directorId: movie.director.id ?? 0,
+          categoryIds: [movie.categories[0]?.id ?? 0],
           photos: null,
           cover: movie.imagePath ? new DataTransfer().files : null,
           video: null,
@@ -110,29 +92,11 @@ const EditMovieForm: React.FC = () => {
     return <div>Failed to load data</div>;
   }
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log("Submitting data:", data);
-    const formData = new FormData();
-
-    formData.append("Title", data.title);
-    formData.append("Description", data.description);
-    formData.append("ReleaseYear", String(data.releaseYear));
-    formData.append("RunningTime", String(data.runningTime));
-    formData.append("DirectorId", String(data.director));
-    formData.append("Link", data.link ?? "");
-    formData.append("AddedAt", new Date().toISOString());
-    data.genres?.forEach((g) => formData.append("GenreIds", String(g)));
-    data.qualities?.forEach((q) => formData.append("QualityIds", String(q)));
-    data.actors?.forEach((a) => formData.append("ActorIds", String(a)));
-    formData.append("CategoryIds", String(data.category));
-    formData.append("Age", String(data.age));
-    formData.append("Country", data.country);
-    if (data.cover?.[0]) formData.append("CoverImage", data.cover[0]);
-    if (data.video) formData.append("VideoFile", data.video);
-    console.log("Form Data:", data as FormFields);
+  const onSubmit: SubmitHandler<CreateMovieRequest> = async (data) => {
+    console.log("Form Data:", data as CreateMovieRequest);
     try {
-      await updateMovie(Number(id), formData);
-      console.log(formData);
+      await updateMovie(Number(id), data);
+      console.log(data);
       message.success("Movie updated successfully!");
     } catch (error) {
       message.error("Failed to update movie.");
@@ -301,7 +265,7 @@ const EditMovieForm: React.FC = () => {
           <div className={`${styles.quality} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="qualities"
+                name="qualityIds"
                 control={control}
                 rules={{ required: "Quality is required" }}
                 render={({ field }) => (
@@ -324,8 +288,10 @@ const EditMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.qualities && (
-                <span className={styles.error}>{errors.qualities.message}</span>
+              {errors.qualityIds && (
+                <span className={styles.error}>
+                  {errors.qualityIds.message}
+                </span>
               )}
             </Form.Item>
           </div>
@@ -369,7 +335,7 @@ const EditMovieForm: React.FC = () => {
           <div className={`${styles.chooseGenres} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="genres"
+                name="genreIds"
                 control={control}
                 rules={{ required: "Genres are required" }}
                 render={({ field }) => (
@@ -391,8 +357,8 @@ const EditMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.genres && (
-                <span className={styles.error}>{errors.genres.message}</span>
+              {errors.genreIds && (
+                <span className={styles.error}>{errors.genreIds.message}</span>
               )}
             </Form.Item>
           </div>
@@ -425,14 +391,14 @@ const EditMovieForm: React.FC = () => {
               <div className={`${styles.inlineRadio} ${styles.radioWrapper}`}>
                 <p>Category</p>
                 <Controller
-                  name="category"
+                  name="categoryIds"
                   control={control}
                   rules={{ required: "Category is required" }}
                   render={({ field }) => (
                     <Radio.Group
                       {...field}
-                      value={field.value}
-                      onChange={(val) => field.onChange(val)}
+                      value={field.value?.[0] ?? null}
+                      onChange={(e) => field.onChange([e.target.value])}
                     >
                       {categoryQuery.status === "success" &&
                         categoryQuery.response.map((category) => (
@@ -444,8 +410,10 @@ const EditMovieForm: React.FC = () => {
                   )}
                 />
               </div>
-              {errors.category && (
-                <span className={styles.error}>{errors.category.message}</span>
+              {errors.categoryIds && (
+                <span className={styles.error}>
+                  {errors.categoryIds.message}
+                </span>
               )}
             </Form.Item>
           </div>
@@ -453,7 +421,7 @@ const EditMovieForm: React.FC = () => {
           <div className={`${styles.actors} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="actors"
+                name="actorIds"
                 control={control}
                 rules={{ required: "Actors are required" }}
                 render={({ field }) => (
@@ -486,8 +454,8 @@ const EditMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.actors && (
-                <span className={styles.error}>{errors.actors.message}</span>
+              {errors.actorIds && (
+                <span className={styles.error}>{errors.actorIds.message}</span>
               )}
             </Form.Item>
           </div>
@@ -495,7 +463,7 @@ const EditMovieForm: React.FC = () => {
           <div className={`${styles.director} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="director"
+                name="directorId"
                 control={control}
                 rules={{ required: "Director is required" }}
                 render={({ field }) => (
@@ -527,8 +495,10 @@ const EditMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.director && (
-                <span className={styles.error}>{errors.director.message}</span>
+              {errors.directorId && (
+                <span className={styles.error}>
+                  {errors.directorId.message}
+                </span>
               )}
             </Form.Item>
           </div>

@@ -9,30 +9,12 @@ import {
   fetchDirectors,
   fetchGenres,
   fetchQualities,
+  CreateMovieRequest,
 } from "../../api/movieApi";
 import useQuery from "../../hooks/useQuery";
 import styles from "./addMovieForm.module.css";
 
 const { TextArea } = Input;
-const { Option } = Select;
-
-type FormFields = {
-  title: string;
-  description: string;
-  releaseYear: number;
-  runningTime: number;
-  quality: string[];
-  genres: string[];
-  age: number;
-  actors: string[];
-  director: string;
-  category: string;
-  country: string;
-  photos: FileList | null;
-  cover: FileList | null;
-  video: File | null;
-  link: string;
-};
 
 const AddMovieForm: React.FC = () => {
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -41,7 +23,7 @@ const AddMovieForm: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormFields>();
+  } = useForm<CreateMovieRequest>();
   const { query: genreQuery } = useQuery(fetchGenres);
   const { query: categoryQuery } = useQuery(fetchCategories);
   const { query: directorQuery } = useQuery(fetchDirectors);
@@ -68,29 +50,11 @@ const AddMovieForm: React.FC = () => {
     return <div>Failed to load data</div>;
   }
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    const formData = new FormData();
-
-    formData.append("Title", data.title);
-    formData.append("Description", data.description);
-    formData.append("ReleaseYear", String(data.releaseYear));
-    formData.append("RunningTime", String(data.runningTime));
-    formData.append("DirectorId", String(data.director));
-    formData.append("Link", data.link ?? "");
-    formData.append("AddedAt", new Date().toISOString());
-
-    data.genres?.forEach((g) => formData.append("GenreIds", g));
-    formData.append("CategoryIds", data.category);
-    data.quality?.forEach((q) => formData.append("QualityIds", q));
-    data.actors?.forEach((a) => formData.append("ActorIds", a));
-    formData.append("Age", String(data.age));
-    formData.append("Country", data.country);
-    if (data.cover?.[0]) formData.append("CoverImage", data.cover[0]);
-    if (data.video) formData.append("VideoFile", data.video);
-    console.log("Form Data:", data as FormFields);
+  const onSubmit: SubmitHandler<CreateMovieRequest> = async (data) => {
+    console.log("Form Data:", data as CreateMovieRequest);
     try {
-      await createMovie(formData);
-      console.log(formData);
+      await createMovie(data);
+      console.log(data as CreateMovieRequest);
       message.success("Movie added successfully!");
     } catch (error) {
       message.error("Failed to add movie.");
@@ -259,7 +223,7 @@ const AddMovieForm: React.FC = () => {
           <div className={`${styles.quality} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="quality"
+                name="qualityIds"
                 control={control}
                 rules={{ required: "Quality is required" }}
                 render={({ field }) => (
@@ -281,8 +245,10 @@ const AddMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.quality && (
-                <span className={styles.error}>{errors.quality.message}</span>
+              {errors.qualityIds && (
+                <span className={styles.error}>
+                  {errors.qualityIds.message}
+                </span>
               )}
             </Form.Item>
           </div>
@@ -326,7 +292,7 @@ const AddMovieForm: React.FC = () => {
           <div className={`${styles.chooseGenres} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="genres"
+                name="genreIds"
                 control={control}
                 rules={{ required: "Genres are required" }}
                 render={({ field }) => (
@@ -348,8 +314,8 @@ const AddMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.genres && (
-                <span className={styles.error}>{errors.genres.message}</span>
+              {errors.genreIds && (
+                <span className={styles.error}>{errors.genreIds.message}</span>
               )}
             </Form.Item>
           </div>
@@ -382,14 +348,14 @@ const AddMovieForm: React.FC = () => {
               <div className={`${styles.inlineRadio} ${styles.radioWrapper}`}>
                 <p>Category</p>
                 <Controller
-                  name="category"
+                  name="categoryIds"
                   control={control}
                   rules={{ required: "Category is required" }}
                   render={({ field }) => (
                     <Radio.Group
                       {...field}
-                      value={field.value || []}
-                      onChange={(value) => field.onChange(value)}
+                      value={field.value?.[0] || null}
+                      onChange={(e) => field.onChange([e.target.value])}
                     >
                       {categoryQuery.status === "success" &&
                         categoryQuery.response.map((category) => (
@@ -401,8 +367,10 @@ const AddMovieForm: React.FC = () => {
                   )}
                 />
               </div>
-              {errors.category && (
-                <span className={styles.error}>{errors.category.message}</span>
+              {errors.categoryIds && (
+                <span className={styles.error}>
+                  {errors.categoryIds.message}
+                </span>
               )}
             </Form.Item>
           </div>
@@ -410,7 +378,7 @@ const AddMovieForm: React.FC = () => {
           <div className={`${styles.actors} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="actors"
+                name="actorIds"
                 control={control}
                 rules={{ required: "Actors are required" }}
                 render={({ field }) => (
@@ -442,8 +410,8 @@ const AddMovieForm: React.FC = () => {
                   </Select>
                 )}
               />
-              {errors.actors && (
-                <span className={styles.error}>{errors.actors.message}</span>
+              {errors.actorIds && (
+                <span className={styles.error}>{errors.actorIds.message}</span>
               )}
             </Form.Item>
           </div>
@@ -451,7 +419,7 @@ const AddMovieForm: React.FC = () => {
           <div className={`${styles.director} ${styles.inputStyles}`}>
             <Form.Item required>
               <Controller
-                name="director"
+                name="directorId"
                 control={control}
                 rules={{ required: "Director is required" }}
                 render={({ field }) => (
@@ -460,7 +428,7 @@ const AddMovieForm: React.FC = () => {
                     placeholder="Select Director"
                     variant="borderless"
                     loading={directorQuery.status === "loading"}
-                    value={field.value || []}
+                    value={field.value}
                     showSearch
                     onChange={(value) => field.onChange(value)}
                     filterOption={(input, option) =>
@@ -471,19 +439,17 @@ const AddMovieForm: React.FC = () => {
                   >
                     {directorQuery.status === "success" &&
                       directorQuery.response.map((director) => (
-                        <Select.Option
-                          key={director.id}
-                          value={director.id}
-                          label={director.name}
-                        >
+                        <Select.Option key={director.id} value={director.id}>
                           {director.name}
                         </Select.Option>
                       ))}
                   </Select>
                 )}
               />
-              {errors.director && (
-                <span className={styles.error}>{errors.director.message}</span>
+              {errors.directorId && (
+                <span className={styles.error}>
+                  {errors.directorId.message}
+                </span>
               )}
             </Form.Item>
           </div>

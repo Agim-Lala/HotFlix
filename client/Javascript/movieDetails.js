@@ -322,15 +322,21 @@ function populateMovieDetails(movie) {
       .getElementById("movieRating")
       .classList.add(getRatingClass(movie.rating));
   } else {
-    document.getElementById("movieRating").textContent = "8";
-    document.getElementById("movieRating").classList.add(getRatingClass(8));
+    document.getElementById("movieRating").textContent = movie.averageRating;
+    document
+      .getElementById("movieRating")
+      .classList.add(getRatingClass(movie.averageRating));
   }
-  document.getElementById("movieDirector").textContent = movie.directorName;
-  document.getElementById("movieCast").textContent = movie.actors.join(", ");
-  document.getElementById("movieGenres").textContent = movie.genres.join(", ");
+  document.getElementById("movieDirector").textContent = movie.director?.name;
+  document.getElementById("movieCast").textContent = movie.actors
+    ?.map((actor) => actor.name)
+    .join(", ");
+  document.getElementById("movieGenres").textContent = movie.genres
+    .map((genre) => genre.name)
+    .join(", ");
   document.getElementById("movieReleaseYear").textContent = movie.releaseYear;
-  document.getElementById("movieRunningTime").textContent = "130 min";
-  document.getElementById("movieCountry").textContent = "USA";
+  document.getElementById("movieRunningTime").textContent = movie.runningTime;
+  document.getElementById("movieCountry").textContent = movie.country;
   document.getElementById("movieDescription").textContent = movie.description;
   document
     .getElementById("movieVideo")

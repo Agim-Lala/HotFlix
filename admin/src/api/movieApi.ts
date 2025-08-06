@@ -69,6 +69,35 @@ export interface MovieDTO {
   link: string;
 }
 
+export type CreateMovieRequest = {
+  title: string;
+  description: string;
+  releaseYear: number;
+  runningTime: number;
+  qualityIds: number[];
+  genreIds: number[];
+  age: number;
+  actorIds: number[];
+  directorId: number;
+  categoryIds: number[];
+  country: string;
+  photos: FileList | null;
+  cover: FileList | null;
+  video: File | null;
+  link: string;
+};
+
+export const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(",")[1]);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
 export const fetchMovies = async (
   options: MovieQueryOptions = {}
 ): Promise<PaginatedMovieResponse> => {
@@ -119,7 +148,7 @@ export const getMovieById = async (id: number): Promise<MovieDTO> => {
   return response.data;
 };
 
-export const createMovie = async (formData: FormData) => {
+export const createMovie = async (formData: CreateMovieRequest) => {
   const response = await axios.post(
     "http://localhost:5219/api/Movies",
     formData
@@ -127,10 +156,20 @@ export const createMovie = async (formData: FormData) => {
   return response.data;
 };
 
-export const updateMovie = async (id: number, formData: FormData) => {
+export const updateMovie = async (id: number, formData: CreateMovieRequest) => {
+  const payload = {
+    ...formData,
+    coverImage: formData.cover?.[0]
+      ? await fileToBase64(formData.cover[0])
+      : undefined,
+    videoFile: formData.video ? await fileToBase64(formData.video) : undefined,
+  };
+
+  delete (payload as any).cover;
+  delete (payload as any).video;
   const response = await axios.put(
     `http://localhost:5219/api/Movies/${id}`,
-    formData
+    payload
   );
   return response.data;
 };
