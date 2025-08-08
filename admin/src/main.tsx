@@ -9,7 +9,9 @@ import Catalog from "./components/Catalog/Catalog";
 import Users from "./components/Users";
 import Reviews from "./components/Reviews";
 import Comments from "./components/Comments";
+import AddMovieForm from "./components/Catalog/NewMovie";
 import UserEditPage from "./components/Users/UserEdit";
+import EditMovieForm from "./components/Catalog/EditMovie";
 import { ConfigProvider, App as AntdApp } from "antd";
 
 const router = createBrowserRouter([
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
   {
     path: "/comments",
     element: <Comments />,
+  },
+  {
+    path: "/add-movie",
+    element: <AddMovieForm />,
+  },
+  {
+    path: "/movies/edit/:id",
+    element: <EditMovieForm />,
   },
 ]);
 
