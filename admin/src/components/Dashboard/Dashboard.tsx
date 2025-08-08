@@ -20,6 +20,7 @@ import {
 } from "../../api/movieApi";
 import { getReviewsSortedById } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
+import { useNavigate } from "react-router";
 
 export const metricItems = [
   {
@@ -112,6 +113,7 @@ const reviewsColumns = [
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   return (
     <SidebarLayout>
       <div className={styles.headerRow}>
@@ -140,6 +142,7 @@ const Dashboard = () => {
           columns={movieColumnsRating}
           fetchData={async () => await getMoviesSortedByRating()}
           rowKey="movieId"
+          onRowClick={(record) => navigate(`/movies/edit${record.movieId}`)}
         />
         <DashboardCard<Movie>
           title="Latest Items"
@@ -147,6 +150,7 @@ const Dashboard = () => {
           columns={movieColumnsLatest}
           fetchData={async () => await getMoviesSortedByCreatedAt()}
           rowKey="movieId"
+          onRowClick={(record) => navigate(`/movies/edit${record.movieId}`)}
         />
         <DashboardCard
           title="Latest Users"
@@ -154,6 +158,7 @@ const Dashboard = () => {
           columns={userColumns}
           fetchData={async () => await getUsersSortedByCreatedAt()}
           rowKey="id"
+          onRowClick={(record) => navigate(`/users/${record.id}`)}
         />
         <DashboardCard
           title="Latest Reviews"

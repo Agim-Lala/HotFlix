@@ -11,6 +11,7 @@ interface DashboardCardProps<T> {
   fetchData: () => Promise<T[]>;
   rowKey: string;
   onViewAll?: () => void;
+  onRowClick?: (record: T) => void;
 }
 
 function DashboardCard<T>({
@@ -20,6 +21,7 @@ function DashboardCard<T>({
   fetchData,
   rowKey,
   onViewAll,
+  onRowClick,
 }: DashboardCardProps<T>) {
   const fetchResponse = useCallback(async () => {
     const result = await fetchData();
@@ -52,6 +54,11 @@ function DashboardCard<T>({
         loading={status === "loading" || status === "idle"}
         rowKey={rowKey}
         bordered={false}
+        onRow={(record) => ({
+          onClick: () => {
+            onRowClick ? onRowClick(record) : null;
+          },
+        })}
       />
     </Card>
   );
