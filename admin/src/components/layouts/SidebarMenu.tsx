@@ -3,7 +3,6 @@ import { Menu } from "antd";
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  FileTextOutlined,
   UserOutlined,
   MessageOutlined,
   StarOutlined,
@@ -14,7 +13,6 @@ import styles from "./SidebarLayout.module.css";
 const menuItems = [
   { key: "/", label: "Dashboard", icon: <DashboardOutlined /> },
   { key: "/catalog", label: "Catalog", icon: <AppstoreOutlined /> },
-  { key: "/pages", label: "Pages", icon: <FileTextOutlined /> },
   { key: "/users", label: "Users", icon: <UserOutlined /> },
   { key: "/comments", label: "Comments", icon: <MessageOutlined /> },
   { key: "/reviews", label: "Reviews", icon: <StarOutlined /> },

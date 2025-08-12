@@ -1,212 +1,177 @@
 const API_URL = "http://localhost:5219/api/movies";
-
-
-
-// Rating Class //
-
-function getRatingClass(rating) {
-    if (rating >= 8) return "green-rating";
-    if (rating >= 6) return "yellow-rating";
-    return "red-rating";
-}
-
-// Skeleton Loading //
-
-function renderSkeleton(containerId, cardClass, cardCount) {
-    const container = document.querySelector(containerId);
-    if (!container) return;
-    container.innerHTML = "";
-
-    for (let i = 0; i < cardCount; i++) {
-        container.innerHTML += `
-            <div class="${cardClass} skeleton-loading">
-                <div class="movie-card-medium-image skeleton"></div>
-                <h2 class="movie-card-medium-title skeleton"></h2>
-                <p class="movie-card-medium-genre skeleton"></p>
-            </div>
-        `;
-        
-    }
-}
+const MOVIES_PER_PAGE = 18;
 
 let movies = [];
 let currentPage = 1;
-const MOVIES_PER_PAGE = 18;
 let totalPages = 1;
 
-// Fetch Movies //
+// ===== Utility Functions ===== //
 
-async function fetchMovies(url = API_URL, queryParams = null, page = 1, pageSize = MOVIES_PER_PAGE) {
-    try {
-        renderSkeleton("#movies-container", "movie-card-medium", MOVIES_PER_PAGE);
-        let fetchUrl = url;
-        const fetchParams = new URLSearchParams();
+const getRatingClass = (rating) => {
+  if (rating >= 8) return "green-rating";
+  if (rating >= 6) return "yellow-rating";
+  return "red-rating";
+};
 
-        if (queryParams) {
-            queryParams.forEach((value, key) => {
-                fetchParams.append(key, value);
-            });
-        }
-        fetchParams.append("page", page);
-        fetchParams.append("pageSize", pageSize);
-        fetchUrl += `?${fetchParams.toString()}`;
+const getQueryParams = () => {
+  const genreId = document.getElementById("genre-select")?.value;
+  const year = document.getElementById("year-input")?.value.trim();
+  const qualityId = document.getElementById("quality-select")?.value;
 
-        const response = await fetch(fetchUrl);
+  let startYear = null,
+    endYear = null;
+  if (year.includes("-")) {
+    [startYear, endYear] = year.split("-").map((y) => y.trim());
+  }
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to fetch movies: ${response.status} - ${errorText}`);
-        }
+  const params = new URLSearchParams();
+  if (genreId && genreId !== "all") params.append("genreId", genreId);
+  if (startYear) params.append("startYear", startYear);
+  if (endYear) params.append("endYear", endYear);
+  if (qualityId && qualityId !== "all") params.append("qualityId", qualityId);
 
-        const data = await response.json();
-        if (!Array.isArray(data)) { 
-            throw new Error("Unexpected response format. Expected an array.");
-        }
-        movies = data;
-        totalPages = Math.ceil(movies.length / MOVIES_PER_PAGE); 
-        currentPage = page;
-        console.log("Fetched Movies:", movies);
-        console.log("totalPages", totalPages);
-        renderMovies();
-        renderPagination();
-    } catch (error) {
-        console.error("Error fetching movies:", error);
-    }
-}
+  return params;
+};
 
-function renderMovies() {
-    const container = document.getElementById("movies-container");
-    if (!container) {
-        console.error("Container not found");
-        return;
-    }
-    container.innerHTML = "";
+// ===== UI Rendering ===== //
 
-    const startIndex = (currentPage - 1) * MOVIES_PER_PAGE;
-    const endIndex = startIndex + MOVIES_PER_PAGE;
-    const pageMovies = movies.slice(startIndex, endIndex);
-    
-    pageMovies.forEach((movie, index) => {
-        const imageUrl = `http://localhost:5219${movie.imagePath}`;
-        
-        const movieCard = document.createElement('div');
-        movieCard.classList.add('movie-card-medium', 'movie-card-animate'); 
-        movieCard.style.animationDelay = `${index * 0.05}s`;
+const renderSkeleton = (container, count) => {
+  container.innerHTML = Array(count)
+    .fill(
+      `
+      <div class="movie-card-medium skeleton-loading">
+        <div class="movie-card-medium-image skeleton"></div>
+        <h2 class="movie-card-medium-title skeleton"></h2>
+        <p class="movie-card-medium-genre skeleton"></p>
+      </div>
+    `
+    )
+    .join("");
+};
 
-        const genreSpans = movie.genres.map(genre => `<span class="movie-genre">${genre} </span>`).join(",");
+const renderMovies = () => {
+  const container = document.getElementById("movies-container");
+  container.innerHTML = "";
 
-        movieCard.innerHTML = `
-            <div class="movie-card-medium">
-                <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
-                    <div class="rating ${getRatingClass(movie.rating)}">${8}</div>
-                </div>
-                <h2 class="movie-card-medium-title">${movie.title}</h2>
-                <p class="movie-card-medium-genre">${genreSpans}</p>
-            </div>
-        `;
-        
-        movieCard.addEventListener('click', () => {
-            window.location.href = `MovieDetail.html?id=${movie.movieId}`;
-        });
+  const startIndex = (currentPage - 1) * MOVIES_PER_PAGE;
+  const pageMovies = movies.slice(startIndex, startIndex + MOVIES_PER_PAGE);
 
-        container.appendChild(movieCard);
+  const cardsHTML = pageMovies
+    .map((movie, index) => {
+      const imageUrl = `http://localhost:5219${movie.imagePath}`;
+      const genres = movie.genres
+        .map((genre) => `<span class="movie-genre">${genre}</span>`)
+        .join(", ");
+
+      return `
+        <div class="movie-card-medium movie-card-animate" style="animation-delay:${
+          index * 0.05
+        }s">
+          <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
+            <div class="rating ${getRatingClass(movie.averageRating)}">${
+        movie.averageRating
+      }</div>
+          </div>
+          <h2 class="movie-card-medium-title">${movie.title}</h2>
+          <p class="movie-card-medium-genre">${genres}</p>
+        </div>
+      `;
+    })
+    .join("");
+
+  container.innerHTML = cardsHTML;
+
+  // Attach click listeners
+  container.querySelectorAll(".movie-card-medium").forEach((card, i) => {
+    card.addEventListener("click", () => {
+      window.location.href = `MovieDetail.html?id=${pageMovies[i].movieId}`;
     });
-}
+  });
+};
 
-// Filter //
+const renderPagination = () => {
+  const paginationContainer = document.querySelector(".pagination");
+  paginationContainer.innerHTML = "";
 
-function applyFilter() {
-    const genreId = document.getElementById("genre-select").value;
-    const year = document.getElementById("year-input").value.trim();
-    const qualityId = document.getElementById("quality-select").value;
+  const createButton = (label, onClick, isActive = false) => {
+    const a = document.createElement("a");
+    a.innerHTML = label;
+    if (isActive) a.classList.add("active");
+    a.addEventListener("click", onClick);
+    return a;
+  };
 
+  paginationContainer.appendChild(
+    createButton("«", () => {
+      if (currentPage > 1) updatePage(currentPage - 1);
+    })
+  );
 
-    let startYear = null, endYear = null;
-    if (year.includes("-")) {
-        [startYear, endYear] = year.split("-").map(y => y.trim());
-    }
+  for (let i = 1; i <= totalPages; i++) {
+    paginationContainer.appendChild(
+      createButton(i, () => updatePage(i), i === currentPage)
+    );
+  }
 
-    const queryParams = new URLSearchParams();
-    if (genreId && genreId !== "all") queryParams.append("genreId", genreId);
-    if (startYear) queryParams.append("startYear", startYear);
-    if (endYear) queryParams.append("endYear", endYear);
-    if (qualityId && qualityId !== "all") queryParams.append("qualityId", qualityId); 
-    fetchMovies(API_URL + "/filter", queryParams);
-}
+  paginationContainer.appendChild(
+    createButton("»", () => {
+      if (currentPage < totalPages) updatePage(currentPage + 1);
+    })
+  );
+};
+
+// ===== Fetching & Data Flow ===== //
+
+const fetchMovies = async (page = 1, params = null) => {
+  const container = document.getElementById("movies-container");
+  renderSkeleton(container, MOVIES_PER_PAGE);
+
+  const url =
+    params && params.toString()
+      ? `${API_URL}/filter?${params.toString()}&page=${page}&pageSize=${MOVIES_PER_PAGE}`
+      : `${API_URL}?page=${page}&pageSize=${MOVIES_PER_PAGE}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(await response.text());
+
+    const data = await response.json();
+    movies = Array.isArray(data) ? data : [];
+
+    // If backend sends totalPages, use it; else calculate
+    totalPages = Math.ceil(movies.length / MOVIES_PER_PAGE);
+    currentPage = page;
+
+    renderMovies();
+    renderPagination();
+  } catch (err) {
+    console.error("Error fetching movies:", err);
+    container.innerHTML = "<p>Error loading movies.</p>";
+  }
+};
+
+const updatePage = (page) => {
+  fetchMovies(page, getQueryParams());
+};
+
+// ===== Filters ===== //
+
+const applyFilter = () => {
+  fetchMovies(1, getQueryParams());
+};
+
+// ===== Init ===== //
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchMovies();
+  fetchMovies();
 
-    const filterButton = document.getElementById("filter-button");
-    if (filterButton) {
-        filterButton.addEventListener("click", applyFilter);
-    }
+  document
+    .getElementById("filter-button")
+    ?.addEventListener("click", applyFilter);
+
+  document
+    .getElementById("scrollToTopButton")
+    ?.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 });
-
-function getQueryParams(){
-    const genreId = document.getElementById("genre-select").value;
-    const year = document.getElementById("year-input").value.trim();
-    const qualityId = document.getElementById("quality-select").value;
-
-
-    let startYear = null, endYear = null;
-    if (year.includes("-")) {
-        [startYear, endYear] = year.split("-").map(y => y.trim());
-    }
-
-    const queryParams = new URLSearchParams();
-    if (genreId && genreId !== "all") queryParams.append("genreId", genreId);
-    if (startYear) queryParams.append("startYear", startYear);
-    if (endYear) queryParams.append("endYear", endYear);
-    if (qualityId && qualityId !== "all") queryParams.append("qualityId", qualityId); 
-
-    return queryParams;
-}
-
-
-// Pagination //
-function renderPagination() {
-    const paginationContainer = document.querySelector(".pagination");
-    if (!paginationContainer) return;
-
-    paginationContainer.innerHTML = ""; 
-
-    const prevArrow = document.createElement("a");
-    prevArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>`;
-    prevArrow.addEventListener("click", () => {
-        if (currentPage > 1) {
-            fetchMovies(currentPage === 1 ? API_URL: API_URL + "/filter", currentPage ===1 ? null: getQueryParams(), currentPage - 1);
-        }
-    });
-    paginationContainer.appendChild(prevArrow);
-
-    for (let i = 1; i <= totalPages; i++) {
-        const pageLink = document.createElement("a");
-        pageLink.textContent = i;
-        pageLink.addEventListener("click", () => fetchMovies(currentPage === 1 ? API_URL: API_URL + "/filter", currentPage ===1 ? null: getQueryParams(), i));
-        if (i === currentPage) {
-            pageLink.classList.add("active");
-        }
-        paginationContainer.appendChild(pageLink);
-    }
-    const nextArrow = document.createElement("a");
-    nextArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>`;
-    nextArrow.addEventListener("click", () => {
-        if (currentPage < totalPages) {
-            fetchMovies(currentPage === 1 ? API_URL: API_URL + "/filter", currentPage ===1 ? null: getQueryParams(), currentPage + 1);
-        }
-    });
-    paginationContainer.appendChild(nextArrow);
-}
-
-
-const scrollToTopButton = document.getElementById('scrollToTopButton');
-
-if (scrollToTopButton) {
-    scrollToTopButton.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth' // Optional: Adds smooth scrolling
-        });
-    });
-}

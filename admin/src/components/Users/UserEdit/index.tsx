@@ -2,12 +2,17 @@ import { type FC, memo, useCallback, useState } from "react";
 import { Tabs, message, Spin } from "antd";
 import useQuery from "../../../hooks/useQuery";
 import { useParams } from "react-router-dom";
-import { getUserById } from "../../../api/userApi";
+import { getUserById, toggleUserStatus } from "../../../api/userApi";
 import UserProfileForm from "./UserProfileForm";
 import type { User } from "../../../api/userApi";
 import UserPasswordForm from "./UserPasswordForm";
 import styles from "./UserEdit.module.css";
-import { LockOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LockOutlined,
+  DeleteOutlined,
+  UserOutlined,
+  UnlockOutlined,
+} from "@ant-design/icons";
 
 type TabKeys = "profile" | "comments" | "reviews";
 const tabItems: { key: TabKeys; label: string }[] = [
@@ -89,6 +94,16 @@ const UserEditPage: FC = () => {
   }
   if (status === "error" || !user) return <div>User not found.</div>;
 
+  const handleToggleStatus = async () => {
+    try {
+      await toggleUserStatus(user.id);
+      message.success("User status updated successfully!");
+      refetch();
+    } catch (error) {
+      message.error("Failed to update user status.");
+    }
+  };
+
   return (
     <div className={styles.userEditPage}>
       <h1>Edit User</h1>
@@ -124,8 +139,8 @@ const UserEditPage: FC = () => {
         </div>
 
         <div className={styles.actionButtons}>
-          <button className={styles.lockBtn}>
-            <LockOutlined />
+          <button className={styles.lockBtn} onClick={handleToggleStatus}>
+            {user.status === "Approved" ? <LockOutlined /> : <UnlockOutlined />}
           </button>
           <button className={styles.deleteBtn}>
             <DeleteOutlined />

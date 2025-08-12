@@ -81,9 +81,9 @@ export type CreateMovieRequest = {
   directorId: number;
   categoryIds: number[];
   country: string;
-  photos: FileList | null;
+
   cover: FileList | null;
-  video: File | null;
+  video: FileList | null;
   link: string;
 };
 
@@ -162,7 +162,9 @@ export const updateMovie = async (id: number, formData: CreateMovieRequest) => {
     coverImage: formData.cover?.[0]
       ? await fileToBase64(formData.cover[0])
       : undefined,
-    videoFile: formData.video ? await fileToBase64(formData.video) : undefined,
+    videoFile: formData.video
+      ? await fileToBase64(formData.video[0])
+      : undefined,
   };
 
   delete (payload as any).cover;
@@ -176,6 +178,13 @@ export const updateMovie = async (id: number, formData: CreateMovieRequest) => {
 
 export const deleteMovieById = async (id: number): Promise<void> => {
   await axios.delete(`http://localhost:5219/api/Movies/${id}`);
+};
+
+export const toggleMovieStatus = async (id: number): Promise<boolean> => {
+  const response = await axios.put<boolean>(
+    `http://localhost:5219/api/movies/${id}/toggle-visibility`
+  );
+  return response.data;
 };
 
 // Fetching Form data for movie creation
@@ -228,4 +237,13 @@ export const fetchQualities = async (): Promise<Quality[]> => {
   const res = await fetch("http://localhost:5219/api/Quality");
   if (!res.ok) throw new Error("Failed to fetch qualities");
   return res.json();
+};
+
+// Views
+
+export const getUniqueMonthlyViews = async () => {
+  const response = await axios.get<number>(
+    "http://localhost:5219/api/movies/monthlyUniqueViews"
+  );
+  return response.data;
 };

@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import { Input, Select, Space } from "antd";
+import { Input, message, Select, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import SidebarLayout from "../layouts/SidebarLayout";
-import { fetchUsers, SortFields } from "../../api/userApi";
+import { fetchUsers, SortFields, toggleUserStatus } from "../../api/userApi";
 import { UserTable } from "./UserTable";
 import styles from "./Users.module.css";
 import useQuery from "../../hooks/useQuery";
@@ -22,14 +22,15 @@ const Users = () => {
       fetchUsers({
         sortBy: selectedSort,
         ascending: true,
-        page: 1,
-        pageSize: 10,
+        page: pagination.page,
+        pageSize: pagination.pageSize,
       }),
-    [selectedSort]
+    [selectedSort, pagination.page, pagination.pageSize]
   );
 
   const {
     query: { status, response },
+    refetch,
   } = useQuery(fetchResponse);
 
   useEffect(() => {
@@ -37,6 +38,17 @@ const Users = () => {
       onTotalCountChange(response.totalCount);
     }
   }, [response]);
+
+  const handleToggleStatus = async (id: number) => {
+    try {
+      await toggleUserStatus(id);
+      message.success(`User status changed`);
+      await refetch();
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to toggle user status.");
+    }
+  };
 
   return (
     <SidebarLayout>
@@ -81,6 +93,7 @@ const Users = () => {
           currentPage={pagination.page}
           totalCount={pagination.totalCount}
           onPageChange={onPageChange}
+          onToggleStatus={handleToggleStatus}
         />
       </div>
     </SidebarLayout>

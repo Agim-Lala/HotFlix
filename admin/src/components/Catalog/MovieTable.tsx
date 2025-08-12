@@ -5,7 +5,7 @@ import {
   StarFilled,
   EditOutlined,
 } from "@ant-design/icons";
-import { Movie, deleteMovieById } from "../../api/movieApi";
+import { Movie } from "../../api/movieApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
@@ -18,11 +18,14 @@ interface MovieTableProps {
   totalCount?: number;
   initialPageSize?: number;
   onPageChange?: (page: number) => void;
+  onToggleStatus?: (id: number) => void;
+  handleDelete: (movieId: number) => void;
 }
 
 const getMovieTableColumns = (
   _navigate: ReturnType<typeof useNavigate>,
-  handleDelete: (movieId: number) => void
+  handleDelete: (movieId: number) => void,
+  handleToggleStatus: (movieId: number) => void
 ): ColumnsType<Movie> => [
   {
     title: "ID",
@@ -78,29 +81,40 @@ const getMovieTableColumns = (
     title: "Actions",
     key: "actions",
     render: (_text, record) => (
-      <Space>
+      <div className={styles.actionButtons}>
         <Tooltip title="View Details">
-          <Button
-            icon={<EditOutlined />}
-            type="text"
+          <button
+            className={`${styles.baseBtn} ${styles.viewBtn}`}
             onClick={() => _navigate(`/movies/${record.movieId}`)}
-          />
+          >
+            <EditOutlined />
+          </button>
         </Tooltip>
+
         <Tooltip title="Lock/Unlock">
-          <Button icon={<LockOutlined />} type="text" />
+          <button
+            className={`${styles.baseBtn} ${styles.lockBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleStatus(record.movieId);
+            }}
+          >
+            <LockOutlined />
+          </button>
         </Tooltip>
+
         <Tooltip title="Delete">
-          <Button
-            icon={<DeleteOutlined />}
-            type="text"
-            danger
+          <button
+            className={`${styles.baseBtn} ${styles.deleteBtn}`}
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(record.movieId);
             }}
-          />
+          >
+            <DeleteOutlined />
+          </button>
         </Tooltip>
-      </Space>
+      </div>
     ),
   },
 ];
@@ -112,19 +126,11 @@ export const MovieTable: React.FC<MovieTableProps> = ({
   totalCount,
   initialPageSize,
   onPageChange,
+  onToggleStatus,
+  handleDelete,
 }) => {
-  const { message } = App.useApp();
-
   const navigate = useNavigate();
-  const handleDelete = async (movieId: number) => {
-    try {
-      await deleteMovieById(movieId);
-      message.success("Movie deleted");
-    } catch {
-      message.error("Failed to delete movie");
-    }
-  };
-  const columns = getMovieTableColumns(navigate, handleDelete);
+  const columns = getMovieTableColumns(navigate, handleDelete, onToggleStatus!);
 
   return (
     <Table

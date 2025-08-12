@@ -1,5 +1,5 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import { LockOutlined, DeleteOutlined } from "@ant-design/icons";
+import { LockOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Comment } from "../../api/commentApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -60,11 +60,20 @@ const getCommentTableColumns = (
     key: "actions",
     render: () => (
       <Space>
-        <Tooltip title="Lock/Unlock">
-          <Button icon={<LockOutlined />} type="text" />
+        <Tooltip title="View">
+          <Button
+            icon={<EditOutlined />}
+            type="text"
+            className={`${styles.baseBtn} ${styles.viewBtn}`}
+          />
         </Tooltip>
         <Tooltip title="Delete">
-          <Button icon={<DeleteOutlined />} type="text" danger />
+          <Button
+            icon={<DeleteOutlined />}
+            type="text"
+            danger
+            className={`${styles.baseBtn} ${styles.deleteBtn}`}
+          />
         </Tooltip>
       </Space>
     ),

@@ -18,10 +18,12 @@ interface UserTableProps {
   totalCount?: number;
   initialPageSize?: number;
   onPageChange?: (page: number) => void;
+  onToggleStatus: (userId: number) => void;
 }
 
 const getUserTableColumns = (
-  _navigate: ReturnType<typeof useNavigate>
+  _navigate: ReturnType<typeof useNavigate>,
+  onToggleStatus: (userId: number) => void
 ): ColumnsType<User> => [
   {
     title: "ID",
@@ -85,16 +87,42 @@ const getUserTableColumns = (
   {
     title: "Actions",
     key: "actions",
-    render: () => (
+    render: (_, record) => (
       <Space>
-        <Tooltip title="Lock/Unlock">
-          <Button icon={<LockOutlined />} type="text" />
+        <Tooltip
+          title={record.status === "Approved" ? "Ban User" : "Approve User"}
+        >
+          <Button
+            icon={<LockOutlined />}
+            type="text"
+            className={`${styles.baseBtn} ${styles.lockBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleStatus(record.id);
+            }}
+          />
         </Tooltip>
         <Tooltip title="Edit">
-          <Button icon={<EditOutlined />} type="text" />
+          <Button
+            icon={<EditOutlined />}
+            type="text"
+            className={`${styles.baseBtn} ${styles.viewBtn}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              _navigate(`/users/${record.id}`);
+            }}
+          />
         </Tooltip>
         <Tooltip title="Delete">
-          <Button icon={<DeleteOutlined />} type="text" danger />
+          <Button
+            icon={<DeleteOutlined />}
+            type="text"
+            className={`${styles.baseBtn} ${styles.viewBtn}`}
+            danger
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
         </Tooltip>
       </Space>
     ),
@@ -108,9 +136,10 @@ export const UserTable: React.FC<UserTableProps> = ({
   initialPageSize,
   totalCount,
   onPageChange,
+  onToggleStatus,
 }) => {
   const navigate = useNavigate();
-  const columns = getUserTableColumns(navigate);
+  const columns = getUserTableColumns(navigate, onToggleStatus);
 
   return (
     <Table
