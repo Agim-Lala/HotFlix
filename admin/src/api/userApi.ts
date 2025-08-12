@@ -93,3 +93,12 @@ export const updateUserPassword = async (
     confirmNewPassword,
   });
 };
+
+export const toggleUserStatus = async (
+  id: number
+): Promise<"Approved" | "Banned"> => {
+  const response = await axios.patch<{ status: "Approved" | "Banned" }>(
+    `http://localhost:5219/api/auth/${id}/status`
+  );
+  return response.data.status;
+};

@@ -52,9 +52,8 @@ const EditMovieForm: React.FC = () => {
           country: movie.country,
           directorId: movie.director.id ?? 0,
           categoryIds: [movie.categories[0]?.id ?? 0],
-          photos: null,
           cover: movie.imagePath ? new DataTransfer().files : null,
-          video: null,
+          video: movie.videoPath ? new DataTransfer().files : null,
           link: movie.link,
         });
         console.log("Loaded movie data:", movie);
@@ -363,29 +362,6 @@ const EditMovieForm: React.FC = () => {
             </Form.Item>
           </div>
 
-          <div className={`${styles.uploadPhotos} ${styles.inputStyles}`}>
-            <Form.Item>
-              <Controller
-                name="photos"
-                control={control}
-                render={({ field }) => (
-                  <label className={styles.uploadLabel}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      multiple
-                      onChange={(e) => field.onChange(e.target.files)}
-                      className={styles.hiddenInput}
-                    />
-                    <span>Upload Photos</span>
-                    <UploadOutlined className={styles.uploadIcon} />
-                  </label>
-                )}
-              />
-            </Form.Item>
-          </div>
-
           <div className={styles.categories}>
             <Form.Item required>
               <div className={`${styles.inlineRadio} ${styles.radioWrapper}`}>
@@ -512,12 +488,10 @@ const EditMovieForm: React.FC = () => {
                   <label className={styles.uploadLabel}>
                     <input
                       type="file"
-                      style={{ display: "none" }}
                       accept="video/*"
                       onChange={(e) => field.onChange(e.target.files)}
                       className={styles.hiddenInput}
                     />
-                    <span>Upload Video</span>
                     <UploadOutlined className={styles.uploadIcon} />
                   </label>
                 )}

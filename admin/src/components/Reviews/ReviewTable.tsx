@@ -1,5 +1,10 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import { LockOutlined, DeleteOutlined, StarFilled } from "@ant-design/icons";
+import {
+  LockOutlined,
+  DeleteOutlined,
+  StarFilled,
+  EditOutlined,
+} from "@ant-design/icons";
 import { Review } from "../../api/reviewApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -69,11 +74,20 @@ const getReviewTableColumns = (
     key: "actions",
     render: () => (
       <Space>
-        <Tooltip title="Lock/Unlock">
-          <Button icon={<LockOutlined />} type="text" />
+        <Tooltip title="View">
+          <Button
+            icon={<EditOutlined />}
+            type="text"
+            className={`${styles.baseBtn} ${styles.viewBtn}`}
+          />
         </Tooltip>
         <Tooltip title="Delete">
-          <Button icon={<DeleteOutlined />} type="text" danger />
+          <Button
+            icon={<DeleteOutlined />}
+            type="text"
+            danger
+            className={`${styles.baseBtn} ${styles.deleteBtn}`}
+          />
         </Tooltip>
       </Space>
     ),

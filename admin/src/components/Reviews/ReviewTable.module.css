@@ -89,3 +89,38 @@
   color: #ff9933;
   border-color: #ff9933;
 }
+.baseBtn {
+  background-color: #2c2c33;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  font-size: 16px;
+}
+
+.viewBtn {
+  color: #4dabf7;
+}
+
+.viewBtn:hover {
+  background-color: #4dabf722;
+}
+
+.lockBtn {
+  color: #3fcf8e;
+}
+
+.lockBtn:hover {
+  background-color: #3fcf8e22;
+}
+
+.deleteBtn {
+  color: #f25c5c;
+}
+
+.deleteBtn:hover {
+  background-color: #f25c5c22;
+}

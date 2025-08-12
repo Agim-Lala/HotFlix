@@ -30,6 +30,7 @@ function DashboardCard<T>({
 
   const {
     query: { response, status },
+    refetch,
   } = useQuery(fetchResponse);
 
   return (
@@ -40,7 +41,10 @@ function DashboardCard<T>({
           <h3 style={{ margin: 0 }}>{title}</h3>
         </div>
         <div className={styles.headerRight}>
-          <ReloadOutlined onClick={fetchData} className={styles.reloadIcon} />
+          <ReloadOutlined
+            onClick={() => refetch()}
+            className={styles.reloadIcon}
+          />
           <button onClick={onViewAll} className={styles.viewAllButton}>
             View All
           </button>
