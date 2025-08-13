@@ -1,4 +1,4 @@
-import { Table, Space, Button, Tooltip, message, App } from "antd";
+import { Table, Tooltip } from "antd";
 import {
   LockOutlined,
   DeleteOutlined,
@@ -69,7 +69,7 @@ const getMovieTableColumns = (
   },
   {
     title: "Created At",
-    dataIndex: "createdAt",
+    dataIndex: "addedAt",
     key: "createdAt",
     render: (date: string) => (
       <span className={styles.createdAt}>

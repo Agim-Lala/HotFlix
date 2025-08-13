@@ -17,7 +17,6 @@ import {
   getMoviesSortedByCreatedAt,
   getMoviesSortedByRating,
   Movie,
-  SortFields,
 } from "../../api/movieApi";
 import { getReviewsSortedById } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
@@ -145,6 +144,7 @@ const Dashboard = () => {
           fetchData={async () => await getMoviesSortedByRating()}
           rowKey="movieId"
           onRowClick={(record) => navigate(`/movies/edit/${record.movieId}`)}
+          onViewAll={() => navigate(`/catalog?sortBy=Rating`)}
         />
         <DashboardCard<Movie>
           title="Latest Items"
@@ -153,6 +153,7 @@ const Dashboard = () => {
           fetchData={async () => await getMoviesSortedByCreatedAt()}
           rowKey="movieId"
           onRowClick={(record) => navigate(`/movies/edit/${record.movieId}`)}
+          onViewAll={() => navigate(`/catalog?sortBy=CreatedAt`)}
         />
         <DashboardCard
           title="Latest Users"
@@ -161,6 +162,7 @@ const Dashboard = () => {
           fetchData={async () => await getUsersSortedByCreatedAt()}
           rowKey="id"
           onRowClick={(record) => navigate(`/users/${record.id}`)}
+          onViewAll={() => navigate(`/users?sortBy=createdAt`)}
         />
         <DashboardCard
           title="Latest Reviews"
@@ -168,6 +170,7 @@ const Dashboard = () => {
           columns={reviewsColumns}
           fetchData={async () => await getReviewsSortedById()}
           rowKey="reviewId"
+          onViewAll={() => navigate(`/reviews?sortBy=createdAt`)}
         />
       </div>
     </SidebarLayout>

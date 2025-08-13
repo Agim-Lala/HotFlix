@@ -66,3 +66,7 @@ export const getReviewsSortedById = async () => {
   });
   return response.reviews;
 };
+
+export const DeleteReview = async (reviewId: number): Promise<void> => {
+  await axios.delete(`http://localhost:5219/api/reviews/${reviewId}`);
+};
