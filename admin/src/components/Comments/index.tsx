@@ -1,35 +1,45 @@
 import { useState, useCallback, useEffect } from "react";
-import { Input, Select, Space } from "antd";
+import { Input, Select, Space, Modal, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import SidebarLayout from "../layouts/SidebarLayout";
-import { fetchComments, SortFields } from "../../api/commentApi";
+import {
+  fetchComments,
+  SortFields,
+  adminDeleteComment,
+} from "../../api/commentApi";
 import styles from "./comments.module.css";
 import useQuery from "../../hooks/useQuery";
 import { usePagination } from "../../hooks/usePagination";
 import { CommentTable } from "./CommentsTable";
+import CommentViewDrawer from "./CommentViewDrawer";
 
 const sortOptions = Object.values(SortFields);
 
 const Comments = () => {
+  const [ascending, setAscending] = useState(false);
   const [selectedSort, setSelectedSort] = useState<SortFields>(
-    SortFields.CreatedAt
+    SortFields.createdAt
   );
-
+  const [drawerOpen, setDrawerOpen] = useState(false); // NEW
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
+    null
+  );
   const { pagination, onTotalCountChange, onPageChange } = usePagination(10);
 
   const fetchResponse = useCallback(
     () =>
       fetchComments({
         sortBy: selectedSort,
-        ascending: true,
+        ascending,
         page: pagination.page,
         pageSize: pagination.pageSize,
       }),
-    [selectedSort, pagination.page, pagination.pageSize]
+    [selectedSort, ascending, pagination.page, pagination.pageSize]
   );
 
   const {
     query: { status, response },
+    refetch,
   } = useQuery(fetchResponse);
 
   useEffect(() => {
@@ -37,6 +47,28 @@ const Comments = () => {
       onTotalCountChange(response.totalCount);
     }
   }, [response]);
+
+  const handleDelete = async (commentId: number) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this comment?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      async onOk() {
+        try {
+          await adminDeleteComment(commentId);
+          message.success("Comment deleted successfully");
+          refetch();
+        } catch (error) {
+          message.error("Failed to delete comment");
+        }
+      },
+    });
+  };
+  const handleView = (commentId: number) => {
+    setSelectedCommentId(commentId);
+    setDrawerOpen(true);
+  };
 
   return (
     <SidebarLayout>
@@ -55,15 +87,29 @@ const Comments = () => {
             <div className={styles.sortLabel}>Sort by:</div>
             <Select
               value={selectedSort}
-              onChange={(value) => {
-                setSelectedSort(value);
+              onSelect={(value) => {
+                if (value === selectedSort) {
+                  setAscending((prev) => !prev);
+                } else {
+                  setSelectedSort(value);
+                  setAscending(false);
+                }
                 onPageChange(1);
               }}
               className={styles.select}
               variant="borderless"
               options={sortOptions.map((item) => ({
                 value: item,
-                label: <span>{item}</span>,
+                label: (
+                  <span>
+                    {item}
+                    {selectedSort === item && (
+                      <span style={{ marginLeft: 4 }}>
+                        {ascending ? "↑" : "↓"}
+                      </span>
+                    )}
+                  </span>
+                ),
               }))}
             />
           </div>
@@ -84,6 +130,13 @@ const Comments = () => {
           currentPage={pagination.page}
           totalCount={pagination.totalCount}
           onPageChange={onPageChange}
+          onDelete={handleDelete}
+          onView={handleView}
+        />
+        <CommentViewDrawer
+          open={drawerOpen}
+          commentId={selectedCommentId}
+          onClose={() => setDrawerOpen(false)}
         />
       </div>
     </SidebarLayout>

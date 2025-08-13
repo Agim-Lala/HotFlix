@@ -1,5 +1,5 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import { LockOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Comment } from "../../api/commentApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +12,14 @@ interface CommentTableProps {
   currentPage: number;
   totalCount: number;
   onPageChange: (page: number) => void;
+  onDelete: (commentId: number) => void;
+  onView: (commentId: number) => void;
 }
 
 const getCommentTableColumns = (
-  _navigate: ReturnType<typeof useNavigate>
+  _navigate: ReturnType<typeof useNavigate>,
+  onDelete: (commentId: number) => void,
+  onView: (commentId: number) => void
 ): ColumnsType<Comment> => [
   {
     title: "ID",
@@ -41,9 +45,13 @@ const getCommentTableColumns = (
   },
   {
     title: "Like/Dislike",
-    dataIndex: "likeDislike",
+    dataIndex: "likesCount",
     key: "likeDislike",
-    render: (value: string | undefined) => value || "0/0",
+    render: (_: any, record: Comment) => (
+      <span>
+        {record.likesCount ?? 0} / {record.dislikesCount ?? 0}
+      </span>
+    ),
   },
   {
     title: "Created At",
@@ -58,12 +66,13 @@ const getCommentTableColumns = (
   {
     title: "Actions",
     key: "actions",
-    render: () => (
+    render: (_text, record) => (
       <Space>
         <Tooltip title="View">
           <Button
             icon={<EditOutlined />}
             type="text"
+            onClick={() => onView(record.commentId)}
             className={`${styles.baseBtn} ${styles.viewBtn}`}
           />
         </Tooltip>
@@ -72,6 +81,7 @@ const getCommentTableColumns = (
             icon={<DeleteOutlined />}
             type="text"
             danger
+            onClick={() => onDelete(record.commentId)}
             className={`${styles.baseBtn} ${styles.deleteBtn}`}
           />
         </Tooltip>
@@ -86,9 +96,11 @@ export const CommentTable: React.FC<CommentTableProps> = ({
   currentPage,
   totalCount,
   onPageChange,
+  onDelete,
+  onView,
 }) => {
   const navigate = useNavigate();
-  const columns = getCommentTableColumns(navigate);
+  const columns = getCommentTableColumns(navigate, onDelete, onView);
 
   return (
     <Table

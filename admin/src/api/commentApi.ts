@@ -1,11 +1,10 @@
 import axios from "axios";
 
 export enum SortFields {
-  commentId = "Id",
-  Title = "Title",
-  Author = "Author",
-  Text = "Text",
-  CreatedAt = "CreatedAt",
+  id = "Id",
+  createdAt = "CreatedAt",
+  username = "Username",
+  movieTitle = "MovieTitle",
 }
 
 export interface PaginatedCommentResponse {
@@ -27,14 +26,34 @@ export interface Comment {
   author: string;
   text: string;
   createdAt?: string;
-  likeDislike?: string;
+  likesCount?: number;
+  dislikesCount?: number;
+}
+export interface CommentDetail {
+  commentId: number;
+  text: string;
+  createdAt: string;
+  updatedAt?: string | null;
+  likesCount: number;
+  dislikesCount: number;
+  userId: number;
+  username: string;
+  author: string;
+  movieId: number;
+  movieTitle: string;
+  parentCommentId?: number | null;
+  quotedCommentId?: number | null;
+  quotedText?: string | null;
+  quotedComment?: CommentDetail | null;
+  replies: CommentDetail[];
+  isDeleted: boolean;
 }
 
 export const fetchComments = async (
   options: CommentQueryOptions = {}
 ): Promise<PaginatedCommentResponse> => {
   const {
-    sortBy = SortFields.commentId,
+    sortBy = SortFields.id,
     ascending = false,
     page,
     pageSize,
@@ -59,8 +78,21 @@ export const fetchComments = async (
 
 export const getCommentsSortedById = async () => {
   const response = await fetchComments({
-    sortBy: SortFields.CreatedAt,
+    sortBy: SortFields.createdAt,
     ascending: false,
   });
   return response.comments;
+};
+
+export const adminDeleteComment = async (commentId: number): Promise<void> => {
+  await axios.delete(
+    `http://localhost:5219/api/Comments/admin/comments/${commentId}`
+  );
+};
+
+export const getCommentById = async (commentId: number) => {
+  const res = await axios.get<CommentDetail>(
+    `http://localhost:5219/api/Comments/${commentId}`
+  );
+  return res.data;
 };

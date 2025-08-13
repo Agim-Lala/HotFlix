@@ -30,7 +30,7 @@ export interface Movie {
   averageRating: number;
   views?: number;
   isVisible?: boolean;
-  createdAt?: string;
+  addedAt?: string;
   description: string;
   releaseYear: number;
   runningTime: number;
@@ -81,7 +81,6 @@ export type CreateMovieRequest = {
   directorId: number;
   categoryIds: number[];
   country: string;
-
   cover: FileList | null;
   video: FileList | null;
   link: string;

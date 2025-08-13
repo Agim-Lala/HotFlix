@@ -1,10 +1,5 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import {
-  LockOutlined,
-  DeleteOutlined,
-  StarFilled,
-  EditOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, StarFilled, EditOutlined } from "@ant-design/icons";
 import { Review } from "../../api/reviewApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +13,12 @@ interface ReviewTableProps {
   totalCount?: number;
   initialPageSize?: number;
   onPageChange?: (page: number) => void;
+  onDelete: (reviewId: number) => void;
 }
 
 const getReviewTableColumns = (
-  _navigate: ReturnType<typeof useNavigate>
+  _navigate: ReturnType<typeof useNavigate>,
+  onDelete: (reviewId: number) => void
 ): ColumnsType<Review> => [
   {
     title: "ID",
@@ -72,7 +69,7 @@ const getReviewTableColumns = (
   {
     title: "Actions",
     key: "actions",
-    render: () => (
+    render: (_text, record) => (
       <Space>
         <Tooltip title="View">
           <Button
@@ -86,6 +83,7 @@ const getReviewTableColumns = (
             icon={<DeleteOutlined />}
             type="text"
             danger
+            onClick={() => onDelete(record.reviewId)}
             className={`${styles.baseBtn} ${styles.deleteBtn}`}
           />
         </Tooltip>
@@ -101,9 +99,10 @@ export const ReviewTable: React.FC<ReviewTableProps> = ({
   initialPageSize,
   totalCount,
   onPageChange,
+  onDelete,
 }) => {
   const navigate = useNavigate();
-  const columns = getReviewTableColumns(navigate);
+  const columns = getReviewTableColumns(navigate, onDelete);
 
   return (
     <Table
