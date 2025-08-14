@@ -144,13 +144,9 @@ svg {
 }
 .header-list-item:last-child {
   padding: 1rem 1rem;
-  margin-bottom: 0.5rem;
 }
 .header-list-item:hover {
   color: #ff9933;
-}
-.header-list-item:last-child:hover {
-  background-color: #ff9933;
 }
 .header-list-item a:hover {
   color: #ff9933;
@@ -472,32 +468,61 @@ svg {
   align-items: center;
   padding: 4rem 1.5rem 0;
 }
+#expectedPremiereContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  overflow: hidden; /* hides overflow when sliding */
+  position: relative;
+}
 
+/* Chevron Buttons Container */
 .expected-premiere-buttons {
   display: flex;
-  gap: 1rem;
+
   align-items: center;
 }
 
 .chevron-container {
   display: flex;
-  gap: 1rem;
 }
 
+/* Chevron Buttons Styling */
 .chevron-left,
 .chevron-right {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 4rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  background-color: var(background-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
+/* SVG inside buttons */
 .chevron-left svg,
 .chevron-right svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.chevron-left:hover,
+.chevron-right:hover {
+  background-color: #e68a00;
+  transform: scale(1.1);
+}
+
+/* Click / active effect */
+.chevron-left:active,
+.chevron-right:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 /* Pagination */

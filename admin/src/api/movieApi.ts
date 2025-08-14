@@ -45,6 +45,7 @@ export interface Movie {
   cover: FileList | null;
   video: File | null;
   link: string;
+  isPremiered: boolean;
 }
 
 export interface MovieDTO {
@@ -67,6 +68,7 @@ export interface MovieDTO {
   isVisible: boolean;
   views: number;
   link: string;
+  isPremiered: boolean;
 }
 
 export type CreateMovieRequest = {
@@ -84,6 +86,7 @@ export type CreateMovieRequest = {
   cover: FileList | null;
   video: FileList | null;
   link: string;
+  isPremiered: boolean;
 };
 
 export const fileToBase64 = (file: File): Promise<string> =>
@@ -148,9 +151,22 @@ export const getMovieById = async (id: number): Promise<MovieDTO> => {
 };
 
 export const createMovie = async (formData: CreateMovieRequest) => {
+  const payload: any = {
+    ...formData,
+    coverImage: formData.cover?.[0]
+      ? await fileToBase64(formData.cover[0])
+      : undefined,
+    videoFile: formData.video?.[0]
+      ? await fileToBase64(formData.video[0])
+      : undefined,
+  };
+
+  delete payload.cover;
+  delete payload.video;
+
   const response = await axios.post(
     "http://localhost:5219/api/Movies",
-    formData
+    payload
   );
   return response.data;
 };
@@ -161,11 +177,10 @@ export const updateMovie = async (id: number, formData: CreateMovieRequest) => {
     coverImage: formData.cover?.[0]
       ? await fileToBase64(formData.cover[0])
       : undefined,
-    videoFile: formData.video
+    videoFile: formData.video?.[0]
       ? await fileToBase64(formData.video[0])
       : undefined,
   };
-
   delete (payload as any).cover;
   delete (payload as any).video;
   const response = await axios.put(

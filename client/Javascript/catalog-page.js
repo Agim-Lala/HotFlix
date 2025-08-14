@@ -175,3 +175,101 @@ document.addEventListener("DOMContentLoaded", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 });
+
+// Expected premiere section
+
+// EXPECTED PREMIERE
+
+const updatePremiereButtonsVisibility = () => {
+  const prevBtn = document.getElementById("prevPremiereButton");
+  const nextBtn = document.getElementById("nextPremiereButton");
+
+  if (premiereMovies.length <= PREMIERE_PER_PAGE) {
+    prevBtn.style.display = "none";
+    nextBtn.style.display = "none";
+  } else {
+    prevBtn.style.display = "flex";
+    nextBtn.style.display = "flex";
+  }
+};
+
+let premiereMovies = [];
+let premiereIndex = 0;
+const PREMIERE_PER_PAGE = 6;
+
+const fetchNonPremieredMovies = async () => {
+  try {
+    renderSkeleton(
+      "#expectedPremiereContainer",
+      "movie-card-medium",
+      PREMIERE_PER_PAGE
+    );
+
+    const res = await fetch(API_URL + "/non-premiered");
+    if (!res.ok) throw new Error("Failed to fetch non-premiered movies");
+
+    premiereMovies = await res.json();
+    updatePremiereButtonsVisibility();
+    renderPremiereMovies();
+  } catch (err) {
+    console.error("Error fetching non-premiered movies:", err);
+  }
+};
+
+const renderPremiereMovies = () => {
+  const container = document.getElementById("expectedPremiereContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const visibleMovies = premiereMovies.slice(
+    premiereIndex,
+    premiereIndex + PREMIERE_PER_PAGE
+  );
+
+  visibleMovies.forEach((movie, index) => {
+    const imageUrl = `http://localhost:5219${movie.imagePath}`;
+    const genreSpans = movie.genres
+      .map((g) => `<span class="movie-genre">${g}</span>`)
+      .join(",");
+
+    const movieCard = document.createElement("div");
+    movieCard.classList.add("movie-card-medium", "movie-card-animate");
+    movieCard.style.animationDelay = `${index * 0.1}s`;
+
+    movieCard.innerHTML = `
+      <div class="movie-card-medium-image" style="background-image: url('${imageUrl}')">
+      </div>
+      <h2 class="movie-card-medium-title">${movie.title}</h2>
+      <p class="movie-card-medium-genre">${genreSpans}</p>
+    `;
+
+    movieCard.addEventListener("click", () => {
+      window.location.href = `MovieDetail.html?id=${movie.movieId}`;
+    });
+
+    container.appendChild(movieCard);
+  });
+};
+const nextPremiere = () => {
+  premiereIndex += PREMIERE_PER_PAGE;
+  if (premiereIndex >= premiereMovies.length) premiereIndex = 0;
+  renderPremiereMovies();
+};
+
+const prevPremiere = () => {
+  premiereIndex -= PREMIERE_PER_PAGE;
+  if (premiereIndex < 0)
+    premiereIndex = Math.max(0, premiereMovies.length - PREMIERE_PER_PAGE);
+  renderPremiereMovies();
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("nextPremiereButton")
+    ?.addEventListener("click", nextPremiere);
+  document
+    .getElementById("prevPremiereButton")
+    ?.addEventListener("click", prevPremiere);
+
+  fetchNonPremieredMovies();
+});

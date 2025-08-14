@@ -102,3 +102,12 @@ export const toggleUserStatus = async (
   );
   return response.data.status;
 };
+
+export const getMe = async (): Promise<User> => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+  const response = await axios.get("http://localhost:5219/api/auth/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
