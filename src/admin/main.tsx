@@ -14,40 +14,44 @@ import UserEditPage from "./components/Users/UserEdit";
 import EditMovieForm from "./components/Catalog/EditMovie";
 import { ConfigProvider, App as AntdApp } from "antd";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Dashboard />,
-  },
-  {
-    path: "/catalog",
-    element: <Catalog />,
-  },
-  {
-    path: "/users",
-    element: <Users />,
-  },
-  {
-    path: "/users/:id",
-    element: <UserEditPage />,
-  },
-  {
-    path: "/reviews",
-    element: <Reviews />,
-  },
-  {
-    path: "/comments",
-    element: <Comments />,
-  },
-  {
-    path: "/add-movie",
-    element: <AddMovieForm />,
-  },
-  {
-    path: "/movies/edit/:id",
-    element: <EditMovieForm />,
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Dashboard />,
+      children: [],
+    },
+    {
+      path: "/catalog",
+      element: <Catalog />,
+    },
+    {
+      path: "/users",
+      element: <Users />,
+    },
+    {
+      path: "/users/:id",
+      element: <UserEditPage />,
+    },
+    {
+      path: "/reviews",
+      element: <Reviews />,
+    },
+    {
+      path: "/comments",
+      element: <Comments />,
+    },
+    {
+      path: "/add-movie",
+      element: <AddMovieForm />,
+    },
+    {
+      path: "/movies/edit/:id",
+      element: <EditMovieForm />,
+    },
+  ],
+  { basename: "/admin" },
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -56,5 +60,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </AntdApp>
     </ConfigProvider>
-  </StrictMode>
+  </StrictMode>,
 );
