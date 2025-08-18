@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/client/Css/index.css" />
+    <link rel="stylesheet" href="/client/Css/login.css" />
+    <title>Register</title>
+  </head>
+  <body>
+    <div class="login-card">
+      <form id="registerForm">
+        <div class="input-container">
+          <input type="text" id="firstName" name="firstName" required />
+          <label for="firstName">First Name</label>
+        </div>
+        <div class="input-container">
+          <input type="text" id="lastName" name="lastName" required />
+          <label for="lastName">Last Name</label>
+        </div>
+        <div class="input-container">
+          <input type="text" id="username" name="username" required />
+          <label for="username">Username</label>
+        </div>
+        <div class="input-container">
+          <input type="email" id="email" name="email" required />
+          <label for="email">Email</label>
+        </div>
+        <div class="input-container">
+          <input type="password" id="password" name="password" required />
+          <label for="password">Password</label>
+        </div>
+        <button type="submit" class="btn btn-primary login-btn">
+          Register
+        </button>
+      </form>
+
+      <p>Already have an account? <a href="/client/SignIn.html">Sign In</a></p>
+    </div>
+  </body>
+  <script src="/client/Javascript/authentication.js"></script>
+</html>

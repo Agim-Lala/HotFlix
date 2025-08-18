@@ -6,10 +6,19 @@ export async function fetchMovieData(movieId) {
     const response = await fetch(`${API_URL}/movies/${movieId}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const movie = await response.json();
+
+    if (movie.isVisible === false) {
+      alert("This movie is not available.");
+      window.location.href = "/index.html";
+      return;
+    }
+
     setCurrentMovieId(movieId);
     populateMovieDetails(movie);
   } catch (error) {
     console.error("Failed to fetch movie details:", error);
+    alert("Movie not found or unavailable.");
+    window.location.href = "/index.html";
   }
 }
 

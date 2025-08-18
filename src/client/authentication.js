@@ -21,20 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
           const data = await response.json();
-          // Store token in localStorage
           localStorage.setItem("token", data.token);
-          alert("Login successful!");
-
-          // Redirect to homepage or dashboard
-          window.location.href = "HotFlix.html";
+          window.location.href = "/index.html";
         } else {
-          const error = await response.text();
-          console.error("Login failed:", error);
-          alert("Login failed. Please check your credentials.");
+          const error = await response.json();
+          alert(
+            error.message || "Login failed. Please check your credentials."
+          );
         }
       } catch (err) {
-        console.error("Error during login:", err);
-        alert("An error occurred while logging in.");
+        console.error(err);
+        alert("Something went wrong. Please try again.");
       }
     });
   }
@@ -68,7 +65,7 @@ document
 
       if (response.ok) {
         alert("Registration successful! Redirecting to login...");
-        window.location.href = "client/Login.html";
+        window.location.href = "signIn.html";
       } else {
         const error = await response.text();
         console.error("Registration failed:", error);

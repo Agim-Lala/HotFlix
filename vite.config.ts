@@ -28,6 +28,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),
+        signIn: path.resolve(__dirname, "signin.html"),
+        register: path.resolve(__dirname, "register"),
+        catalog: path.resolve(__dirname, "catalog.html"),
+        movieDetail: path.resolve(__dirname, "movieDetail"),
         admin: path.resolve(__dirname, "admin.html"),
       },
       output: {
