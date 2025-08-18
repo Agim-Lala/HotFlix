@@ -122,3 +122,48 @@ export async function recordMovieView(movieId) {
     );
   }
 }
+
+export async function fetchRelatedMovies(movieId) {
+  try {
+    const response = await fetch(`${API_URL}/Movies/${movieId}/related`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const relatedMovies = await response.json();
+    renderRelatedMovies(relatedMovies);
+  } catch (error) {
+    console.error("Failed to fetch related movies:", error);
+  }
+}
+
+function renderRelatedMovies(movies) {
+  const container = document.getElementById("relatedMoviesContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  movies.forEach((movie) => {
+    const movieCard = document.createElement("div");
+    movieCard.classList.add("movie-card-medium");
+
+    const ratingClass = getRatingClass(movie.averageRating || 0);
+
+    movieCard.innerHTML = `
+            <div class="movie-card-medium-image" style="background-image: url(${
+              movie.imagePath
+                ? `http://localhost:5219${movie.imagePath}`
+                : "Images/covers/default.jpg"
+            })">
+                <div class="rating ${ratingClass}">${
+      movie.averageRating?.toFixed(1) || "N/A"
+    }</div>
+            </div>
+            <h2 class="movie-card-medium-tittle">${movie.title}</h2>
+            <p class="movie-card-medium-genre">${movie.genres.join(", ")}</p>
+        `;
+
+    movieCard.addEventListener("click", () => {
+      window.location.href = `MovieDetail.html?id=${movie.movieId}`;
+    });
+
+    container.appendChild(movieCard);
+  });
+}

@@ -51,18 +51,19 @@ const AddMovieForm: React.FC = () => {
   }
 
   const onSubmit: SubmitHandler<CreateMovieRequest> = async (data) => {
-    console.log("Form Data:", data as CreateMovieRequest);
     try {
       await createMovie(data);
-      console.log(data as CreateMovieRequest);
       message.success("Movie added successfully!");
+      console.log("Movie created successfully", data);
     } catch (error) {
-      message.error(`Failed to add movie: ${error}`);
+      console.error(error);
+      message.error("Failed to add movie.");
     }
   };
+
   const handleCoverChange = (
     files: FileList | null,
-    onChange: (files: FileList) => void,
+    onChange: (files: FileList) => void
   ) => {
     if (files && files[0]) {
       const file = files[0];
@@ -87,6 +88,7 @@ const AddMovieForm: React.FC = () => {
               <Controller
                 name="cover"
                 control={control}
+                rules={{ required: "Cover image is required" }}
                 render={({ field }) => (
                   <div
                     onDrop={(e) => {
@@ -98,6 +100,7 @@ const AddMovieForm: React.FC = () => {
                   >
                     <input
                       type="file"
+                      accept="image/"
                       required
                       style={{ display: "none" }}
                       onChange={(e) =>
@@ -347,6 +350,39 @@ const AddMovieForm: React.FC = () => {
               {errors.categoryIds && (
                 <span className={styles.error}>
                   {errors.categoryIds.message}
+                </span>
+              )}
+            </Form.Item>
+          </div>
+
+          <div className={styles.isPremiered}>
+            <Form.Item>
+              <div className={`${styles.inlineRadio} ${styles.radioWrapper}`}>
+                <p>Is Premiered</p>
+                <Controller
+                  name="isPremiered"
+                  control={control}
+                  rules={{
+                    validate: (value) =>
+                      value === true ||
+                      value === false ||
+                      "Please select if the movie is premiered",
+                  }}
+                  render={({ field }) => (
+                    <Radio.Group
+                      {...field}
+                      value={field.value ?? null}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    >
+                      <Radio value={true}>Yes</Radio>
+                      <Radio value={false}>No</Radio>
+                    </Radio.Group>
+                  )}
+                />
+              </div>
+              {errors.isPremiered && (
+                <span className={styles.error}>
+                  {errors.isPremiered.message}
                 </span>
               )}
             </Form.Item>
