@@ -55,6 +55,7 @@ const EditMovieForm: React.FC = () => {
           cover: movie.imagePath ? new DataTransfer().files : null,
           video: movie.videoPath ? new DataTransfer().files : null,
           link: movie.link,
+          isPremiered: movie.isPremiered,
         });
         console.log("Loaded movie data:", movie);
       } catch (error) {
@@ -389,6 +390,39 @@ const EditMovieForm: React.FC = () => {
               {errors.categoryIds && (
                 <span className={styles.error}>
                   {errors.categoryIds.message}
+                </span>
+              )}
+            </Form.Item>
+          </div>
+
+          <div className={styles.isPremiered}>
+            <Form.Item required>
+              <div className={`${styles.inlineRadio} ${styles.radioWrapper}`}>
+                <p>Is Premiered</p>
+                <Controller
+                  name="isPremiered"
+                  control={control}
+                  rules={{
+                    validate: (value) =>
+                      value === true ||
+                      value === false ||
+                      "Please select if the movie is premiered",
+                  }}
+                  render={({ field }) => (
+                    <Radio.Group
+                      {...field}
+                      value={field.value ?? null}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    >
+                      <Radio value={true}>Yes</Radio>
+                      <Radio value={false}>No</Radio>
+                    </Radio.Group>
+                  )}
+                />
+              </div>
+              {errors.isPremiered && (
+                <span className={styles.error}>
+                  {errors.isPremiered.message}
                 </span>
               )}
             </Form.Item>

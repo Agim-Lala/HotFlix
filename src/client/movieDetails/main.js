@@ -2,6 +2,7 @@ import {
   fetchMovieData,
   populateMovieDetails,
   recordMovieView,
+  fetchRelatedMovies,
 } from "./movie.js";
 import {
   fetchComments,
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchMovieData(movieId);
     loadActiveTabData();
     recordMovieView(movieId);
+    fetchRelatedMovies(movieId);
   } else {
     console.error("Movie ID not found in URL.");
   }

@@ -20,7 +20,7 @@ body {
     "cover release-year running-time quality age"
     "cover choose-countries choose-countries choose-genres choose-genres"
     "cover upload-photos upload-photos upload-photos upload-photos"
-    "categories categories categories categories categories"
+    "categories categories categories categories is-premiered"
     "actors actors actors director director"
     "upload-videos upload-videos upload-videos upload-videos upload-videos"
     "add-link add-link add-link add-link add-link";
@@ -242,6 +242,9 @@ select::placeholder,
 }
 .categories {
   grid-area: categories;
+}
+.isPremiered {
+  grid-area: is-premiered;
 }
 .actors {
   grid-area: actors;
