@@ -57,12 +57,12 @@ const AddMovieForm: React.FC = () => {
       console.log(data as CreateMovieRequest);
       message.success("Movie added successfully!");
     } catch (error) {
-      message.error("Failed to add movie.");
+      message.error(`Failed to add movie: ${error}`);
     }
   };
   const handleCoverChange = (
     files: FileList | null,
-    onChange: (files: FileList) => void
+    onChange: (files: FileList) => void,
   ) => {
     if (files && files[0]) {
       const file = files[0];
@@ -317,29 +317,6 @@ const AddMovieForm: React.FC = () => {
               {errors.genreIds && (
                 <span className={styles.error}>{errors.genreIds.message}</span>
               )}
-            </Form.Item>
-          </div>
-
-          <div className={`${styles.uploadPhotos} ${styles.inputStyles}`}>
-            <Form.Item>
-              <Controller
-                name="photos"
-                control={control}
-                render={({ field }) => (
-                  <label className={styles.uploadLabel}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      multiple
-                      onChange={(e) => field.onChange(e.target.files)}
-                      className={styles.hiddenInput}
-                    />
-                    <span>Upload Photos</span>
-                    <UploadOutlined className={styles.uploadIcon} />
-                  </label>
-                )}
-              />
             </Form.Item>
           </div>
 
