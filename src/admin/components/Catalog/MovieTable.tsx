@@ -85,7 +85,7 @@ const getMovieTableColumns = (
         <Tooltip title="View Details">
           <button
             className={`${styles.baseBtn} ${styles.viewBtn}`}
-            onClick={() => _navigate(`/movies/${record.movieId}`)}
+            onClick={() => _navigate(`/movies/edit/${record.movieId}`)}
           >
             <EditOutlined />
           </button>

@@ -22,6 +22,7 @@ export function renderComments(comments) {
     console.error("Comments container element not found.");
     return;
   }
+  updateCommentUIForAuth();
   container.innerHTML = "";
 
   function render(comment, level = 0) {
@@ -133,7 +134,10 @@ export function renderComments(comments) {
 }
 
 export async function likeComment(commentId) {
-  if (!token) return;
+  if (!token) {
+    alert("You need to be logged in to like a comment.");
+    return;
+  }
   try {
     const response = await fetch(`${API_URL}/comments/${commentId}/like`, {
       method: "POST",
@@ -146,7 +150,10 @@ export async function likeComment(commentId) {
 }
 
 export async function dislikeComment(commentId) {
-  if (!token) return;
+  if (!token) {
+    alert("You need to be logged in to Dislike a comment.");
+    return;
+  }
   try {
     const response = await fetch(`${API_URL}/comments/${commentId}/dislike`, {
       method: "POST",
@@ -159,6 +166,10 @@ export async function dislikeComment(commentId) {
 }
 
 export function replyToComment(commentId) {
+  if (!token) {
+    alert("You need to be logged in to reply to a comment.");
+    return;
+  }
   const sendButton = document.querySelector(".comment-box .send-btn");
   if (sendButton) {
     sendButton.setAttribute("data-reply-id", commentId);
@@ -168,10 +179,43 @@ export function replyToComment(commentId) {
 }
 
 export function quoteComment(commentId) {
+  if (!token) {
+    alert("You need to be logged in to quote to a comment.");
+    return;
+  }
   const sendButton = document.querySelector(".comment-box .send-btn");
   if (sendButton) {
     sendButton.setAttribute("data-quote-id", commentId);
     sendButton.removeAttribute("data-reply-id");
     document.querySelector(".comment-box textarea")?.focus();
+  }
+}
+
+export function updateCommentUIForAuth() {
+  const commentBox = document.querySelector(".comment-box textarea");
+  const sendButton = document.querySelector(".comment-box .send-btn");
+
+  if (!token) {
+    if (commentBox) {
+      commentBox.disabled = true;
+      commentBox.placeholder = "You need to be logged in to add a comment";
+    }
+    if (sendButton) sendButton.disabled = true;
+
+    const container = getCommentsContainer();
+    if (container) {
+      container
+        .querySelectorAll(".like-button, .dislike-button, .reply-quote span")
+        .forEach((btn) => {
+          btn.style.pointerEvents = "none";
+          btn.style.opacity = 0.5;
+        });
+    }
+  } else {
+    if (commentBox) {
+      commentBox.disabled = false;
+      commentBox.placeholder = "Add a comment...";
+    }
+    if (sendButton) sendButton.disabled = false;
   }
 }

@@ -7,12 +7,19 @@ import {
 import {
   fetchComments,
   renderComments,
+  updateCommentUIForAuth,
   likeComment,
   dislikeComment,
   replyToComment,
   quoteComment,
 } from "./comments.js";
-import { fetchReviews, renderReviews, createReviewElement } from "./review.js";
+import {
+  fetchReviews,
+  renderReviews,
+  updateReviewUIForAuth,
+  createReviewElement,
+  showOwnReviewInsteadOfForm,
+} from "./review.js";
 import { getCurrentUserId, getRatingClass } from "./utils.js";
 import {
   API_URL,
@@ -42,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadActiveTabData();
     recordMovieView(movieId);
     fetchRelatedMovies(movieId);
+    updateCommentUIForAuth();
+    updateReviewUIForAuth();
   } else {
     console.error("Movie ID not found in URL.");
   }
@@ -92,123 +101,139 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // --- Review submission ---
   document
-    .getElementById("submitReviewBtn")
-    ?.addEventListener("click", async () => {
-      const text = document.getElementById("reviewText")?.value.trim();
-      const rating = parseFloat(document.getElementById("reviewRating")?.value);
+    .getElementById("addReviewSection")
+    ?.addEventListener("click", async (e) => {
+      if (e.target && e.target.id === "submitReviewBtn") {
+        const reviewTextEl = document.getElementById("reviewText");
+        const reviewRatingEl = document.getElementById("reviewRating");
+        const submitBtn = e.target;
 
-      if (!text || !rating || isNaN(rating)) {
-        alert("Please enter review text and select a valid rating.");
-        return;
-      }
+        const text = reviewTextEl?.value.trim();
+        const rating = parseFloat(reviewRatingEl?.value);
 
-      if (!token) {
-        alert("You must be logged in to post a review.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/reviews`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            movieId: getCurrentMovieId(),
-            text: text,
-            rating: rating,
-          }),
-        });
-
-        if (!response.ok) {
-          const errText = await response.text();
-          console.error("Failed to post review:", errText);
-          alert("Error posting review.");
+        if (!text || !rating || isNaN(rating)) {
+          alert("Please enter review text and select a valid rating.");
           return;
         }
 
-        const newReview = await response.json();
-        getReviewsContainer()?.prepend(createReviewElement(newReview));
-        document.getElementById("reviewText").value = "";
-        document.getElementById("reviewRating").value = "";
-        dataLoaded.reviews = false;
-      } catch (error) {
-        console.error("Post review error:", error);
-        alert("Something went wrong.");
+        try {
+          let response;
+          if (submitBtn.dataset.reviewId) {
+            // --- UPDATE REVIEW ---
+            const reviewId = submitBtn.dataset.reviewId;
+            response = await fetch(`${API_URL}/reviews/${reviewId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ text, rating }),
+            });
+          } else {
+            // --- CREATE NEW REVIEW ---
+            response = await fetch(`${API_URL}/reviews`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                movieId: getCurrentMovieId(),
+                text,
+                rating,
+              }),
+            });
+          }
+
+          if (!response.ok) {
+            const errText = await response.text();
+            console.error("Review request failed:", errText);
+            alert("Error submitting review.");
+            return;
+          }
+
+          const updatedOrNewReview = await response.json();
+
+          // Back to display mode
+          showOwnReviewInsteadOfForm(updatedOrNewReview);
+
+          // Reload other reviews
+          fetchReviews(getCurrentMovieId());
+        } catch (error) {
+          console.error("Review submit error:", error);
+          alert("Something went wrong.");
+        }
       }
     });
 
-  // --- Rating Slider Display ---
-  const ratingSlider = document.getElementById("reviewRating");
-  const ratingValueDisplay = document.getElementById("ratingValue");
-  ratingSlider?.addEventListener("input", () => {
-    ratingValueDisplay.textContent = ratingSlider.value;
-  });
-}); // End DOMContentLoaded
+  // --- TAB SETUP AND DATA LOADING ---
+  function setupTabs() {
+    const tabContainer = getTabContainer();
+    const contentContainers = getContentContainers();
+    if (!tabContainer) return;
 
-// --- TAB SETUP AND DATA LOADING ---
-function setupTabs() {
-  const tabContainer = getTabContainer();
-  const contentContainers = getContentContainers();
-  if (!tabContainer) return;
+    tabContainer.addEventListener("click", (event) => {
+      if (event.target && event.target.matches(".new-items-list-item")) {
+        const clickedTab = event.target;
+        const tabName = clickedTab.getAttribute("data-tab");
 
-  tabContainer.addEventListener("click", (event) => {
-    if (event.target && event.target.matches(".new-items-list-item")) {
-      const clickedTab = event.target;
-      const tabName = clickedTab.getAttribute("data-tab");
+        // Remove active class from all tabs and content
+        tabContainer
+          .querySelectorAll(".new-items-list-item")
+          .forEach((tab) => tab.classList.remove("active-tab"));
+        contentContainers.forEach((content) =>
+          content.classList.remove("active-content")
+        );
 
-      // Remove active class from all tabs and content
-      tabContainer
-        .querySelectorAll(".new-items-list-item")
-        .forEach((tab) => tab.classList.remove("active-tab"));
-      contentContainers.forEach((content) =>
-        content.classList.remove("active-content")
-      );
+        // Add active class to the clicked tab and corresponding content
+        clickedTab.classList.add("active-tab");
+        const activeContent = document.querySelector(
+          `.tab-content[data-tab-content="${tabName}"]`
+        );
+        if (activeContent) {
+          activeContent.classList.add("active-content");
+        }
 
-      // Add active class to the clicked tab and corresponding content
-      clickedTab.classList.add("active-tab");
-      const activeContent = document.querySelector(
-        `.tab-content[data-tab-content="${tabName}"]`
-      );
-      if (activeContent) {
-        activeContent.classList.add("active-content");
+        // Load data for the activated tab if not already loaded
+        loadActiveTabData();
       }
-
-      // Load data for the activated tab if not already loaded
-      loadActiveTabData();
-    }
-  });
-}
-
-function loadActiveTabData() {
-  const tabContainer = getTabContainer();
-  if (!tabContainer) return;
-  const activeTab = tabContainer.querySelector(
-    ".new-items-list-item.active-tab"
-  );
-  const movieId = getCurrentMovieId();
-  if (!activeTab || !movieId) return;
-
-  const tabName = activeTab.getAttribute("data-tab");
-
-  switch (tabName) {
-    case "comments":
-      if (!dataLoaded.comments) {
-        fetchComments(movieId);
-      }
-      break;
-    case "reviews":
-      if (!dataLoaded.reviews) {
-        fetchReviews(movieId);
-      }
-      break;
-    case "photos":
-      if (!dataLoaded.photos) {
-        // fetchPhotos(movieId); // Implement if needed
-      }
-      break;
+    });
   }
-}
+
+  function loadActiveTabData() {
+    const tabContainer = getTabContainer();
+    if (!tabContainer) return;
+    const activeTab = tabContainer.querySelector(
+      ".new-items-list-item.active-tab"
+    );
+    const movieId = getCurrentMovieId();
+    if (!activeTab || !movieId) return;
+
+    const tabName = activeTab.getAttribute("data-tab");
+
+    switch (tabName) {
+      case "comments":
+        if (!dataLoaded.comments) {
+          fetchComments(movieId);
+        }
+        break;
+      case "reviews":
+        if (!dataLoaded.reviews) {
+          fetchReviews(movieId);
+        }
+        break;
+    }
+  }
+
+  const scrollToTopButton = document.getElementById("scrollToTopButton");
+
+  if (scrollToTopButton) {
+    scrollToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Optional: Adds smooth scrolling
+      });
+    });
+  }
+});

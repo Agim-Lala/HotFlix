@@ -7,15 +7,19 @@ import styles from "./reviews.module.css";
 import useQuery from "../../hooks/useQuery";
 import { ReviewTable } from "./ReviewTable";
 import { usePagination } from "../../hooks/usePagination";
+import ReviewDrawer from "./ReviewDrawer";
 
 const sortOptions = Object.values(SortFields);
 
 const Reviews = () => {
   const [Message] = message.useMessage();
   const [ascending, setAscending] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortFields>(
     SortFields.CreatedAt
   );
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
   const { pagination, onTotalCountChange, onPageChange } = usePagination(10);
 
   const fetchResponse = useCallback(
@@ -25,8 +29,9 @@ const Reviews = () => {
         ascending,
         page: 1,
         pageSize: 10,
+        filters: search ? { query: search } : undefined,
       }),
-    [selectedSort, ascending, pagination.page, pagination.pageSize]
+    [selectedSort, ascending, pagination.page, pagination.pageSize, search]
   );
 
   const {
@@ -56,6 +61,11 @@ const Reviews = () => {
         }
       },
     });
+  };
+
+  const handleView = (reviewId: number) => {
+    setSelectedReviewId(reviewId);
+    setDrawerOpen(true);
   };
 
   return (
@@ -107,6 +117,10 @@ const Reviews = () => {
             placeholder="Key word ..."
             suffix={<SearchOutlined />}
             variant="borderless"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => onPageChange(1)}
+            allowClear
           />
         </Space>
       </div>
@@ -119,6 +133,13 @@ const Reviews = () => {
           totalCount={pagination.totalCount}
           onPageChange={onPageChange}
           onDelete={handleDelete}
+          onView={handleView}
+        />
+
+        <ReviewDrawer
+          open={drawerOpen}
+          reviewId={selectedReviewId}
+          onClose={() => setDrawerOpen(false)}
         />
       </div>
     </SidebarLayout>

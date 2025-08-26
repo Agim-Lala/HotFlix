@@ -12,14 +12,18 @@ import {
 import SidebarLayout from "../layouts/SidebarLayout";
 import styles from "./Dashboard.module.css";
 import DashboardCard from "./DashboardCard";
+import MetricCard from "./MetricCard";
 import { Link } from "react-router-dom";
 import {
   getMoviesSortedByCreatedAt,
   getMoviesSortedByRating,
   Movie,
+  monthlyUniqueViews,
+  newMoviesCount,
 } from "../../api/movieApi";
-import { getReviewsSortedById } from "../../api/reviewApi";
+import { getReviewsSortedById, newReviewsCount } from "../../api/reviewApi";
 import { getUsersSortedByCreatedAt } from "../../api/userApi";
+import { newCommentCount } from "../../api/commentApi";
 import { useNavigate } from "react-router";
 
 export const metricItems = [
@@ -125,15 +129,26 @@ const Dashboard = () => {
       </div>
 
       <div className={styles.metricCardsContainer}>
-        {metricItems.map((item, index) => (
-          <div key={index} className={styles.metricCard}>
-            <div>
-              <div className={styles.metricTitle}>{item.title}</div>
-              <div className={styles.metricValue}>{item.value}</div>
-            </div>
-            <div>{item.icon}</div>
-          </div>
-        ))}
+        <MetricCard
+          title="Unique Views This Month"
+          icon={<ColumnHeightOutlined className={styles.metricIcon} />}
+          fetchResponse={monthlyUniqueViews}
+        />
+        <MetricCard
+          title="Items Added This Month"
+          icon={<FileAddOutlined className={styles.metricIcon} />}
+          fetchResponse={newMoviesCount}
+        />
+        <MetricCard
+          title="New Comments"
+          icon={<MessageOutlined className={styles.metricIcon} />}
+          fetchResponse={newCommentCount}
+        />
+        <MetricCard
+          title="New Reviews"
+          icon={<StarOutlined className={styles.metricIcon} />}
+          fetchResponse={newReviewsCount}
+        />
       </div>
 
       <div className={styles.dashboardGrid}>

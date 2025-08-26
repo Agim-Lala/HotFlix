@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { Drawer, Typography, Divider, Space, Spin } from "antd";
+import { Drawer, Typography, Divider, Space, Spin, Tag, Avatar } from "antd";
 import dayjs from "dayjs";
 import { CommentDetail, getCommentById } from "../../api/commentApi";
 import styles from "./CommentViewDrawer.module.css";
+import {
+  DislikeOutlined,
+  LikeOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
 
 const { Text, Paragraph, Title } = Typography;
 
@@ -37,89 +42,106 @@ export default function CommentViewDrawer({ open, commentId, onClose }: Props) {
   const renderReply = (reply: CommentDetail, depth = 0) => (
     <div
       key={reply.commentId}
-      className={styles.repliesContainer}
-      style={{ marginLeft: depth * 12 }}
+      className={styles.replyCard}
+      style={{ marginLeft: depth * 16 }}
     >
-      <Space direction="vertical" size={2} style={{ width: "100%" }}>
-        <Text type="secondary" style={{ color: "rgba(255,255,255,0.6)" }}>
-          #{reply.commentId} • {reply.author} •{" "}
-          {dayjs(reply.createdAt).format("DD MMM YYYY HH:mm")}
-        </Text>
-        <Paragraph className={styles.replyText}>{reply.text}</Paragraph>
-      </Space>
+      <div className={styles.replyHeader}>
+        <Avatar size={28}>{reply.author.charAt(0).toUpperCase()}</Avatar>
+        <div className={styles.replyMeta}>
+          <Text className={styles.replyAuthor}>{reply.author}</Text>
+          <Text className={styles.replyDate}>
+            {dayjs(reply.createdAt).format("DD MMM YYYY HH:mm")}
+          </Text>
+        </div>
+      </div>
+      <Paragraph className={styles.replyText}>{reply.text}</Paragraph>
       {reply.replies?.map((r) => renderReply(r, depth + 1))}
     </div>
   );
 
   return (
     <Drawer
-      title="View Comment"
+      title={<span className={styles.drawerTitle}>💬 Comment Details</span>}
       placement="right"
-      width={520}
+      width={560}
       onClose={onClose}
       open={open}
+      className={styles.drawerRoot}
     >
       {loading ? (
-        <div className={styles.noData}>
+        <div className={styles.loaderContainer}>
           <Spin size="large" />
         </div>
       ) : !data ? (
-        <Text className={styles.noData}>No data</Text>
+        <Text className={styles.noData}>No comment found</Text>
       ) : (
         <div className={styles.drawerContainer}>
-          <Space direction="vertical" style={{ width: "100%" }} size="small">
-            <div className={styles.headerText}>
-              <ul className={styles.headerList}>
-                <li className={styles.headerListItem}>
-                  Comment Id: {data.commentId}
-                </li>
-                <li className={styles.headerListItem}>Author: {data.author}</li>
-                <li className={styles.headerListItem}>
-                  Created At:{" "}
-                  {dayjs(data.createdAt).format("DD MMM YYYY HH:mm")}
-                </li>
-              </ul>
-            </div>
-
-            <Text className={styles.movieTitle}>
-              {"Movie Title:  "}
-              {data.movieTitle}
-            </Text>
-
-            {data.quotedComment && (
-              <div className={styles.quotedComment}>
-                <Text type="secondary" className={styles.greyTextColor}>
-                  Quoting Comment with Id: {data.quotedComment.commentId}
-                </Text>
-                <Paragraph className={styles.commentText}>
-                  {data.quotedComment.text}
-                </Paragraph>
-              </div>
-            )}
-
-            <Title level={5} style={{ marginTop: 12, color: "#ffffff" }}>
-              Comment
-            </Title>
-            <Paragraph className={styles.commentText}>{data.text}</Paragraph>
-
-            <div className={styles.stats}>
-              <Text>👍 {data.likesCount ?? 0}</Text>
-              <Text>👎 {data.dislikesCount ?? 0}</Text>
-            </div>
-
-            <Divider style={{ borderColor: "rgba(255,255,255,0.1)" }} />
-
-            <Title level={5} style={{ marginBottom: 6, color: "#ffffff" }}>
-              Replies ({data.replies?.length ?? 0})
-            </Title>
-            {data.replies?.length ? (
-              <div>{data.replies.map((r) => renderReply(r))}</div>
-            ) : (
-              <Text type="secondary" style={{ color: "rgba(255,255,255,0.6)" }}>
-                No replies
+          {}
+          <div className={styles.commentHeader}>
+            <Avatar size={42} className={styles.avatar}>
+              {data.author.charAt(0).toUpperCase()}
+            </Avatar>
+            <div className={styles.metaInfo}>
+              <Text className={styles.author}>{data.author}</Text>
+              <Text className={styles.date}>
+                {dayjs(data.createdAt).format("DD MMM YYYY HH:mm")}
               </Text>
-            )}
-          </Space>
+            </div>
+          </div>
+
+          <Text className={styles.movieTag}>
+            {" "}
+            <VideoCameraOutlined style={{ marginRight: 6 }} /> {data.movieTitle}
+          </Text>
+
+          {data.parentComment && (
+            <div className={styles.parentComment}>
+              <Text className={styles.parentLabel}>
+                Replying to {data.parentComment.author}'s comment #:
+              </Text>
+              <Paragraph className={styles.parentText}>
+                {data.parentComment.text}
+              </Paragraph>
+            </div>
+          )}
+
+          {data.quotedComment && (
+            <div className={styles.quotedComment}>
+              <Text className={styles.quotedLabel}>
+                Quoting comment #{data.quotedComment.commentId}
+              </Text>
+              <Paragraph className={styles.quotedText}>
+                {data.quotedComment.text}
+              </Paragraph>
+            </div>
+          )}
+
+          <Title level={5} className={styles.sectionTitle}>
+            Comment
+          </Title>
+          <Paragraph className={styles.commentText}>{data.text}</Paragraph>
+
+          <div className={styles.stats}>
+            <Tag color="green">
+              <LikeOutlined /> {data.likesCount}
+            </Tag>
+            <Tag color="red">
+              <DislikeOutlined /> {data.dislikesCount}
+            </Tag>
+          </div>
+
+          <Divider className={styles.divider} />
+
+          <Title level={5} className={styles.sectionTitle}>
+            Replies ({data.replies?.length ?? 0})
+          </Title>
+          {data.replies?.length ? (
+            <div className={styles.repliesWrapper}>
+              {data.replies.map((r) => renderReply(r))}
+            </div>
+          ) : (
+            <Text className={styles.noReplies}>No replies</Text>
+          )}
         </div>
       )}
     </Drawer>

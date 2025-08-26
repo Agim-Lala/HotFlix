@@ -1,0 +1,38 @@
+.drawer {
+  font-family: "Inter", sans-serif;
+  color: #ffffff;
+  background-color: #1f1f1f;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.value {
+  font-weight: 400;
+  color: #ff9933;
+}
+
+.reviewText {
+  background-color: #474747;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ff9933;
+  font-style: italic;
+  border-radius: 1%;
+  padding: 1rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

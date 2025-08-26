@@ -17,10 +17,11 @@ const sortOptions = Object.values(SortFields);
 
 const Comments = () => {
   const [ascending, setAscending] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortFields>(
     SortFields.createdAt
   );
-  const [drawerOpen, setDrawerOpen] = useState(false); // NEW
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(
     null
   );
@@ -33,8 +34,9 @@ const Comments = () => {
         ascending,
         page: pagination.page,
         pageSize: pagination.pageSize,
+        filters: search ? { query: search } : undefined,
       }),
-    [selectedSort, ascending, pagination.page, pagination.pageSize]
+    [selectedSort, ascending, pagination.page, pagination.pageSize, search]
   );
 
   const {
@@ -116,9 +118,13 @@ const Comments = () => {
 
           <Input
             className={styles.input}
-            placeholder="Find Movie/Tv series ..."
+            placeholder="Find Comments ..."
             suffix={<SearchOutlined />}
             variant="borderless"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => onPageChange(1)}
+            allowClear
           />
         </Space>
       </div>

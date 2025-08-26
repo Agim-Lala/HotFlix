@@ -117,7 +117,7 @@ const EditMovieForm: React.FC = () => {
 
   return (
     <>
-      <h1>Edit Movie</h1>
+      <h1>{"Edit Movie with ID : " + movieId}</h1>
       <Form
         layout="vertical"
         onFinish={handleSubmit(onSubmit)}
@@ -176,191 +176,222 @@ const EditMovieForm: React.FC = () => {
             </Form.Item>
           </div>
 
-          <div className={`${styles.title} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="title"
-                control={control}
-                rules={{ required: "Title is required" }}
-                render={({ field }) => (
-                  <Input {...field} placeholder="Title" variant="borderless" />
+          <div className={styles.title}>
+            <label className={styles.label}>Title</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="title"
+                  control={control}
+                  rules={{ required: "Title is required" }}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Title"
+                      variant="borderless"
+                    />
+                  )}
+                />
+                {errors.title && (
+                  <span className={styles.error}>{errors.title.message}</span>
                 )}
-              />
-              {errors.title && (
-                <span className={styles.error}>{errors.title.message}</span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.description} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="description"
-                control={control}
-                rules={{ required: "Description is required" }}
-                render={({ field }) => (
-                  <TextArea
-                    rows={4}
-                    placeholder="Description"
-                    variant="borderless"
-                    {...field}
-                  />
+          <div className={styles.description}>
+            <label className={styles.label}>Description</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={{ required: "Description is required" }}
+                  render={({ field }) => (
+                    <TextArea
+                      rows={3}
+                      placeholder="Description"
+                      variant="borderless"
+                      className={styles.textarea}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <span className={styles.error}>
+                    {errors.description.message}
+                  </span>
                 )}
-              />
-              {errors.description && (
-                <span className={styles.error}>
-                  {errors.description.message}
-                </span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.releaseYear} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="releaseYear"
-                control={control}
-                rules={{ required: "Release year is required" }}
-                render={({ field }) => (
-                  <Input
-                    min={1900}
-                    max={2100}
-                    {...field}
-                    placeholder="Release Year"
-                    variant="borderless"
-                  />
+          <div className={styles.releaseYear}>
+            <label className={styles.label}>Release Year</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="releaseYear"
+                  control={control}
+                  rules={{ required: "Release year is required" }}
+                  render={({ field }) => (
+                    <Input
+                      min={1900}
+                      max={2100}
+                      {...field}
+                      placeholder="Release Year"
+                      variant="borderless"
+                    />
+                  )}
+                />
+                {errors.releaseYear && (
+                  <span className={styles.error}>
+                    {errors.releaseYear.message}
+                  </span>
                 )}
-              />
-              {errors.releaseYear && (
-                <span className={styles.error}>
-                  {errors.releaseYear.message}
-                </span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.runningTime} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="runningTime"
-                control={control}
-                rules={{ required: "Running time is required" }}
-                render={({ field }) => (
-                  <Input
-                    min={1}
-                    {...field}
-                    placeholder="Running Time"
-                    variant="borderless"
-                  />
+          <div className={styles.runningTime}>
+            <label className={styles.label}>Running Time (minutes)</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="runningTime"
+                  control={control}
+                  rules={{ required: "Running time is required" }}
+                  render={({ field }) => (
+                    <Input
+                      min={1}
+                      {...field}
+                      placeholder="Running Time"
+                      variant="borderless"
+                    />
+                  )}
+                />
+                {errors.runningTime && (
+                  <span className={styles.error}>
+                    {errors.runningTime.message}
+                  </span>
                 )}
-              />
-              {errors.runningTime && (
-                <span className={styles.error}>
-                  {errors.runningTime.message}
-                </span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.quality} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="qualityIds"
-                control={control}
-                rules={{ required: "Quality is required" }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    mode="multiple"
-                    placeholder="Select Quality"
-                    variant="borderless"
-                    loading={qualityQuery.status === "loading"}
-                    {...field}
-                    value={field.value}
-                    onChange={(val) => field.onChange(val)}
-                  >
-                    {qualityQuery.status === "success" &&
-                      qualityQuery.response.map((quality) => (
-                        <Select.Option key={quality.id} value={quality.id}>
-                          {quality.name}
-                        </Select.Option>
-                      ))}
-                  </Select>
+          <div className={styles.quality}>
+            <label className={styles.label}>Quality</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="qualityIds"
+                  control={control}
+                  rules={{ required: "Quality is required" }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      mode="multiple"
+                      placeholder="Select Quality"
+                      variant="borderless"
+                      loading={qualityQuery.status === "loading"}
+                      {...field}
+                      value={field.value}
+                      onChange={(val) => field.onChange(val)}
+                    >
+                      {qualityQuery.status === "success" &&
+                        qualityQuery.response.map((quality) => (
+                          <Select.Option key={quality.id} value={quality.id}>
+                            {quality.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  )}
+                />
+                {errors.qualityIds && (
+                  <span className={styles.error}>
+                    {errors.qualityIds.message}
+                  </span>
                 )}
-              />
-              {errors.qualityIds && (
-                <span className={styles.error}>
-                  {errors.qualityIds.message}
-                </span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.age} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="age"
-                control={control}
-                rules={{ required: "Age rating is required" }}
-                render={({ field }) => (
-                  <Input {...field} placeholder="Age" variant="borderless" />
-                )}
-              />
-            </Form.Item>
-            {errors.age && (
-              <span className={styles.error}>{errors.age.message}</span>
-            )}
+          <div className={styles.age}>
+            <label className={styles.label}>Age Rating</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="age"
+                  control={control}
+                  rules={{ required: "Age rating is required" }}
+                  render={({ field }) => (
+                    <Input {...field} placeholder="Age" variant="borderless" />
+                  )}
+                />
+              </Form.Item>
+              {errors.age && (
+                <span className={styles.error}>{errors.age.message}</span>
+              )}
+            </div>
           </div>
 
-          <div className={`${styles.chooseCountries} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="country"
-                control={control}
-                rules={{ required: "Countries are required" }}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Country"
-                    variant="borderless"
-                  ></Input>
+          <div className={styles.chooseCountries}>
+            <label className={styles.label}>Country</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="country"
+                  control={control}
+                  rules={{ required: "Countries are required" }}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Country"
+                      variant="borderless"
+                    ></Input>
+                  )}
+                />
+                {errors.country && (
+                  <span className={styles.error}>{errors.country.message}</span>
                 )}
-              />
-              {errors.country && (
-                <span className={styles.error}>{errors.country.message}</span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.chooseGenres} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="genreIds"
-                control={control}
-                rules={{ required: "Genres are required" }}
-                render={({ field }) => (
-                  <Select
-                    mode="multiple"
-                    {...field}
-                    placeholder="Select genres"
-                    variant="borderless"
-                    loading={genreQuery.status === "loading"}
-                    value={field.value || []}
-                    onChange={(value) => field.onChange(value)}
-                  >
-                    {genreQuery.status === "success" &&
-                      genreQuery.response.map((genre) => (
-                        <Select.Option key={genre.id} value={genre.id}>
-                          {genre.name}
-                        </Select.Option>
-                      ))}
-                  </Select>
+          <div className={styles.chooseGenres}>
+            <label className={styles.label}>Genres</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="genreIds"
+                  control={control}
+                  rules={{ required: "Genres are required" }}
+                  render={({ field }) => (
+                    <Select
+                      mode="multiple"
+                      {...field}
+                      placeholder="Select genres"
+                      variant="borderless"
+                      loading={genreQuery.status === "loading"}
+                      value={field.value || []}
+                      onChange={(value) => field.onChange(value)}
+                    >
+                      {genreQuery.status === "success" &&
+                        genreQuery.response.map((genre) => (
+                          <Select.Option key={genre.id} value={genre.id}>
+                            {genre.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  )}
+                />
+                {errors.genreIds && (
+                  <span className={styles.error}>
+                    {errors.genreIds.message}
+                  </span>
                 )}
-              />
-              {errors.genreIds && (
-                <span className={styles.error}>{errors.genreIds.message}</span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
           <div className={styles.categories}>
@@ -428,129 +459,120 @@ const EditMovieForm: React.FC = () => {
             </Form.Item>
           </div>
 
-          <div className={`${styles.actors} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="actorIds"
-                control={control}
-                rules={{ required: "Actors are required" }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    mode="multiple"
-                    placeholder="Select Actors"
-                    variant="borderless"
-                    loading={actorQuery.status === "loading"}
-                    {...field}
-                    value={field.value || []}
-                    onChange={(val) => field.onChange(val)}
-                    showSearch
-                    filterOption={(input, option) =>
-                      (option?.label as string)
-                        ?.toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                  >
-                    {actorQuery.status === "success" &&
-                      actorQuery.response.map((actor) => (
-                        <Select.Option
-                          key={actor.id}
-                          value={actor.id}
-                          label={actor.name}
-                        >
-                          {actor.name}
-                        </Select.Option>
-                      ))}
-                  </Select>
+          <div className={styles.actors}>
+            <label className={styles.label}>Actors</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="actorIds"
+                  control={control}
+                  rules={{ required: "Actors are required" }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      mode="multiple"
+                      placeholder="Select Actors"
+                      variant="borderless"
+                      loading={actorQuery.status === "loading"}
+                      {...field}
+                      value={field.value || []}
+                      onChange={(val) => field.onChange(val)}
+                      showSearch
+                      filterOption={(input, option) =>
+                        (option?.label as string)
+                          ?.toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                    >
+                      {actorQuery.status === "success" &&
+                        actorQuery.response.map((actor) => (
+                          <Select.Option
+                            key={actor.id}
+                            value={actor.id}
+                            label={actor.name}
+                          >
+                            {actor.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  )}
+                />
+                {errors.actorIds && (
+                  <span className={styles.error}>
+                    {errors.actorIds.message}
+                  </span>
                 )}
-              />
-              {errors.actorIds && (
-                <span className={styles.error}>{errors.actorIds.message}</span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.director} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="directorId"
-                control={control}
-                rules={{ required: "Director is required" }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    placeholder="Select Director"
-                    variant="borderless"
-                    loading={directorQuery.status === "loading"}
-                    {...field}
-                    value={field.value}
-                    onChange={(val) => field.onChange(val)}
-                    showSearch
-                    filterOption={(input, option) =>
-                      (option?.label as string)
-                        ?.toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                  >
-                    {directorQuery.status === "success" &&
-                      directorQuery.response.map((director) => (
-                        <Select.Option
-                          key={director.id}
-                          value={director.id}
-                          label={director.name}
-                        >
-                          {director.name}
-                        </Select.Option>
-                      ))}
-                  </Select>
+          <div className={styles.director}>
+            <label className={styles.label}>Director</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="directorId"
+                  control={control}
+                  rules={{ required: "Director is required" }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      placeholder="Select Director"
+                      variant="borderless"
+                      loading={directorQuery.status === "loading"}
+                      {...field}
+                      value={field.value}
+                      onChange={(val) => field.onChange(val)}
+                      showSearch
+                      filterOption={(input, option) =>
+                        (option?.label as string)
+                          ?.toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                    >
+                      {directorQuery.status === "success" &&
+                        directorQuery.response.map((director) => (
+                          <Select.Option
+                            key={director.id}
+                            value={director.id}
+                            label={director.name}
+                          >
+                            {director.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  )}
+                />
+                {errors.directorId && (
+                  <span className={styles.error}>
+                    {errors.directorId.message}
+                  </span>
                 )}
-              />
-              {errors.directorId && (
-                <span className={styles.error}>
-                  {errors.directorId.message}
-                </span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
 
-          <div className={`${styles.uploadVideos} ${styles.inputStyles}`}>
-            <Form.Item>
-              <Controller
-                name="video"
-                control={control}
-                render={({ field }) => (
-                  <label className={styles.uploadLabel}>
-                    <input
-                      type="file"
-                      accept="video/*"
-                      onChange={(e) => field.onChange(e.target.files)}
-                      className={styles.hiddenInput}
-                    />
-                    <UploadOutlined className={styles.uploadIcon} />
-                  </label>
+          <div className={styles.addLink}>
+            <label className={styles.label}>Link</label>
+            <div className={styles.inputStyles}>
+              <Form.Item required>
+                <Controller
+                  name="link"
+                  control={control}
+                  rules={{ required: "Link is required" }}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Link"
+                      variant="borderless"
+                    ></Input>
+                  )}
+                />
+                {errors.link && (
+                  <span className={styles.error}>{errors.link.message}</span>
                 )}
-              />
-            </Form.Item>
-          </div>
-
-          <div className={`${styles.addLink} ${styles.inputStyles}`}>
-            <Form.Item required>
-              <Controller
-                name="link"
-                control={control}
-                rules={{ required: "Link is required" }}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Link"
-                    variant="borderless"
-                  ></Input>
-                )}
-              />
-              {errors.link && (
-                <span className={styles.error}>{errors.link.message}</span>
-              )}
-            </Form.Item>
+              </Form.Item>
+            </div>
           </div>
         </div>
 

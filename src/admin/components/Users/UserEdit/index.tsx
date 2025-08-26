@@ -1,5 +1,5 @@
 import { type FC, memo, useCallback, useState } from "react";
-import { Tabs, message, Spin } from "antd";
+import { Tabs, message, Spin, Tooltip } from "antd";
 import useQuery from "../../../hooks/useQuery";
 import { useParams } from "react-router-dom";
 import { getUserById, toggleUserStatus } from "../../../api/userApi";
@@ -17,8 +17,6 @@ import {
 type TabKeys = "profile" | "comments" | "reviews";
 const tabItems: { key: TabKeys; label: string }[] = [
   { key: "profile", label: "PROFILE" },
-  { key: "comments", label: "COMMENTS" },
-  { key: "reviews", label: "REVIEWS" },
 ];
 
 const TabContent = memo(
@@ -51,11 +49,6 @@ const TabContent = memo(
             </div>
           )
         );
-      case "comments":
-        return <div>Comments Section</div>;
-
-      case "reviews":
-        return <div>Reviews Section</div>;
 
       default:
         return null;
@@ -139,12 +132,22 @@ const UserEditPage: FC = () => {
         </div>
 
         <div className={styles.actionButtons}>
-          <button className={styles.lockBtn} onClick={handleToggleStatus}>
-            {user.status === "Approved" ? <LockOutlined /> : <UnlockOutlined />}
-          </button>
-          <button className={styles.deleteBtn}>
-            <DeleteOutlined />
-          </button>
+          <Tooltip
+            title={user.status === "Approved" ? "Lock User" : "Unlock User"}
+          >
+            <button className={styles.lockBtn} onClick={handleToggleStatus}>
+              {user.status === "Approved" ? (
+                <LockOutlined />
+              ) : (
+                <UnlockOutlined />
+              )}
+            </button>
+          </Tooltip>
+          <Tooltip title="Delete User">
+            <button className={styles.deleteBtn}>
+              <DeleteOutlined />
+            </button>
+          </Tooltip>
         </div>
       </div>
       <TabContent
