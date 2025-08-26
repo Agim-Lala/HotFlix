@@ -372,11 +372,50 @@ svg {
   margin: 0;
   color: #ff9933;
   cursor: pointer;
+  display: flex;
+  align-self: start;
 }
 .movie-card-big-genre:hover {
   text-decoration: underline;
 }
 
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  margin: 5% auto;
+  padding: 0;
+  width: 70%;
+  max-width: 800px;
+  border-radius: 10px;
+  background: #000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Close Button */
+.close {
+  color: #fff;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover {
+  color: red;
+}
 /* New Items Section */
 
 .new-items-tittle {
@@ -475,7 +514,7 @@ svg {
   gap: 1.5rem;
   padding: 1.5rem;
   margin-bottom: 3rem;
-  overflow: hidden; /* hides overflow when sliding */
+  overflow: hidden;
   position: relative;
 }
 

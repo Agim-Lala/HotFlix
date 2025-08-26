@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/client/Css/index.css" />
+    <title>HotFlix</title>
+  </head>
+  <header>
+    <div class="header">
+      <div
+        id="dashboardBtn"
+        style="
+          display: none;
+          text-align: center;
+          cursor: pointer;
+          margin-top: 0;
+        "
+      >
+        <div class="btn btn-primary btn-sign" onclick="goToDashboard()">
+          Dashboard
+        </div>
+      </div>
+
+      <ul class="header-list">
+        <li class="header-list-item"><a href="/index.html"> HOME </a></li>
+        <li class="header-list-item">
+          <a href="/catalog.html"> CATALOG </a>
+        </li>
+        <li id="scrollToBottomButton" class="header-list-item">PRICING PLAN</li>
+      </ul>
+
+      <div class="search-input">
+        <input type="text" placeholder="Search..." />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 30 30"
+          fill="white"
+          class="size-5"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+
+      <div id="auth-section">
+        <a href="/signIn.html" id="signInBtn" class="btn btn-primary btn-sign"
+          >Sign In</a
+        >
+
+        <div
+          id="userInfo"
+          style="display: none; text-align: center; cursor: pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+            width="30"
+            height="30"
+            style="color: #fff"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501
+                  20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12
+                  21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            />
+          </svg>
+          <div
+            id="usernameDisplay"
+            style="margin-top: 5px; font-size: 0.9rem; color: #ccc"
+          ></div>
+        </div>
+      </div>
+      <div
+        id="logoutBtn"
+        style="display: none; text-align: center; cursor: pointer"
+      >
+        <div class="btn btn-primary btn-sign" onclick="logoutUser()">
+          Logout
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="price-card-container" class="price-card-container"></div>
+
+  <footer>
+    <ul class="last-line-footer grey-border-top">
+      <li class="last-line-footer-items">About Us</li>
+      <li class="last-line-footer-items">Contacts</li>
+      <li class="last-line-footer-items">Privacy policy</li>
+      <li id="scrollToTopButton" class="last-line-footer-items">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          class="size-4"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 14a.75.75 0 0 1-.75-.75V4.56L4.03 7.78a.75.75 0 0 1-1.06-1.06l4.5-4.5a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.75 4.56v8.69A.75.75 0 0 1 8 14Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </li>
+    </ul>
+  </footer>
+  <script src="src/client/sign-in-sign-out.js"></script>
+  <script src="src/client/price-cards.js"></script>
+  <script src="src/client/authentication.js"></script>
+</html>

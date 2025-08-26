@@ -201,6 +201,20 @@ export const toggleMovieStatus = async (id: number): Promise<boolean> => {
   return response.data;
 };
 
+export const newMoviesCount = async () => {
+  const response = await axios.get<{ count: number }>(
+    "http://localhost:5219/api/Movies/new-movies-count"
+  );
+  return response.data;
+};
+
+export const monthlyUniqueViews = async () => {
+  const response = await axios.get<{ count: number }>(
+    "http://localhost:5219/api/Movies/monthlyUniqueViews"
+  );
+  return response.data;
+};
+
 // Fetching Form data for movie creation
 export type Genre = {
   id: number;

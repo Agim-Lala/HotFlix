@@ -29,7 +29,17 @@ export interface Review {
   text: string;
   Rating: number;
   createdAt?: string;
-  likeDislike?: string;
+}
+export interface ReviewDetail {
+  reviewId: number;
+  text: string;
+  rating: number;
+  createdAt: string;
+  username: string;
+  movieTitle: string;
+  movieId: number;
+  userId: number;
+  author: string;
 }
 
 export const fetchReviews = async (
@@ -69,4 +79,18 @@ export const getReviewsSortedById = async () => {
 
 export const DeleteReview = async (reviewId: number): Promise<void> => {
   await axios.delete(`http://localhost:5219/api/reviews/${reviewId}`);
+};
+
+export const getReviewById = async (id: number): Promise<ReviewDetail> => {
+  const response = await axios.get<ReviewDetail>(
+    `http://localhost:5219/api/reviews/${id}`
+  );
+  return response.data;
+};
+
+export const newReviewsCount = async () => {
+  const response = await axios.get<{ count: number }>(
+    "http://localhost:5219/api/reviews/new-reviews-count"
+  );
+  return response.data;
 };

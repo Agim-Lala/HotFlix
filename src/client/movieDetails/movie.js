@@ -22,6 +22,12 @@ export async function fetchMovieData(movieId) {
   }
 }
 
+// Helper to extract YouTube video ID from full URL
+function getYouTubeVideoId(url) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+  return match ? match[1] : null;
+}
+
 export function populateMovieDetails(movie) {
   document.getElementById("movieTitle").textContent = movie.title;
   document.getElementById(
@@ -49,12 +55,58 @@ export function populateMovieDetails(movie) {
   document.getElementById("movieRunningTime").textContent = movie.runningTime;
   document.getElementById("movieCountry").textContent = movie.country;
   document.getElementById("movieDescription").textContent = movie.description;
-  document
-    .getElementById("movieVideo")
-    .querySelector('source[type="video/mp4"]').src = "Images/Videos/Movie.mp4";
-  document
-    .getElementById("movieVideo")
-    .querySelector('source[type="video/ogg"]').src = "Images/Videos/Movie.mp4";
+  const videoContainer = document.getElementById("movieVideoContainer");
+  videoContainer.innerHTML = "";
+  if (movie.link) {
+    const videoId = getYouTubeVideoId(movie.link);
+    if (videoId) {
+      const iframe = document.createElement("iframe");
+      iframe.width = "700";
+      iframe.height = "400";
+      iframe.style.borderRadius = "3%";
+      iframe.src = `https://www.youtube.com/embed/${videoId}`;
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      videoContainer.appendChild(iframe);
+    }
+  }
+
+  const trailerButton = document.getElementById("trailerButton");
+  const modal = document.getElementById("trailerModal");
+  const modalVideoContainer = document.getElementById("modalVideoContainer");
+  const closeBtn = document.getElementById("closeTrailer");
+
+  trailerButton.onclick = () => {
+    if (movie.link) {
+      const videoId = getYouTubeVideoId(movie.link);
+      if (videoId) {
+        modalVideoContainer.innerHTML = `
+          <iframe width="100%" height="450" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        `;
+        modal.style.display = "block";
+      }
+    }
+  };
+
+  // Close modal
+  closeBtn.onclick = () => {
+    modal.style.display = "none";
+    modalVideoContainer.innerHTML = ""; // remove video to stop audio
+  };
+
+  // Close if clicked outside modal
+  window.onclick = (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      modalVideoContainer.innerHTML = "";
+    }
+  };
 }
 
 export async function recordMovieView(movieId) {
@@ -143,7 +195,9 @@ function renderRelatedMovies(movies) {
   movies.forEach((movie) => {
     const movieCard = document.createElement("div");
     movieCard.classList.add("movie-card-medium");
-
+    const genreSpans = movie.genres
+      .map((g) => `<span class="movie-genre">${g}</span>`)
+      .join(",");
     const ratingClass = getRatingClass(movie.averageRating || 0);
 
     movieCard.innerHTML = `
@@ -156,8 +210,8 @@ function renderRelatedMovies(movies) {
       movie.averageRating?.toFixed(1) || "N/A"
     }</div>
             </div>
-            <h2 class="movie-card-medium-tittle">${movie.title}</h2>
-            <p class="movie-card-medium-genre">${movie.genres.join(", ")}</p>
+            <h2 class="movie-card-medium-title">${movie.title}</h2>
+            <p class="movie-card-medium-genre">${genreSpans}</p>
         `;
 
     movieCard.addEventListener("click", () => {

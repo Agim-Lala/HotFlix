@@ -1,5 +1,5 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { Comment } from "../../api/commentApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +70,7 @@ const getCommentTableColumns = (
       <Space>
         <Tooltip title="View">
           <Button
-            icon={<EditOutlined />}
+            icon={<EyeOutlined />}
             type="text"
             onClick={() => onView(record.commentId)}
             className={`${styles.baseBtn} ${styles.viewBtn}`}

@@ -46,6 +46,11 @@ export interface CommentDetail {
   quotedText?: string | null;
   quotedComment?: CommentDetail | null;
   replies: CommentDetail[];
+  parentComment?: {
+    commentId: number;
+    text: string;
+    author: string;
+  } | null;
   isDeleted: boolean;
 }
 
@@ -95,4 +100,11 @@ export const getCommentById = async (commentId: number) => {
     `http://localhost:5219/api/Comments/${commentId}`
   );
   return res.data;
+};
+
+export const newCommentCount = async () => {
+  const response = await axios.get<{ count: number }>(
+    "http://localhost:5219/api/Comments/new-comments-count"
+  );
+  return response.data;
 };

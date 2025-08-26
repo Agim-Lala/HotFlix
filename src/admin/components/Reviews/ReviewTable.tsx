@@ -1,5 +1,5 @@
 import { Table, Space, Button, Tooltip } from "antd";
-import { DeleteOutlined, StarFilled, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, StarFilled, EyeOutlined } from "@ant-design/icons";
 import { Review } from "../../api/reviewApi";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
@@ -14,11 +14,13 @@ interface ReviewTableProps {
   initialPageSize?: number;
   onPageChange?: (page: number) => void;
   onDelete: (reviewId: number) => void;
+  onView: (reviewId: number) => void;
 }
 
 const getReviewTableColumns = (
   _navigate: ReturnType<typeof useNavigate>,
-  onDelete: (reviewId: number) => void
+  onDelete: (reviewId: number) => void,
+  onView: (reviewId: number) => void
 ): ColumnsType<Review> => [
   {
     title: "ID",
@@ -39,6 +41,8 @@ const getReviewTableColumns = (
     title: "Text",
     dataIndex: "text",
     key: "text",
+    render: (value: string) =>
+      value.length > 50 ? value.slice(0, 50) + "..." : value,
   },
   {
     title: "Rating",
@@ -49,12 +53,6 @@ const getReviewTableColumns = (
         <StarFilled /> {rating}
       </span>
     ),
-  },
-  {
-    title: "Like/Dislike",
-    dataIndex: "likeDislike",
-    key: "likeDislike",
-    render: (value: string | undefined) => value || "0/0",
   },
   {
     title: "Created At",
@@ -73,8 +71,9 @@ const getReviewTableColumns = (
       <Space>
         <Tooltip title="View">
           <Button
-            icon={<EditOutlined />}
+            icon={<EyeOutlined />}
             type="text"
+            onClick={() => onView(record.reviewId)}
             className={`${styles.baseBtn} ${styles.viewBtn}`}
           />
         </Tooltip>
@@ -100,9 +99,10 @@ export const ReviewTable: React.FC<ReviewTableProps> = ({
   totalCount,
   onPageChange,
   onDelete,
+  onView,
 }) => {
   const navigate = useNavigate();
-  const columns = getReviewTableColumns(navigate, onDelete);
+  const columns = getReviewTableColumns(navigate, onDelete, onView);
 
   return (
     <Table

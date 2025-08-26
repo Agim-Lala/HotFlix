@@ -69,14 +69,3 @@ movieVideo.addEventListener("msfullscreenchange", () => {
     trailerButton.style.display = "none";
   }
 });
-
-const scrollToTopButton = document.getElementById("scrollToTopButton");
-
-if (scrollToTopButton) {
-  scrollToTopButton.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // Optional: Adds smooth scrolling
-    });
-  });
-}

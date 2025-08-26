@@ -18,7 +18,9 @@
              </li>
            <li class="header-list-item"> <a href="/catalog.html">CATALOG </a>
              </li>
-           <li class="header-list-item">PRICING PLAN</li>
+            <li  class="header-list-item">
+          <a href="/subscriptionPlan.html">PRICING PLAN</a>
+        </li>
         
         </ul>
             
@@ -92,17 +94,14 @@
                 </div>
             </div>
     
-            <div>
-                <video id="movieVideo" width="700px" height="400px" style="border-radius:3%;" controls>
-                    <source src="/client/Images/Videos/Movie.mp4" type="video/mp4">
-                    <source src="/client/Images/Videos/Movie.mp4" type="video/ogg">
-                </video>
-                <div class="play">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                    </svg>
-                </div>
-            </div>
+            <div id="movieVideoContainer"></div>
+
+            <div id="trailerModal" class="modal">
+  <div class="modal-content">
+    <span id="closeTrailer" class="close">&times;</span>
+    <div id="modalVideoContainer"></div>
+  </div>
+</div>
         </div>
     </div>
    
@@ -113,7 +112,7 @@
         <ul class="new-items-list" id="discoverTabs">
             <li class="new-items-list-item active-tab" data-tab="comments">COMMENTS</li>
             <li class="new-items-list-item" data-tab="reviews">REVIEWS</li>
-            <li class="new-items-list-item" data-tab="photos">PHOTOS</li>
+            
         </ul>
     </div>
     
@@ -133,12 +132,12 @@
     
         <div id="reviewsSectionContent" class="tab-content" data-tab-content="reviews">
             <div class="reviews-section">
-                <h2>Reviews</h2>
+                
                 <div id="addReviewSection" class="review-box">
                     <textarea id="reviewText" placeholder="Write your review..."></textarea>
                     <label class="rating-label" for="reviewRating">Rating:</label>
                     <input type="range" min="1" max="10" step="0.1" id="reviewRating" />
-                    <span id="ratingValue">5</span>
+                    <span id="ratingValue"></span>
                     <div id="submitReviewBtn" class="btn btn-primary send-btn">Submit Review</div>
                 </div>
                 <div id="reviewsContainer">
@@ -147,13 +146,7 @@
             </div>
         </div>
     
-        <div id="photosSectionContent" class="tab-content" data-tab-content="photos">
-            <div class="photos-section"> <h2>Photos</h2>
-                <div id="photosContainer">
-                    <p>Photos feature coming soon.</p>
-                </div>
-            </div>
-        </div>
+       
         
 
 
@@ -168,7 +161,7 @@
 
 </body>
 
-<Footer> 
+<footer>
      <ul class="last-line-footer grey-border-top">
     <li class="last-line-footer-items">About Us</li>
     <li class="last-line-footer-items">Contacts</li>
@@ -178,7 +171,7 @@
       </svg>
       </li>
 </ul>
-</Footer>
+</footer>
 <script src="/src/client/sign-in-sign-out.js"></script>
 <script type="module" src="/src/client/movieDetails/main.js"></script>
 <script src="/src/client/video-play.js"></script>

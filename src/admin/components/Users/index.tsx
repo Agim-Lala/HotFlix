@@ -16,6 +16,7 @@ const Users = () => {
     SortFields.CreatedAt
   );
   const [ascending, setAscending] = useState(false);
+  const [search, setSearch] = useState("");
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -42,8 +43,9 @@ const Users = () => {
         ascending,
         page: pagination.page,
         pageSize: pagination.pageSize,
+        filters: search ? { query: search } : undefined,
       }),
-    [selectedSort, ascending, pagination.page, pagination.pageSize]
+    [selectedSort, ascending, pagination.page, pagination.pageSize, search]
   );
 
   const {
@@ -117,6 +119,10 @@ const Users = () => {
             placeholder="Find users ..."
             suffix={<SearchOutlined />}
             variant="borderless"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => onPageChange(1)}
+            allowClear
           />
         </Space>
       </div>

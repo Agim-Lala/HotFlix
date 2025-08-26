@@ -1,4 +1,5 @@
 import { API_URL, token, dataLoaded, getReviewsContainer } from "./shared.js";
+import { getCurrentUserId } from "./utils.js";
 
 export async function fetchReviews(movieId) {
   const reviewsContainer = getReviewsContainer();
@@ -18,6 +19,15 @@ export async function fetchReviews(movieId) {
     }
     const reviews = await response.json();
     renderReviews(reviews);
+
+    if (token) {
+      const currentUserId = getCurrentUserId();
+      const myReview = reviews.find((r) => r.userId === currentUserId);
+      if (myReview) {
+        showOwnReviewInsteadOfForm(myReview);
+      }
+    }
+
     dataLoaded.reviews = true;
   } catch (error) {
     reviewsContainer.innerHTML =
@@ -29,10 +39,15 @@ export function renderReviews(reviews) {
   const reviewsContainer = getReviewsContainer();
   if (!reviewsContainer) return;
   reviewsContainer.innerHTML = "";
+
   if (reviews && reviews.length > 0) {
-    reviews.forEach((review) => {
-      reviewsContainer.appendChild(createReviewElement(review));
-    });
+    const currentUserId = token ? getCurrentUserId() : null;
+
+    reviews
+      .filter((r) => r.userId !== currentUserId)
+      .forEach((review) => {
+        reviewsContainer.appendChild(createReviewElement(review));
+      });
   }
 }
 
@@ -57,4 +72,78 @@ export function createReviewElement(review) {
     <div class="review-timestamp">${formattedDate}</div>
   `;
   return div;
+}
+
+export function updateReviewUIForAuth() {
+  const reviewText = document.getElementById("reviewText");
+  const reviewRating = document.getElementById("reviewRating");
+  const submitReviewBtn = document.getElementById("submitReviewBtn");
+  const ratingValueDisplay = document.getElementById("ratingValue");
+
+  if (!token) {
+    if (reviewText) {
+      reviewText.disabled = true;
+      reviewText.placeholder = "You need to be logged in to write a review";
+    }
+    if (reviewRating) reviewRating.disabled = true;
+    if (submitReviewBtn) submitReviewBtn.disabled = true;
+  } else {
+    if (reviewText) {
+      reviewText.disabled = false;
+      reviewText.placeholder = "Write your review here...";
+    }
+    if (reviewRating) reviewRating.disabled = false;
+    if (submitReviewBtn) submitReviewBtn.disabled = false;
+    if (reviewRating && ratingValueDisplay) {
+      ratingValueDisplay.textContent = reviewRating.value;
+      reviewRating.addEventListener("input", () => {
+        ratingValueDisplay.textContent = reviewRating.value;
+      });
+    }
+  }
+}
+
+export function showOwnReviewInsteadOfForm(myReview) {
+  const addReviewSection = document.getElementById("addReviewSection");
+  if (!addReviewSection) return;
+
+  const formattedDate = new Date(
+    myReview.updatedAt || myReview.createdAt
+  ).toLocaleString();
+
+  addReviewSection.innerHTML = `
+    <div class="review-item my-review" id="myReviewDisplay">
+      <div class="user-info">
+        <strong>You</strong>
+        <span class="review-rating">Rating: ${myReview.rating}/10</span>
+      </div>
+      <p class="review-text">${myReview.text}</p>
+      <div class="review-timestamp">Last updated: ${formattedDate}</div>
+      <div id="editReviewBtn" class="btn btn-primary">Edit Review</div>
+    </div>
+  `;
+
+  document.getElementById("editReviewBtn")?.addEventListener("click", () => {
+    switchToEditMode(myReview);
+  });
+}
+function switchToEditMode(myReview) {
+  const addReviewSection = document.getElementById("addReviewSection");
+  if (!addReviewSection) return;
+
+  addReviewSection.innerHTML = `
+    <textarea id="reviewText">${myReview.text}</textarea>
+    <label class="rating-label" for="reviewRating">Rating:</label>
+    <input type="range" min="1" max="10" step="0.1" id="reviewRating" value="${myReview.rating}" />
+    <div class="rating-value">Current rating: <span id="ratingValue">${myReview.rating}</span></div>
+    <div id="submitReviewBtn" class="btn btn-primary send-btn" data-review-id="${myReview.reviewId}">
+      Update Review
+    </div>
+  `;
+
+  const ratingSlider = document.getElementById("reviewRating");
+  const ratingValueDisplay = document.getElementById("ratingValue");
+  ratingSlider?.addEventListener("input", () => {
+    ratingValueDisplay.textContent = ratingSlider.value;
+  });
 }
